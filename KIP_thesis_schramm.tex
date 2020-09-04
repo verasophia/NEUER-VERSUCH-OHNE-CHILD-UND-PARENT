@@ -1,0 +1,508 @@
+\documentclass[a4, 12pt]{article}
+\usepackage[paper=a4paper, top=2.5cm, left=2.5cm, right=2.5cm, bottom=2.5cm, headheight=1.0cm, headsep=1cm, footnotesep=0.5cm]{geometry}%
+\clubpenalty = 10000
+\widowpenalty = 10000
+\usepackage[T1]{fontenc}
+\usepackage{pslatex}%
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage[english]{babel}
+\usepackage{setspace}
+\usepackage{url}
+
+% \usepackage{natbib}
+\usepackage[style=apa,
+			backend=biber,
+			maxcitenames=1,
+			maxcitenames=2,
+			uniquelist=true]{biblatex}
+\DeclareLanguageMapping{english}{english-apa}
+\addbibresource{literature.bib}
+
+\usepackage{float}
+% \usepackage{placeins}
+\usepackage{lscape}
+\usepackage{rotating}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{booktabs,caption}
+\usepackage{color}
+\definecolor{red}{rgb}{1,0,0}
+
+\usepackage{titlesec}
+\usepackage{multicol}
+
+\usepackage{array}
+\usepackage{wrapfig}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+
+
+\titleformat{\section}{\normalsize\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize}{\thesubsubsection}{1em}{}
+
+%CUSTOMISE LETTERING OF TITLE PAGE
+% \makeatletter
+% \renewcommand*{\@fnsymbol}[1]{\ensuremath{\ifcase#1\or *\or a  \else\@ctrerr\fi}}
+% \makeatother
+
+%TO ENABLE SUBSUBSECTION
+\setcounter{secnumdepth}{3}
+%TO SHOW SUBSUBSECTIONS IN TABLE OF CONTENTS
+\setcounter{tocdepth}{3}
+
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Untitled},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+\begin{document}
+\begin{titlepage}
+% Titlepage (fold)
+\thispagestyle{empty}%
+\begin{center}
+\renewcommand{\baselinestretch}{1.0}\normalsize %
+\textbf{
+The effect of music education on students' well-being. Empirical evidence from a field experiment}\\[1cm]
+Preliminary - work in progress \\[1cm]
+This draft: \today \\[1cm]
+% Comments welcome \\[0.25cm]
+% \renewcommand{\baselinestretch}{1.5}\normalsize
+Vera Schramm \\
+University of Halle-Wittenberg \\[0.75cm]
+% \today
+ \end{center}
+
+
+\end{titlepage}
+
+\renewcommand{\baselinestretch}{1}\normalsize
+
+\textbf{\normalsize Abstract}
+Our analyses, following the discussion above, address two central questions
+using a cultural capital framework. First, who participates in music
+both in and outside of school, and to what extent is such involvement
+stratified by social class, race/ethnic, and gender status? Second, and relative
+to the more central question discussed at the outset, do various forms of
+music involvement influence academic achievement, even after accounting
+for prior achievement, background statuses, and other educationally meaningful
+investments? Relatedly, to what extent might disparities in music
+involvement shape group-specific gaps in achievement that have been so well
+documented elsewhere?
+
+\clearpage
+\tableofcontents
+
+\clearpage
+\doublespacing
+\pagestyle{plain}
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+\label{sec:introduction}
+
+In German schools, subjects like art and music are often considered less important than the typical hard subjects like math and science. Due to a lack of teachers, many classes are cancelled, of which 80\% are in the subject of music. In Saxony we see ongoing efforts to eliminate the subject of music from the curriculum entirely. Furthermore, the quality of music lessons suffers from the fact that 80\% of its teaching staff are foreign to this subject (Möller, 2017).
+
+Music education experts are concerned about this development. According to them, music should not be regarded as a private matter. Regardless of their socioeconomic background, school children must have the opportunity to receive high level music education because it is as important for a proper education as literacy and mathematics (Gebert, 2018). Prof.~Höppner, the General Secretary of the German Music Council (Generalsekretär des Deutschen Musikrats), said in an interview that music education helps to build stable self-esteem by learning to access ones own emotions (Stoverock, n.d.). He points out that the phase where music can shape a young person explicitly well is complete by the age of 13 which stresses the importance of high quality music education for students in pre- and secondary school.
+
+The Federal Association of Music Education (Bundesverband Musikunterricht (BMU)) has set up the ``Agenda 2030'' to initiate an improvement in music education. Similar to Höppner (Stoverock, n.d.), they consider music education as valuable and essential for a social and cultural society. Their position is that schools are the central place to make children gather experiences in music because all children and adolescents can be reached, regardless of their socio-economic backgrounds. It encourages children to take responsibility and to increase their sense of self-determination (Bundesverband Musikunterricht (BMU), 2016, p. 2).
+
+In views of this broad socieatal debate, it seems surprising that there is only little empirical research on the role of music education for childesn's outcomes. My thesis addresses this research gap and investigates the effects of music education on children's overall life satisfaction and on satisfaction in specific areas, namely satisfaction with the class, satisfaction with friends, satisfaction with music lesson and satisfaction with the situation at school. It analyzes music education in the classroom where fifth and sixth grade students have one additional hour of music education per week. The project is called ``klasse.im.puls'' and it promotes the establishment of musical training in secondary schools in Bavaria. The program was implemented with the intention to give every child the opportunity to learn how to play an instrument. Additional positive outcomes were expected: an increase in self-confidence and social competence, as well as a reduction in violent behavior\footnote{For more information:}
+My analysis focuses on the change in the overall life satisfaction and in satisfaction within specific areas reported by the students over the course of the project. The term of life satisfaction refers to a cognitive evaluation of a person's reaction to his or her life in contrast to affect, an ongoing emotional reaction. Combinden, LS and affect yield subjective well-being (Diener, 2009, p. 71). I will approach the probelm by using a multi level model, that accounts for differences on the level of the individual student, on the level of the class and on the school level. I do this by using Baysian inference\ldots{}
+
+The interest in life satisfaction as an outcome of the music project stems from the idea that higher values of LS come with many benefits. Among other positive correlates, adolescdents reporting very high levels of LS are less likely to be affected by depression, anxiety, negative affect and social stress copared to adolescents with very low life satisfaction. Also, they achieve higher SEAs and demonstrate higher mean scores of school satisfaction (Gilman \& Huebner, 2006, p. 316; C. Proctor et al., 2009, p. 928). These results go in line with a study by (Suldo \& Huebner, 2004, p. 94). The authors show that LS could be a moderating variable in predictions of the development of psychopathological behaviors. Low life satisfaction may be an indication for externalizing behavior problems in the future. When life satisfaction is on a higher level, those behavior problems are less likely to occur (Suldo \& Huebner, 2004, p. 100) They conclude that life satisfaction might operate as a buffer against the development of subsequent externalizing behavior problems ``in the face of stressful life events'' (Suldo \& Huebner, 2004. p.~101). Kim, Conger, Elder, \& Lorenz (2003) add to the discussion that externalizing behabvior problems in turn lead to more stressful life events. That reciprocal interrelation of stressful life events and externalizing problesm(reported as delinquent behaviors) lead to a unhealthy dynamic: a viscous circle that occurs due to low life satisfaction. If higher LS leads better coping mechanisms with stressful life events, these dependencies could be reduced.
+LS is also positively correlated with children having higher measures of self-esteem, internal locus of control, and extraversion (Huebner, 1991a, p. 107). These features help in building a solid foundation for later life. On the other hand, dissatisfaction with life is associated with adolescents having poor mental or physical health and being exposed to a higher risk of considering or attempting suicide (Valois, Zullig, Huebner, \& Drane, 2004, p. 94). Furthermore, Zullig, Valois, Huebner, Oeltmann, \& Drane (2001, pp. 284--185) show that adolescents reporting low levels of overall life satisfaction are more likely to use drugs and alcohol earlier in life and in higher amounts than adolescents with medium or high life satisfaction. Also, anxiety and neuroticism are more common among dissatisfied than satisfied children and adolescents (Huebner, 1991a, p. 107).
+
+Considering the statement of Höppner, one would expect the project to positively effect students' life satisfaction. Evidence for this relation would lend credibility to the project and support its continuation. It could also stress the importance of music education and signal the Ministry of Culture to keep music education in the curriculum and work on its implementation in federal states alongside Bavaria. However, there will be no indebth investigation of the analysis of any observations. Describing possible reasons for certain outcomes must be left to music and education experts\ldots{}
+
+The structure of my thesis is as follows: At first there will be an overview of the current literature. It is split into two parts: Publications about music and recent findings about measuring life satisfaction. Next, the project and the dataset will be explained. Descripitve statistics are presented alongside a detailde diagnostic on pr-treatment differences in the treatment group compared to the control goup The estimation strategy is presented in chapter four, following the results in the fifth chapter. Finally, chapter six concludes and discusses.
+
+\emph{Gute Einleitung bei Southgate \& Roscigno (2009)}
+\clearpage
+
+\hypertarget{literature-review}{%
+\section{Literature review}\label{literature-review}}
+
+\label{sec:literature_review}
+
+An extensive amount of reseach was done on adult life satisfaction and on methods how to measure it. From that we know that not only is life satisfaction a result of life circumstances but it determines outcomes in several areas like health, \ldots{} (see Firsch 1999 for a review (suldo and huebner, ß. 94))
+
+Even though, the amount of research on
+
+Life satisfaction in children and adolescents has been observed in a much lesser extent. This might be attributed to the fact that instruments for assesing children's subjective satisfaction reports have been less extensively developed. When dealing with self-reported life satisfaction in children, it is crucial that the respective child fully understands the question in order to give a valid response (Gluskie, 2012; Tomyn, Fuller-Tyszkiewicz, Cummins, \& Norrish, 2016). One must make sure that a child is old enough to know how to use a satisfaction scale. This requires abstract thinking, which children develop in early adolescent years (10-14 years) (Gluskie, 2012; Piaget, 1955, 1969). Gilman \& Huebner (2000) habe reviwed five measurements explicitely developed to asses adolexcents' life satisfaction: The Students' Life Satisfaction Scale (Huebner, 1991b), the Satisfaction With Life Scale (Diener, Emmons, Larsen, \& Griffin, 1985), the Perceived Life Satisfaction Scale (Adelman, Taylor, \& Nelson, 1989), the Comprehensive Quality of Life Scale - School Version (Cummins, 1997; Gullone \& Cummins, 1999), and the Multodimensional Student's Life Satisfaction Scale (Huebner, 1994). The authors evaluated those measures in terms or validity and reliability and found all of the scales to be appropriate for reseach with adolescents {[}p.~181-188{]}. The demographic characteristics of the available samples show that all of the adolescents observed were older than 12 years. It remains unclear if children younger than that age are able to report valid satisfaction?.
+An oher instrument was developed more recently by (Cummins \& Lau, 2005) which is the Personal Wellbeing Index (PWI-SC). Again, studies demonstrated reliability for this instrument as well (Casas \& Rees, 2015; Casas et al., 2011; Tomyn \& Cummins, 2011; Tomyn, Stokes, Cummins, \& Dias, 2019). But also on those studies, all of the adolescents were at least 12 years of age, mostly even older. There is only very little evidence on the psychometric properties of the PWI-SC for children below the age of 12.
+One of them is González-Carrasco, Casas, Malo, Viñas, \& Dinisman (2016, p. 70) who applied the instrument for children as young as only 9 years and also found adequate fit of the data.
+On the other hand, Tomyn et al. (2016) conducted a study with children aged 10-12 and concluded that subjective wellbeing data of children must be interpreted with caution. They also show that response bias towards the extreme positive end of a scale is higher with decreasing age. The authors do not recommend using the PWI-SC for children younger than 12 years. As for the specific sample, the PWI-SC did not serve as a valid instrument for measuring the SWB.
+
+In conclusion, measuring life satisfaction in children is more challenging than for adults and is still in progress. It is advisable to check the validity and reliability of their data when testing children.
+Altogether, the children of ``klasse.im.puls'' might be just old enough to give valid responses when asked about their life satisfaction.
+
+With regard to the effect of music on students' lives, most of the researchers are interested in academic outcomes and intelligence among students who are actively involved in music. Generally, there is the predominant perception of a positive link between music and cognitive abilities. Osborne, McPherson, Faulkner, Davidson, \& Barrett (2015) (p.~14) observed improved math skills and higher subjective well-being scores in children that were part of a music project. He also found them to have a better self-control over impulsive behavior. Yang (2015) (p.~385) RELATION,Wetter, Koerner, \& Schwaninger (2008) (p.~372) CORRELATION , Hille (2014) (p.~62) CAUSAL EFFECTS OR CORRELATION? SECTION 6!, and Guhn, Emerson, \& Gouzouasis (2019) (p.~316) RELATION present evidence that childrin playing music have better grades at school. But this conclusion is highly critizised. In an extiensive review (Schellenberg \& Weiss, 2013) of the available evidence concerning associations between music and cognitive abilities, the picture is not so clear any longer. Small associations between music training and mathematical ability in correlational and quasi-experimental studies might result from individual differences in general intellectual ability (p.~527). The available evidence simply indicates that high-functioning children (i.e., higher IQ, better performance in school) are more likely than other children to take music lessons and to perform well in mathematics and other tests of cognitive ability (p.~534). This fits with the Hille (2014) study where the oucome difference in cognitive skills between musically active and inactive children reduces greatly when holding constant observable characteristics. An other plausible interpretaion of study outcomes that fail to detect a causal relationship comes from Wetter et al. (2008). More affluent parents can more likely afford music lessons for their child and thus, the socio-economic background may cause to higher performance at school. Despite the weakness of the above studies to draw causal inference, there is slight evidence that there may be a causal direction \emph{from} music training \emph{to} cognitive abilities. Schellenberg (2004) compares a two treatment groups who receive piano lesson and voice lesson respectively to a control group in which the children have drama lessons. Random assignment to the different conditions allowed for inference that music lessons caused small increases in cognitive abilities (namely larger increases in full-scale IQ). However, this does not preclude the possibility that high-functioning children are more likely driven to play music. The misconception of music being a predictor for academic achievement is also discussed by Southgate \& Roscigno (2009) (p.~17). He comes to the point that music is rather a mediator, to some degree, of family background and student status, thus supporting arguments and theorizing partaining to cultural capulta. More recent literature provides (wortliches Zitat!). \emph{Results from a meta-analysis, suggest that music training does not reliably enhance children and young adolescents' cognitive or academic skills, and that prvious positive findings were probably due to confounding variables, such as placebo effects and lack of random allocation of participants (Sala \& Gobet, 2016, p. 64). The better the design, the smaller the effect size (both methodological moderators, namely random allocation of paricipants to the treatment group and comparison to an active control group, affected the effect size\ldots) the reliablity of the positive outcomes seems questionable. Withe respect to the mathematical oucomes, the only study comparing a music training to an active conrol goup and with random allocation of the participants to the group ({\textbf{???}}) found a negative effect size. These considerations uphold the conclusion that music training does not substantially enhance any non-music related cognitive skill.}
+
+Diffuse effect
+Miscnceptions arealso discussed
+why those with musical training outperforming their peers in tests of intelligence or tasks often included in intelligence tests has been the focus of much research and debate.
+However because of the correlational design of many of these investigations, it is difficult to establish the direction of causality unequivocally
+
+Positive correlates are not limited to academics. (Costa-Giomi, 2004 CAUSAL EFFECT) show that children receiving piano lessons experience positive effects in self-esteem (Costa-Giomi, 2004, p. 144) but do not find an effect on math computation scores. In an other study, observing the effect of choir singing on homeless men, evidence was found that attending the choir induced positive emotional change and awareness, which was described by the participants as therapeutic (Bailey \& Davidson, 2003, p. 23). This was already observed by Ruud (1997) in his studeis on music and identity. He states that cultural activities, explicitly music, can ``contribute to a feeling of quality of life and the subjective sense of health.'' (p.~96). There is one especially popular project: Venezuela's National Music Education Program ``El Sistema''. It is a large scale social music education program established by José Abreu in the 1970s. 300,000 children are equipped with instruments every year. They receive regular after-school lessons and are playing in orchestras. The initial goal was to prevent children from using drugs and being involved in violence and crime which was successfully achieved. Staying away from substances is one factor that indicates a more satisfied life as stated in section objective. Being in orchestras also enhanced social behavior of the students through greater concern for others and their own wellbeing. Uy (2012, p. 13). However positive effects go far byond keeping adolescents away from drugs and violence: El sistema teaches the participating students to ``reflect and act upon the world in order to transform it'' {[}7{]}. Playing in an orchestra means joy, motivation, teamwork, the aspiration to success {[}6{]}. The students pick up management and organizational skills and responsibility due to many roles and rules that they need to follow to sty in the program{[}p.~10{]}. Also, being in an orchestra gives the students the change to condeptualize themselves as part of something much larger and greater (p.~11) and they learn to express greater concern for others' and their well being (p.~13). El Sistema became internationall popular and was replicated in several countries. Osborne et al. (2015) reviewd the outcome of El Sistema inspired projects in Australia and found improved maths skills and significantly higher subjective well-being scores in the participating group (p.~14). Students from the music program also had better self-control over impulsive behavior (p.~15) (but different patterns in different schools). Other studies come to contrary conclusions and fail to show a significnt effect of music participation on well-being, sociel skills, emotional intelligence or self-esteem (Portowitz, Lichtenstein, Egorova, \& Brand, 2009, p. 121; Schellenberg, 2011, p. 190 assosiation) RESULTS INDICATE SIGNIFICANT DIFFERENCES BETWEEN THE GROUPS IN THE DEVELOPMENT OF THE RAGETED COGNITIVE SKILLS, EXPERIMENTAL AND CONTROL GROUP. Therefore research provides no clear picture on the relation between music and how it can effect childrens' well-being.
+
+Weinberg2016 BIDIRECTIONAL - INTERPRETATION WITH CAUTION
+
+Most of the literature on music projects look at academic outcomes. It seems like children that are actively engaged in music achieve better academic results Yang (2015, p. 385), Wetter et al. (2008, p. 372), and Hille (2014) also observe better chool grades in student's that are involved in music but they bring up the concern that this might be due to READ SECTION 6
+
+Costa-Giomi (2004) describes a project in which fourth-grade public school children in Montreal received piano lessons and showed positive effects in self-esteem and music marks.
+In an other study, observing the effect of choir singing on homeless men, evidence was found that attending the choir induced positive emotional change and awareness, which was described by the participants as therapeutic (Bailey \& Davidson, 2003, p. 23). Other effects of music lessons can be found in neuro science: Schellenberg (2004) found out that increase in IQ is significantly higher for children that receive keyboard or voice lessons compared to children who do not.\footnote{There is increase in children's IQ regardless of their musical background which is usually a consequence of entering grade school (Ceci \& Williams, 1997)}
+
+anchoring vignettes, to correct for cultural and linguistic factors.
+Most of this debate has been conducted in relation to the subjective well-being
+of adults. There has been relatively little discussion about its relevance to
+children's subjective well-being. Partly, this is because of a lack of large-scale
+data sets containing subjective well-being ratings from a range of countries,
+although there are some recent examples using subjective data from the HBSC
+survey. Adamson (2007) used a single-item measure of children's life satisfaction
+(Cantril's Ladder), as part of UNICEF Report Card 7, which compared the wellbeing
+of children in 21 rich countries. More recently, Bradshaw et al.~(2013)
+utilised eight different subjective questions from the same survey covering
+relationships, health, education and overall life satisfaction. (Casas \& Rees, 2015)
+
+A central construct within the positive psychology literature is life satisfaction.
+Whereas adult life satisfaction has been studied extensively, the life satisfaction of children
+and adolescents has only received attention more recently. (C. L. Proctor et al., 2009)
+well-being and happiness can precede diverse positive
+personal, behavioural, psychological, and social outcomes (see Lyubomirsky et al.~2005),
+just as low LS and unhappiness can predict the onset of depression and psychological
+disorder up to two years prior to diagnosis (see Lewinsohn et al.~1991). (Proctor et al., 2009)
+
+Similar findings have been reported among children and adolescents (e.g.~Ash
+and Huebner 2001; Casas et al.~2004; Greenspoon and Saklofske 2001; Heaven 1989;
+Huebner 1991a; McKnight et al.~2002). For example, Fogle et al.~(2002) found LS to be
+positively correlated with extraversion and social self-efficacy, negatively correlated with
+neuroticism, and
+
+In contrast to research with adults the topic of subjective well-being and satisfaction
+with life has received less attention with regard to children and adolescents (Gullone and
+Cummins 1999; Huebner 1991a). It has been suggested that this situation is, at least in part,
+related to the fact that instruments for assessing children's subjective well-being and
+satisfaction with life have been developed only relatively recently (see Huebner and Diener
+2008; Huebner 1991b; Seligson et al.~2005). Gadermann2009
+
+Validity\ldots{} positive growth and development (Gadermann, Schonert-Reichl, \& Zumbo, 2009, p. 230).
+
+The takeaway from this section is we must be very careful when drawing causal conclusion and we have to adjust the methods.
+
+This paper complements existing literature by using different music indicators and estimation strategies to provied further insight on the relationship between music and education as well as the potential souces of endogeneity.
+
+\clearpage
+
+\hypertarget{data}{%
+\section{Data}\label{data}}
+
+\label{sec:data}
+
+\clearpage
+
+\hypertarget{estimation-strategy}{%
+\section{Estimation strategy}\label{estimation-strategy}}
+
+\label{sec:estimation_strategy}
+
+\clearpage
+
+\hypertarget{results}{%
+\section{Results}\label{results}}
+
+\label{sec:results}
+
+As described in Section 4, estimation biases resulting from selection into treatment take place at two stages: The inital decision to take up music lessons and the decision not to give up until age 17\ldots{} At such a young age, the choice of a long-term extracurricular activity such as music is strongly determined by the parents. For the parents, however, we observe a large number of characteristics, in particular theri socio-economic status, personylity, involvement with the child's edcation, and taste for the arts\ldots{} (Hille, 2014, p. 65)
+NOTE: I have to observe parents (``parental background differences'')
+NOTE: Results in Hille (2014) might be driven by unobserved heterogeneity\ldots{} unobserved individual characteristics coud still determine the decision to keep on playing music until age 17 rather than giving up ealier (p.~67).
+NOTE: Sensitivity of Hille (2014) results to reverse causalityby performing mediation analysis in which we estimate the correlation between music practice and outcome p, while subsequently controlling for all oucomes q rather than p (p.~67). How do I address the issue of reverse causality?
+Three challenges should determine the agenda of future research on this agenda.
+1. separate the influence of parental and individual background from that of music (indentify a variable that increases the likelihook to learn a musical instrument without affecting the development of skills.)
+2. answer the question of the extent to which extracurricular activities are substitutable (substitutes vs.~compliments).
+3. ong-term effects of music training on oucomes such a s labor market success or life satisfaction
+
+\clearpage
+
+\hypertarget{conclusion}{%
+\section{Conclusion}\label{conclusion}}
+
+\label{sec:conclusion}
+
+\clearpage
+
+\hypertarget{references}{%
+\section*{References}\label{references}}
+\addcontentsline{toc}{section}{References}
+
+\singlespacing
+
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+\setlength{\parskip}{8pt}
+
+\noindent
+
+\hypertarget{refs}{}
+\leavevmode\hypertarget{ref-Adelman1989}{}%
+Adelman, H. S., Taylor, L., \& Nelson, P. (1989). Minors dissatisfaction with their life circumstances. \emph{Child Psychiatry \& Human Development}, \emph{20}(2), 135--147. \url{https://doi.org/10.1007/bf00711660}
+
+\leavevmode\hypertarget{ref-Bailey2003}{}%
+Bailey, B. A., \& Davidson, J. W. (2003). Amateur group singing as a therapeutic instrument. \emph{Nordic Journal of Music Therapy}, \emph{12}(1), 18--32. \url{https://doi.org/10.1080/08098130309478070}
+
+\leavevmode\hypertarget{ref-BundesverbandMusikunterricht}{}%
+Bundesverband Musikunterricht (BMU). (2016). \emph{Grundsdatzpapier}. Retrieved from \url{https://www.bmu-musik.de/ueber-uns/positionen/agenda-2030-bmu-positionen-9-2016.html}
+
+\leavevmode\hypertarget{ref-Casas2015}{}%
+Casas, F., \& Rees, G. (2015). Measures of children's subjective well-being: Analysis of the potential for cross-national comparisons. \emph{Child Indicators Research}, \emph{8}(1), 49--69. \url{https://doi.org/10.1007/s12187-014-9293-z}
+
+\leavevmode\hypertarget{ref-Casas2011}{}%
+Casas, F., Sarriera, J. C., Alfaro, J., González, M., Malo, S., Bertran, I., \ldots{} Valdenegro, B. (2011). Testing the personal wellbeing index on 1216~year-old adolescents in 3 different countries with 2 new items. \emph{Social Indicators Research}, \emph{105}(3), 461--482. \url{https://doi.org/10.1007/s11205-011-9781-1}
+
+\leavevmode\hypertarget{ref-Ceci1997}{}%
+Ceci, S. J., \& Williams, W. M. (1997). School, intelligence, and income. \emph{American Psychologist}, \emph{52}(10), 1051--1058.
+
+\leavevmode\hypertarget{ref-CostaGiomi2004}{}%
+Costa-Giomi, E. (2004). Effects of three years of piano instruction on children's academic achievement, school performance and self-esteem. \emph{Psychology of Music}, \emph{32}(2), 139--152. \url{https://doi.org/10.1177/0305735604041491}
+
+\leavevmode\hypertarget{ref-Cummins1997}{}%
+Cummins, R. A. (1997). \emph{Manual for the comprehensive quality of life scale -- student (grades 7-12): ComQol-s5} (5th ed.). Malbourne: Deakin University, School of Psychology.
+
+\leavevmode\hypertarget{ref-Cummins2005}{}%
+Cummins, R. A., \& Lau, A. L. D. (2005). \emph{Personal wellbeing index - school children (PWI-SC)} (3rd ed.). Australian Centre on Quality of Life, School of Psychology, Deakin University, Australia.
+
+\leavevmode\hypertarget{ref-Diener2009}{}%
+Diener, E. (2009). \emph{Culture and well-being} (T. Moum, M. A. G. Sprangers, J. Vogel, R. V. C. Michalos, E. Diener, \& W. G. and, Eds.). \url{https://doi.org/10.1007/978-90-481-2352-0}
+
+\leavevmode\hypertarget{ref-Diener1985}{}%
+Diener, E., Emmons, R. A., Larsen, R. J., \& Griffin, S. (1985). The satisfaction with life scale. \emph{Journal of Personality Assessment}, \emph{49}(1), 71--75. \url{https://doi.org/10.1207/s15327752jpa4901_13}
+
+\leavevmode\hypertarget{ref-Gadermann2009}{}%
+Gadermann, A. M., Schonert-Reichl, K. A., \& Zumbo, B. D. (2009). Investigating validity evidence of the satisfaction with life scale adapted for children. \emph{Social Indicators Research}, \emph{96}(2), 229--247. \url{https://doi.org/10.1007/s11205-009-9474-1}
+
+\leavevmode\hypertarget{ref-Gebert2018}{}%
+Gebert, S. (2018). \emph{Musische erziehung ist keine privatangelegenheit}. Retrieved from \url{https://www.deutschlandfunk.de/musikunterricht-an-schulen-musische-erziehung-ist-keine.680.de.html?dram:article_id=419333}
+
+\leavevmode\hypertarget{ref-Gilman2000}{}%
+Gilman, R., \& Huebner, E. S. (2000). Review of life satisfaction measures for adolescents. \emph{Behaviour Change}, \emph{17}(3), 178--195. \url{https://doi.org/10.1375/bech.17.3.178}
+
+\leavevmode\hypertarget{ref-Gilman2006}{}%
+Gilman, R., \& Huebner, E. S. (2006). Characteristics of adolescents who report very high life satisfaction. \emph{Journal of Youth and Adolescence}, \emph{35}(3), 293--301. \url{https://doi.org/10.1007/s10964-006-9036-7}
+
+\leavevmode\hypertarget{ref-Gluskie2012}{}%
+Gluskie, A. L. (2012). \emph{Subjective wellbeing in children} (PhD thesis). Deakin University.
+
+\leavevmode\hypertarget{ref-GonzalezCarrasco2016}{}%
+González-Carrasco, M., Casas, F., Malo, S., Viñas, F., \& Dinisman, T. (2016). Changes with age in subjective well-being through the adolescent years: Differences by gender. \emph{Journal of Happiness Studies}, \emph{18}(1), 63--88. \url{https://doi.org/10.1007/s10902-016-9717-1}
+
+\leavevmode\hypertarget{ref-Guhn2019}{}%
+Guhn, M., Emerson, S. D., \& Gouzouasis, P. (2019). A population-level analyses of associations between school music participation and academic achievement. \emph{Journal of Educational Psychology}, \emph{112}(2), 308--328. \url{https://doi.org/http://dx.doi.org/10.1037/edu0000376}
+
+\leavevmode\hypertarget{ref-Gullone1999}{}%
+Gullone, E., \& Cummins, R. (1999). The comprehensive quality of life scale: A psychometric evaluation with an adolescent sample. \emph{Behaviour Change}, \emph{16}, 127--139.
+
+\leavevmode\hypertarget{ref-Hille2014}{}%
+Hille, J., Adrian; Schupp. (2014). How learning a musical instrument affects the development of skills. \emph{Economics of Education Review}, \emph{44}, 56--82. \url{https://doi.org/http://dx.doi.org/10.1016/j.econedurev.2014.10.007}
+
+\leavevmode\hypertarget{ref-Huebner1991}{}%
+Huebner, E. S. (1991a). Correlates of life satisfaction in children. \emph{School Psychology Quarterly}, \emph{6}(2), 103--111. \url{https://doi.org/https://doi.org/10.1037/h0088805}
+
+\leavevmode\hypertarget{ref-Huebner1991a}{}%
+Huebner, E. S. (1991b). Initial development of the students life satisfaction scale. \emph{School Psychology International}, \emph{12}(3), 231--240. \url{https://doi.org/10.1177/0143034391123010}
+
+\leavevmode\hypertarget{ref-Huebner1994}{}%
+Huebner, E. S. (1994). Preliminary development and validation of a multidimensional life satisfaction scale for children. \emph{Psychological Assessment}, \emph{6}(2), 149--158. \url{https://doi.org/10.1037/1040-3590.6.2.149}
+
+\leavevmode\hypertarget{ref-Kim2003}{}%
+Kim, K. J., Conger, R. D., Elder, G. H., \& Lorenz, F. O. (2003). Reciprocal influences between stressful life events and adolescent internalizing and externalizing problems. \emph{Child Development}, \emph{74}(1), 127--143. \url{https://doi.org/10.1111/1467-8624.00525}
+
+\leavevmode\hypertarget{ref-Moeller2017}{}%
+Möller, T. (2017). \emph{Ausverkauf musikalischer Bildung?} Retrieved from \url{https://www.deutschlandfunk.de/musikunterricht-in-der-schule-ausverkauf-musikalischer.1992.de.html?dram:article_id=382783}
+
+\leavevmode\hypertarget{ref-Osborne2015}{}%
+Osborne, M. S., McPherson, G. E., Faulkner, R., Davidson, J. W., \& Barrett, M. S. (2015). Exploring the academic and psychosocial impact of el sistema-inspired music programs within two low socio-economic schools. \emph{Music Education Research}, \emph{18}(2), 156--175. \url{https://doi.org/10.1080/14613808.2015.1056130}
+
+\leavevmode\hypertarget{ref-Piaget1955}{}%
+Piaget, J. (1955). \emph{The construction of reality in the child}. London: Routledge; Keagan Paul.
+
+\leavevmode\hypertarget{ref-Piaget1969}{}%
+Piaget, J. (1969). \emph{The child's concept of time}. London: Routledge; Keagan Paul.
+
+\leavevmode\hypertarget{ref-Portowitz2009}{}%
+Portowitz, A., Lichtenstein, O., Egorova, L., \& Brand, E. (2009). Underlying mechanisms linking music education and cognitive modifiability. \emph{Research Studies in Music Education}, \emph{31}(2), 107--128. \url{https://doi.org/10.1177/1321103x09344378}
+
+\leavevmode\hypertarget{ref-Proctor2009a}{}%
+Proctor, C., Linley, P. A., \& Maltby, J. (2009). Very happy youths: Benefits of very high life satisfaction among adolescents. \emph{Social Indicators Research}, \emph{98}(3), 519--532. \url{https://doi.org/10.1007/s11205-009-9562-2}
+
+\leavevmode\hypertarget{ref-Proctor2009}{}%
+Proctor, C. L., Linley, P. A., \& Maltby, J. (2009). Youth life satisfaction: A review of the literature. \emph{Journal of Happiness Studies}, \emph{10}, 583--630. \url{https://doi.org/https://doi.org/10.1007/s10902-008-9110-9}
+
+\leavevmode\hypertarget{ref-Ruud1997}{}%
+Ruud, E. (1997). Music and the quality of life. \emph{Norsk Tidsskrift for Musikkterapi}, \emph{6}(2), 86--97. \url{https://doi.org/10.1080/08098139709477902}
+
+\leavevmode\hypertarget{ref-Sala2016}{}%
+Sala, G., \& Gobet, F. (2016). When the musics over. Does music skill transfer to childrens and young adolescents cognitive and academic skills? A meta-analysis. \emph{Educational Research Review}, \emph{20}, 55--67. \url{https://doi.org/10.1016/j.edurev.2016.11.005}
+
+\leavevmode\hypertarget{ref-Schellenberg2004}{}%
+Schellenberg, E. G. (2004). Music lessons enhance IQ. \emph{Psychological Science}, \emph{15}(8), 511--514. \url{https://doi.org/https://doi.org/10.1111/j.0956-7976.2004.00711.x}
+
+\leavevmode\hypertarget{ref-Schellenberg2011a}{}%
+Schellenberg, E. G. (2011). Music lessons, emotional intelligence, and IQ. \emph{Music Perception: An Interdisciplinary Journal}, \emph{29}(2), 185--194. \url{https://doi.org/10.1525/mp.2011.29.2.185}
+
+\leavevmode\hypertarget{ref-Schellenberg2013}{}%
+Schellenberg, E. G., \& Weiss, M. W. (2013). Music and cognitive abilities. In \emph{The psychology of music} (pp. 499--550). \url{https://doi.org/10.1016/b978-0-12-381460-9.00012-2}
+
+\leavevmode\hypertarget{ref-Southgate2009}{}%
+Southgate, D. E., \& Roscigno, V. J. (2009). The impact of music on childhood and adolescent achievement. \emph{Social Science Quarterly}, \emph{90}(1), 4--21. \url{https://doi.org/10.1111/j.1540-6237.2009.00598.x}
+
+\leavevmode\hypertarget{ref-Stoverock}{}%
+Stoverock, K. (n.d.). \emph{Ein jahrzehntelanges versagen der bildungspolitik}. Retrieved from \url{https://themen.miz.org/fokus-musikunterricht/interview-hoeppner}
+
+\leavevmode\hypertarget{ref-Suldo2004}{}%
+Suldo, S. M., \& Huebner, E. S. (2004). Does life satisfaction moderate the effects of stressful life events on psychopathological behavior during adolescence? \emph{School Psychology Quarterly}, \emph{19}(2), 93--105. \url{https://doi.org/10.1521/scpq.19.2.93.33313}
+
+\leavevmode\hypertarget{ref-Tomyn2011a}{}%
+Tomyn, A. J., \& Cummins, R. A. (2011). The subjective wellbeing of high-school students: Validating the personal wellbeing indexSchool children. \emph{Social Indicators Research}, \emph{101}(3), 405--418. \url{https://doi.org/10.1007/s11205-010-9668-6}
+
+\leavevmode\hypertarget{ref-Tomyn2016}{}%
+Tomyn, A. J., Fuller-Tyszkiewicz, M. D., Cummins, R. A., \& Norrish, J. M. (2016). The validity of subjective wellbeing measurement for children: Evidence using the personal wellbeing indexSchool children. \emph{Journal of Happiness Studies}, \emph{18}(6), 1859--1875. \url{https://doi.org/10.1007/s10902-016-9804-3}
+
+\leavevmode\hypertarget{ref-Tomyn2019}{}%
+Tomyn, A. J., Stokes, M. A., Cummins, R. A., \& Dias, P. C. (2019). A rasch analysis of the personal well-being index in school children. \emph{Evaluation \& the Health Professions}, \emph{43}(2), 110--119. \url{https://doi.org/10.1177/0163278718819219}
+
+\leavevmode\hypertarget{ref-Uy2012}{}%
+Uy, M. (2012). Venezuela's national music education program el sistema: Its interactions with society and its participants' engagement in praxis. \emph{Music \& Arts in Action}, \emph{4}(1), 5--21. Retrieved from \url{http://musicandartsinaction.net/index.php/maia/article/view/elsistema}
+
+\leavevmode\hypertarget{ref-Valois2004}{}%
+Valois, R. F., Zullig, K. J., Huebner, E. S., \& Drane, J. W. (2004). Life satisfaction and suicide among high school adolescents. \emph{Social Indicators Research}, \emph{66}(1/2), 81--105. \url{https://doi.org/10.1023/b:soci.0000007499.19430.2f}
+
+\leavevmode\hypertarget{ref-Wetter2008}{}%
+Wetter, O. E., Koerner, F., \& Schwaninger, A. (2008). Does musical training improve school performance? \emph{Instructional Science}, \emph{37}(4), 365--374. \url{https://doi.org/10.1007/s11251-008-9052-y}
+
+\leavevmode\hypertarget{ref-Yang2015}{}%
+Yang, P. (2015). The impact of msic on educational attainment. \emph{Journal of Cultural Economics}, \emph{39}(4), 369--396. \url{https://doi.org/10.1007/s10824-015-9240-y}
+
+\leavevmode\hypertarget{ref-Zullig2001}{}%
+Zullig, K. J., Valois, R. F., Huebner, E. S., Oeltmann, J. E., \& Drane, J. W. (2001). Relationship between perceived life satisfaction and adolescents' substance abuse. \emph{Journal of Adolescent Health}, \emph{29}(4), 279--288. \url{https://doi.org/10.1016/s1054-139x(01)00269-5}
+
+\clearpage
+
+\hypertarget{appendix-appendix}{%
+\appendix}
+
+
+Example of nice appendic in Hille (2014)
+
+\hypertarget{figures}{%
+\section{Figures}\label{figures}}
+
+\clearpage
+
+\hypertarget{tables}{%
+\section{Tables}\label{tables}}
+\end{document}
+

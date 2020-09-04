@@ -1,0 +1,1785 @@
+---
+title: Klasse im Puls
+author: 
+  - Christoph Wunder
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_document:
+    fig_caption: yes
+    theme: spacelab 
+    highlight: pygments
+    toc: TRUE
+    toc_depth: 2
+    number_sections: TRUE
+    toc_float:
+      smooth_scroll: FALSE
+bibliography: literature.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment=NA)
+rm(list=ls())
+```
+```{r, include=TRUE, message = FALSE}
+library(tidyverse)
+library(Hmisc)
+library(mosaic)
+library(foreign)
+library(lme4)
+library(rstanarm)
+library(brms)
+library(tableone)
+library(RColorBrewer)
+```
+
+
+# Data
+
+## Data manipulation
+
+```{r}
+d <- read.dta("../data/master_kip+netwerk_Stata12.dta")
+names(d)[names(d) == 'v07a'] <- 'lsat'
+names(d)[names(d) == 'v07e'] <- 'sat_friends'
+names(d)[names(d) == 'v08a'] <- 'sat_class'
+names(d)[names(d) == 'Treatment'] <- 'treated'
+names(d)[names(d) == 'v09a'] <- 'classsit.prob' # problems in classroom
+names(d)[names(d) == 'v09c'] <- 'classsit.excl' # exclusion in classroom
+names(d)[names(d) == 'v11a'] <- 'note.deu' # Note Vorjahr deutsch
+names(d)[names(d) == 'v11b'] <- 'note.mat' # Note Vorjahr Mathe
+names(d)[names(d) == 'v11c'] <- 'note.mus' # Note Vorjahr Musik
+names(d)[names(d) == 'v01a'] <- 'hob.mus.making' # Hobby Musik machen
+names(d)[names(d) == 'v01b'] <- 'hob.mus.lis' # Hobby Musik hören
+names(d)[names(d) == 'v02d'] <- 'dauer.mus.lis' # Dauer Musik hören
+names(d)[names(d) == 'v02g'] <- 'dauer.mus.making' # Dauer Musikinstrument spielen
+names(d)[names(d) == 'v04a'] <- 'play.instr' # Musikalisch aktiv: Musikinsrument
+names(d)[names(d) == 'v04b'] <- 'orch' # Musikalisch aktiv im Orchester
+names(d)[names(d) == 'v04c'] <- 'choir' # Musikalisch aktiv im Chor
+names(d)[names(d) == 'v04o'] <- 'sonst' # Musikalisch aktiv: Sonstiges
+names(d)[names(d) == 'v15'] <- 'immigr' # Herkunftsland: Schüler
+names(d)[names(d) == 'v16'] <- 'spr.deu' # Wird zuhause deutschgesprochen? 1 - "überwiegend deutsch", 2 - "überwiegend andere Sprache", 3 - "teils-teils, "unknown" - "Keine Angabe"
+names(d)[names(d) == 'v22b'] <- 'betr.tg' # Taschengeld: Betrag (Problem: Nicht sicher, ob hier Variable v22a (Tschengeld: Rythmus) bereits berücksichtigt wurde)
+d <- d %>% select( school, pid, welle, lsat, sat_friends, sat_class, treated, female, classsit.prob, classsit.excl, note.deu, note.mat, note.mus, hob.mus.making, hob.mus.lis, dauer.mus.lis, dauer.mus.making, play.instr, orch, choir, sonst, spr.deu,immigr, betr.tg )
+d$school <- as.factor(d$school)
+d$pid <- as.factor(d$pid)
+d$treated <- as.factor(d$treated)
+d$welle <- as.factor(d$welle)
+d$female <- as.factor(d$female)
+d$mus.active = ifelse(d$play.instr==1 | d$orch==1 | d$choir==1, 1, 0)
+
+# replacing NAs by category "unknown"
+levels(d$female) <- c(levels(d$female), "unknown")
+d$female[which(is.na(d$female))] <- "unknown"
+
+# replacing NAs by category "unknown"
+levels(d$spr.deu) <- c(levels(d$spr.deu), "unknown")
+d$spr.deu[which(is.na(d$spr.deu))] <- "unknown"
+
+# attempt to fill missing information in wave 2-5
+# not working yet
+dd <- d %>% select(pid, immigr)
+dd <- as_tibble(dd)
+dd <- dd %>% group_by( pid ) %>% fill( immigr )
+
+# Dataframe for wave 1 (pre-treatment)
+welle1 <- d %>% filter(welle==1) %>% 
+  select(school, pid, welle, lsat, sat_friends, sat_class, treated, female, classsit.prob, classsit.excl, note.deu, note.mat, note.mus, hob.mus.making, hob.mus.lis, dauer.mus.lis, dauer.mus.making, play.instr, mus.active, spr.deu,immigr)
+
+# create treated-wave interactions: "tXw"
+d$tXw2 <- as.factor( ifelse( (d$treated==1 & d$welle==2), 1, 0) )
+d$tXw3 <- as.factor( ifelse( (d$treated==1 & d$welle==3), 1, 0) )
+d$tXw4 <- as.factor( ifelse( (d$treated==1 & d$welle==4), 1, 0) )
+d$tXw5 <- as.factor( ifelse( (d$treated==1 & d$welle==5), 1, 0) )
+```
+
+## Descriptives
+
+The outcome variable of interest is children's life satisfaction:
+
+```{r}
+table(d$lsat, useNA = "ifany")
+```
+
+
+```{r}
+ggplot(d, aes(x=lsat)) + geom_bar( ) +
+  scale_x_discrete( limits = seq(0, 10) )
+```
+
+We observe treatments in six schools. The number of observations are shown below.
+
+```{r}
+table(d$school, d$treated)
+```
+
+```{r}
+summary(d)
+```
+
+Correlatioin between satisfaction with class and satisfaction with friends:
+
+```{r}
+cor(d$sat_friends, d$sat_class, use = "pairwise.complete.obs")
+```
+
+
+
+Subsamples to be used:
+
+```{r}
+d1 <- d %>% filter( (welle==1 | welle==2) & school==1) %>% 
+  select(school, pid, welle, treated, lsat, tXw2)
+head(d1)
+```
+
+```{r}
+d2 <- d %>% filter( (welle==1 | welle==2) ) %>% 
+  select(school, pid, welle, treated, lsat, tXw2, female)
+table(d2$school, d2$treated)
+```
+
+```{r}
+d3 <- d %>% select(school, pid, welle, treated, lsat, sat_friends, sat_class, female, tXw2, tXw3, tXw4, tXw5)
+table(d3$school, d3$treated)
+```
+## Issues
+
+Low number of observations in wave 5 in school 5.
+
+```{r}
+d3 %>% filter( school==5 & welle==5) %>% select(lsat, treated) %>% group_by(treated) %>% table(useNA=c("ifany") )
+```
+```{r}
+d3 %>% filter( welle==5 ) %>% select(school, treated) %>% group_by(treated) %>% table()
+```
+
+```{r}
+d3 %>% select(school, welle) %>% group_by(school) %>% table()
+```
+
+## Pre-treatment Analysis
+```{r}
+# Mean differences life satisfaction treatment group vs. control group
+welle1 <- left_join(welle1, welle1 %>% group_by(school, treated) %>% summarise( mean.lsat = mean(lsat, na.rm = TRUE),
+                                                                                sd.lsat=sd(lsat, na.rm=TRUE)),
+                    by=c("school", "treated"))
+
+lsat_pre_treat <- ggplot (welle1, aes(x=school, y=mean.lsat, fill=treated)) + 
+  geom_bar (stat="identity", position = "dodge") + coord_cartesian(ylim = c(0, 11)) + labs(title = "Life satisfaction", caption = "Mean pretreatment life satisfaction (wave 1) for treatment and control group per School") + 
+  geom_errorbar(aes(ymin=mean.lsat-sd.lsat, ymax=mean.lsat+sd.lsat), width=.2,
+                position=position_dodge(.9)) +
+  scale_fill_brewer(palette="Blues")
+
+ggsave("../figures/lsat_pre_treat.pdf", lsat_pre_treat, width = 7, height = 4, units = "in")
+```
+
+```{r}
+# Mean differences satisfaction with friends treatment group vs. control group
+welle1 <- left_join(welle1, welle1 %>% group_by(school, treated) %>% summarise( mean.frsat = mean(sat_friends, na.rm = TRUE),
+                                                                                sd.frsat=sd(sat_friends, na.rm=TRUE)),
+                    by=c("school", "treated"))
+
+sat_friends_pre_treat <- ggplot (welle1, aes(x=school, y=mean.frsat, fill=treated)) + 
+  geom_bar (stat="identity", position = "dodge") + coord_cartesian(ylim = c(0, 11)) + labs(title = "Satisfaction with friends", caption = "Mean pretreatment satisfaction with friends (wave 1) for treatment and control group per School") + 
+  geom_errorbar(aes(ymin=mean.frsat-sd.frsat, ymax=mean.frsat+sd.frsat), width=.2,
+                position=position_dodge(.9)) +
+  scale_fill_brewer(palette="Blues")
+
+ggsave("../figures/sat_friends_pre_treat.pdf", sat_friends_pre_treat, width = 7, height = 4, units = "in")
+```
+
+```{r}
+welle1 <- left_join(welle1, welle1 %>% group_by(school, treated) %>% summarise( mean.clsat = mean(sat_class, na.rm = TRUE),
+                                                                                sd.clsat=sd(sat_class, na.rm=TRUE)),
+                    by=c("school", "treated"))
+
+sat_class_pre_treat <- ggplot (welle1, aes(x=school, y=mean.clsat, fill=treated)) + 
+  geom_bar (stat="identity", position = "dodge") + coord_cartesian(ylim = c(0, 11)) + labs(title = "Satisfaction with the class", caption = "Mean pretreatment satisfaction with the class (wave 1) for treatment and control group per School") + 
+  geom_errorbar(aes(ymin=mean.clsat-sd.frsat, ymax=mean.clsat+sd.frsat), width=.2,
+                position=position_dodge(.9)) +
+  scale_fill_brewer(palette="Blues")
+
+ggsave("../figures/sat_class_pre_treat.pdf", sat_class_pre_treat, width = 7, height = 4, units = "in")
+```
+
+```{r}
+vars <- c("lsat","female", "sat_friends", "sat_class", "classsit.prob", "classsit.excl", "note.deu", "note.mat", "note.mus", "hob.mus.making", "hob.mus.lis", "dauer.mus.lis", "dauer.mus.making", "play.instr", "mus.active", "immigr")
+smd <- CreateTableOne(vars = vars, strata = "treated", data = welle1, test = FALSE, includeNA = F)
+
+print(smd, smd = TRUE) 
+
+ExtractSmd(smd)
+```
+
+# Simple model: one treatment, one control, two waves
+
+## Model statement
+
+We begin with a simple analysis of the effect of the treatment on the outcome for school 1 in wave 2. We use difference-in-differences regressions to estimate the effect of additional music lessons on various pupil outcomes. The regression equation is:
+
+$$
+\begin{align}
+y_{it} = \beta_0 + \beta_1 T_i + \delta_2 (T_{i} \times \text{Period}_{t}) + \lambda_t +  \alpha_{i} + \epsilon_{it},
+\end{align}
+$$
+where
+
+* $y_{it}$ is the outcome of pupil $i$ at time $t$.
+* $T_{i}$ is a binary indicator of whether or not pupil $i$ is in the treatment group. We model a fixed effect for the treatment group because the treatment takes place at the aggregate level (class). Therefore, bias in the estimate of the treatment effect may results from unobserved factors at the class level. 
+* $\delta_2$ is the treatment effect in wave 2. 
+* $\lambda_t$ denotes period fixed effects. 
+* $\alpha_{i}$ models individual-specific unobserved factors. Individual heterogeneity is model because we have repeated observations for the same pupils over time. 
+* $\epsilon_{it}$ is an error term.
+
+## Fit with `lmer()`
+
+```{r}
+fit1 <- lmer( lsat ~ treated + welle + tXw2 + (1 | pid), data = d1 )
+summary(fit1)
+```
+
+## Fit with `rstanarm`
+
+```{r, message=FALSE, cache=TRUE}
+bayes1 <- stan_lmer( lsat ~ 1 + treated + welle + tXw2 + (1 | pid), 
+                     data = d1, seed=123 )
+summary(bayes1, 
+        pars = c("(Intercept)", "treated1", "welle2", "tXw21"),
+        probs = c(0.025, 0.5, 0.975),
+        digits = 4)
+```
+
+We extract the posterior draws to summarize the effect of the treatment.
+
+```{r}
+teff1 <- as.matrix(bayes1, pars = "tXw21") 
+dim(teff1)
+```
+
+```{r}
+r1_mean <- apply( X = teff1, MARGIN = 2, FUN = mean )
+r1_quant <- apply( X = teff1, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.1, 0.9))
+r1_quant <- data.frame(t(r1_quant))
+names(r1_quant) <- c("Q10", "Q90")
+r1 <- data.frame( mean = r1_mean, r1_quant, wave = 2 )
+r1
+```
+Graphical representation of results.
+
+```{r}
+ggplot(data = r1, 
+       aes(x = wave, y = mean) ) +
+  geom_pointrange(aes(ymin = Q10, ymax = Q90)) + 
+  scale_x_discrete("Wave", limits = c(2)) +
+  ylab("Effect on life satisfaction") +
+  geom_hline(yintercept=0, linetype="dashed", size=0.5)
+```
+
+## Fit with `brms`
+
+### Estimation
+
+```{r, cache=TRUE}
+m1 <- brm( lsat ~ 1 + treated + welle + treated:welle + (1 | pid), 
+           data = d1, seed=123, 
+           file = "../results/m1")
+print(m1)
+```
+
+### Posterior prediction
+
+```{r}
+x_pred <- tibble( treated = as.factor(c(0, 1, 0, 1)),
+                  welle   = c(1, 1, 2, 2))
+y_pred <- fitted( m1, newdata = x_pred, re_formula = NA ) 
+y_pred
+```
+```{r}
+y_pred <- as.data.frame(y_pred)
+pred_df <- cbind.data.frame( y_pred, x_pred )
+ggplot( pred_df, aes( x = welle, y = Estimate, group = treated ) ) + 
+  geom_line( aes(color=treated)) +
+  ylab("Life satisfaction") +
+  scale_x_discrete("Wave", limits = c(1,2) )
+```
+
+### Treatment effect
+
+
+```{r}
+post <- posterior_samples(m1)
+r1_mean <- mean( post$`b_treated1:welle2` )
+r1_quant <- quantile( post$`b_treated1:welle2`, probs = c(0.1, 0.9) )
+r1 <- data.frame( mean = r1_mean, r1_quant, wave = 2 )
+r1
+```
+Graphical representation of results.
+
+```{r, eval=FALSE}
+ggplot(data = r1, 
+       aes(x = wave, y = mean) ) +
+  geom_pointrange(aes(ymin = Q10, ymax = Q90)) + 
+  scale_x_discrete("Wave", limits = c(2)) +
+  ylab("Effect on life satisfaction") +
+  geom_hline(yintercept=0, linetype="dashed", size=0.5)
+```
+
+
+# Model for six schools (treatments), two waves
+
+## Model statement
+
+We simultaneously investigate the treatments in six different schools. We restrict the analysis to wave 1 (pre treatment) and wave 2 (post treatment).
+
+We extend the difference-in-differences regressions to estimate the effect of additional music lessons on various pupil outcomes. The regression equation is:
+$$
+\begin{align}
+y_{ijt} = \beta_0 + \beta_{1j[i]} T_i + \delta_{2j[i]} (T_{i} \times \text{Period}_{t}) + \lambda_t + \mu_{j[i]} + \alpha_{i} + \epsilon_{ijt},
+\end{align}
+$$
+
+where
+
+* $y_{ijt}$ is the outcome of pupil $i$ in school $j$ at time $t$.
+* $T_{i}$ is a binary indicator of whether or not pupil $i$ is in the treatment group. We model a fixed effect for the treatment group because the treatment takes place at the aggregate level (class). Therefore, bias in the estimate of the treatment effect may results from unobserved factors at the class level. 
+* $\delta_{2j[i]}$ is the treatment effect in wave 2. The effect is allowed to vary across schools. 
+* $\lambda_t$ denotes period fixed effects. 
+* $\alpha_{i}$ models individual-specific unobserved factors. Individual heterogeneity is model because we have repeated observations for the same pupils over time. 
+* $\epsilon_{it}$ is an error term.
+
+## Fit with `lmer()`
+
+```{r}
+fit2 <- lmer( lsat ~ treated + welle + tXw2 + (1 + tXw2 | school) + (1 | pid), data = d2 )
+summary(fit2)
+```
+
+## Fit with `rstanarm`
+
+```{r, message=FALSE, cache=TRUE}
+bayes2 <- stan_lmer( lsat ~ treated + welle + tXw2 + (1 + treated + tXw2 | school) + (1 | pid), 
+                data=d2, chains = 4, cores = 4, seed=123 )
+summary(bayes2, 
+        pars = c("(Intercept)", "treated1", "welle2", "tXw21",
+                 "b[tXw21 school:1]", "b[tXw21 school:2]", "b[tXw21 school:3]",
+                 "b[tXw21 school:4]", "b[tXw21 school:5]", "b[tXw21 school:6]"),
+        probs = c(0.1, 0.5, 0.9),
+        digits = 4)
+```
+
+We extract the posterior draws to summarize the effect of the treatment.
+
+```{r}
+teff2 <- as.matrix(bayes2, 
+                   pars = c("tXw21",
+                            "b[tXw21 school:1]",
+                            "b[tXw21 school:2]",
+                            "b[tXw21 school:3]",
+                            "b[tXw21 school:4]",
+                            "b[tXw21 school:5]",
+                            "b[tXw21 school:6]")) 
+school1 <- teff2[,1] + teff2[,2]
+school2 <- teff2[,1] + teff2[,3]
+school3 <- teff2[,1] + teff2[,4] 
+school4 <- teff2[,1] + teff2[,5] 
+school5 <- teff2[,1] + teff2[,6] 
+school6 <- teff2[,1] + teff2[,7] 
+teff2 <- data.frame( school1 = school1,
+                     school2 = school2,
+                     school3 = school3,
+                     school4 = school4,
+                     school5 = school5,
+                     school6 = school6)
+head(teff2)
+```
+
+```{r}
+r2_mean <- apply( X = teff2, MARGIN = 2, FUN = mean )
+r2_quant <- apply( X = teff2, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.1, 0.9))
+r2_quant <- data.frame(t(r2_quant))
+names(r2_quant) <- c("Q10", "Q90")
+r2 <- data.frame( school = seq(1:6), mean = r2_mean, r2_quant, wave = 2 )
+r2 
+```
+Graphical representation of results.
+
+```{r}
+ggplot(data = r2, 
+       aes(x = wave, 
+           y = mean)) +
+  geom_pointrange(aes(ymin = Q10, 
+                      ymax = Q90, group = school, color = school),
+                  position=position_dodge(width=0.20)) +
+  scale_x_discrete("Wave", limits = c(2)) +
+  geom_hline(yintercept=0)
+```
+
+## Fit with `brms`
+
+### Estimation
+
+```{r, cache=TRUE}
+prior <- c(prior(normal(0, 5), class = Intercept),
+           prior(normal(0, 5), class = b),
+           prior(cauchy(0, 1), class = sd))
+m2 <- brm( lsat ~ treated + welle + tXw2 + 
+             (1 + treated + tXw2 | school) + (1 | pid),
+           prior = prior, cores = 4, chains = 4, 
+           data = d2, seed=123,
+           file = "../results/m2"
+           )
+print(m2)
+```
+
+```{r, cache=TRUE, include=FALSE}
+# 2020-08-27 cw: Working with interactions does not guarantee that 
+# time trends of control groups are identical across schools
+# (which should be implied by the model), This however does not affect
+# results.
+# m2 <- brm( lsat ~ treated + welle + treated:welle + 
+#             (1 + treated + treated:welle | school) + (1 | pid),
+#           prior = prior, cores = 4, chains = 4, 
+#           data = d2, seed=123,
+#           #file = "../results/m2"
+#           )
+```
+
+### Posterior predictions for average (or marginal) school
+
+Documentation of for using `brms` to compute predictions marginal of school (and pupil), see [here](# http://paul-buerkner.github.io/brms/reference/extract_draws.html).
+
+```{r}
+x_pred <- tibble( treated = as.factor(c(0, 1, 0, 1)),
+                  welle   = c(1, 1, 2, 2),
+                  tXw2    = c(0,0,0,1))
+# Average school (and pupil)
+y_pred <- fitted( m2, newdata = x_pred, 
+                  re_formula = NA ) 
+# Marginal of school
+#y_pred <- fitted( m2, newdata = x_pred,
+#                  re_formula = ~(1 + treated + tXw2 | school) + 
+#                    (1 | pid),
+#                  allow_new_levels = T,
+#                  sample_new_levels = "gaussian" ) 
+pred_df <- cbind.data.frame( y_pred, x_pred )
+pred_df
+```
+
+```{r}
+ggplot( pred_df, aes( x = welle, y = Estimate, group = treated) ) + 
+  geom_line( aes(color=treated) ) +
+  ylab("Life satisfaction") +
+  scale_x_discrete("Wave", limits = c(1,2) )
+```
+
+### Average treatment effect
+
+```{r}
+post <- posterior_samples(m2)
+teff <- tibble( teff = post$`b_tXw2` )
+teff_mean <- apply( X = teff, MARGIN = 2, FUN = mean )
+teff_quant <- t(apply( X = teff, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+su_teff <- tibble( mean = teff_mean, 
+                   Q10 = teff_quant[,1],
+                   Q90 = teff_quant[,2], 
+                   wave = 2 )
+su_teff
+```
+
+### Posterior predictions for existing schools
+
+```{r}
+x_pred <- tibble( treated = rep(as.factor(c(0, 1, 0, 1)), 6),
+                  welle   = rep(c(1, 1, 2, 2), 6),
+                  school  = c( rep(1,4), rep(2,4), rep(3,4),
+                               rep(4,4), rep(5,4), rep(6,4)),
+                  tXw2    = rep(c(0, 0, 0, 1), 6) )
+y_pred <- fitted( m2, newdata = x_pred, 
+                  re_formula = ~(1 + treated + tXw2 | school) ) 
+pred_df <- cbind.data.frame( y_pred, x_pred )
+```
+```{r}
+ggplot( pred_df, aes( x = welle, y = Estimate, group = treated) ) + 
+  geom_line( aes(color=treated) ) +
+  ylab("Life satisfaction") +
+  scale_x_discrete("Wave", limits = c(1,2) ) +
+  facet_wrap(vars(school))
+```
+
+### Treatment effect heterogeneity across schools
+
+```{r}
+post <- posterior_samples(m2)
+teff <- tibble( school1 = post$`b_tXw2` + post$`r_school[1,tXw21]`,
+                school2 = post$`b_tXw2` + post$`r_school[2,tXw21]`,
+                school3 = post$`b_tXw2` + post$`r_school[3,tXw21]`,
+                school4 = post$`b_tXw2` + post$`r_school[4,tXw21]`,
+                school5 = post$`b_tXw2` + post$`r_school[5,tXw21]`,
+                school6 = post$`b_tXw2` + post$`r_school[6,tXw21]`)
+teff_mean <- apply( X = teff, MARGIN = 2, FUN = mean )
+teff_quant <- t(apply( X = teff, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+su_teff <- tibble( school = seq(1:6), 
+                   mean = teff_mean, 
+                   Q10 = teff_quant[,1],
+                   Q90 = teff_quant[,2], 
+                   wave = 2 )
+```
+Graphical representation of results.
+
+```{r}
+ggplot(data = su_teff, 
+       aes(x = wave, 
+           y = mean)) +
+  geom_pointrange(aes(ymin = Q10, 
+                      ymax = Q90, group = school, color = school),
+                  position=position_dodge(width=0.20)) +
+  scale_x_discrete("Wave", limits = c(2)) +
+  geom_hline(yintercept=0)
+```
+
+
+# Full model for six schools and five waves: life satisfaction 
+
+## Model statement
+
+We simultaneously investigate the treatments in six different schools. We restrict the analysis to wave 1 (pre treatment) and wave 2 (post treatment). The regression equation is:
+$$
+\begin{align}
+y_{ijt} = \beta_0 + \beta_{1j[i]} T_i + \sum\limits_{l=2}^5\delta_{lj[i]} (T_{i} \times \text{Period}_{t}) + \lambda_t + \mu_{j[i]} + \alpha_{i} + \epsilon_{ijt},
+\end{align}
+$$
+
+where
+
+* $y_{ijt}$ is the outcome of pupil $i$ in school $j$ at time $t$.
+* $T_{i}$ is a binary indicator of whether or not pupil $i$ is in the treatment group. We model a fixed effect for the treatment group because the treatment takes place at the aggregate level (class). Therefore, bias in the estimate of the treatment effect may results from unobserved factors at the class level. 
+* $\delta_{l2j[i]}$ is the treatment effect in wave $l$. The effect is allowed to vary across schools. 
+* $\lambda_t$ denotes period fixed effects. 
+* $\alpha_{i}$ models individual-specific unobserved factors. Individual heterogeneity is model because we have repeated observations for the same pupils over time. 
+* $\epsilon_{it}$ is an error term.
+
+## Fit with `lmer()`
+
+```{r}
+fit3 <- lmer( lsat ~ treated + welle +  tXw2 + tXw3 + tXw4 + tXw5 + 
+                (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) +
+                       (1 | pid), data=d3)
+coef(fit3)$school
+```
+
+
+## Fit with `rstanarm`
+
+```{r, message=FALSE, cache=TRUE, eval=FALSE, include=FALSE}
+fit1 <- stan_lmer( lsat ~ treated + welle + tXw2 + tXw3 + tXw4 + tXw5 + 
+                       (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) +
+                       (1 | pid), 
+                data=d3, chains = 4, cores = 4, seed=123, adapt_delta = 0.99)
+saveRDS(fit1, "../results/fit1.rds")
+```
+
+```{r,  eval=FALSE, include=FALSE}
+fit1 <- readRDS("../results/fit1.rds")
+summary(fit1, 
+        pars = c("(Intercept)", "treated1", "welle2", "welle3", "welle4", "welle5",
+                 "tXw21", "tXw31", "tXw41", "tXw51"),
+        probs = c(0.1, 0.5, 0.9), digits = 4)
+```
+
+We extract the posterior draws to summarize the effect of the treatment.
+
+Calculate the school-specific treatment effects:
+
+```{r, eval=FALSE, include=FALSE}
+draws <- as.matrix(fit1) 
+#                   pars = c("tXw21",
+#                            "b[tXw21 school:1]",
+#                            "b[tXw21 school:2]",
+#                            "b[tXw21 school:3]",
+#                            "b[tXw21 school:4]",
+#                            "b[tXw21 school:5]",
+#                            "b[tXw21 school:6]",
+#                            "tXw31",
+#                            "b[tXw31 school:1]",
+#                            "b[tXw31 school:2]",
+#                            "b[tXw31 school:3]",
+#                            "b[tXw31 school:4]",
+#                            "b[tXw31 school:5]",
+#                            "b[tXw31 school:6]",
+#                            "tXw41",
+#                            "b[tXw41 school:1]",
+#                            "b[tXw41 school:2]",
+#                            "b[tXw41 school:3]",
+#                            "b[tXw41 school:4]",
+#                            "b[tXw41 school:5]",
+#                            "b[tXw41 school:6]",
+#                            "tXw51",
+#                            "b[tXw51 school:1]",
+#                            "b[tXw51 school:2]",
+#                            "b[tXw51 school:3]",
+#                            "b[tXw51 school:4]",
+#                            "b[tXw51 school:5]",
+#                            "b[tXw51 school:6]")) 
+#
+
+dd.wave2.school1 <- draws[,"tXw21"] + draws[,"b[tXw21 school:1]"]
+
+# reproduce dd using dd of predicted outcomes
+# 2020-08-23: how to predict on the level of the classroom?
+# https://discourse.mc-stan.org/t/stan-glmer-posterior-predict-question/2527
+
+# prediction is for existing schools, and average pupil
+# predictions may be carried out for average school and average pupil. 
+
+mean(dd.wave2.school1)
+
+pred.data0 <- data.frame(school = c(1), 
+                         pid = as.factor(9999), # new pupil 
+                         welle = as.factor(seq(1:5)), treated = as.factor(c(0)))
+pred.data1 <- data.frame(school = c(1), 
+                         pid = as.factor(9999), # new pupil 
+                         welle = as.factor(seq(1:5)), treated = as.factor(c(1)))
+pred.data <- rbind.data.frame( pred.data0, pred.data1 )
+
+pred.data$tXw2 <- as.factor( ifelse( (pred.data$treated==1 & pred.data$welle==2), 1, 0) )
+pred.data$tXw3 <- as.factor( ifelse( (pred.data$treated==1 & pred.data$welle==3), 1, 0) )
+pred.data$tXw4 <- as.factor( ifelse( (pred.data$treated==1 & pred.data$welle==4), 1, 0) )
+pred.data$tXw5 <- as.factor( ifelse( (pred.data$treated==1 & pred.data$welle==5), 1, 0) )
+
+yhat <- posterior_predict(fit1, newdata = pred.data, re.form = NA )
+
+dim(yhat)
+head(yhat)
+yhat_mean <- apply( X = yhat, MARGIN = 2, FUN = mean )
+(yhat_mean[7]-yhat_mean[6]) - (yhat_mean[2]-yhat_mean[1]) 
+yhat$diff0 <- yhat[,2] - yhat[,1]
+
+yhat$diff0
+
+wave2.school2 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school:2]"]
+wave2.school3 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school:3]"]
+wave2.school4 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school:4]"]
+wave2.school5 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school:5]"]
+wave2.school6 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school:6]"]
+wave3.school1 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:1]"]
+wave3.school2 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:2]"]
+wave3.school3 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:3]"]
+wave3.school4 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:4]"]
+wave3.school5 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:5]"]
+wave3.school6 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:6]"]
+wave4.school1 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:1]"]
+wave4.school2 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:2]"]
+wave4.school3 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:3]"]
+wave4.school4 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:4]"]
+wave4.school5 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:5]"]
+wave4.school6 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:6]"]
+wave5.school1 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:1]"]
+wave5.school2 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:2]"]
+wave5.school3 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:3]"]
+wave5.school4 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:4]"]
+wave5.school5 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:5]"]
+wave5.school6 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:6]"]
+
+wave2 <- data.frame( school1 = wave2.school1,
+                     school2 = wave2.school2,
+                     school3 = wave2.school3,
+                     school4 = wave2.school4,
+                     school5 = wave2.school5,
+                     school6 = wave2.school6)
+wave3 <- data.frame( school1 = wave3.school1,
+                     school2 = wave3.school2,
+                     school3 = wave3.school3,
+                     school4 = wave3.school4,
+                     school5 = wave3.school5,
+                     school6 = wave3.school6)
+wave4 <- data.frame( school1 = wave4.school1,
+                     school2 = wave4.school2,
+                     school3 = wave4.school3,
+                     school4 = wave4.school4,
+                     school5 = wave4.school5,
+                     school6 = wave4.school6)
+wave5 <- data.frame( school1 = wave5.school1,
+                     school2 = wave5.school2,
+                     school3 = wave5.school3,
+                     school4 = wave5.school4,
+                     school5 = wave5.school5,
+                     school6 = wave5.school6)
+```
+
+```{r,  eval=FALSE, include=FALSE}
+wave2_mean <- apply( X = wave2, MARGIN = 2, FUN = mean )
+wave3_mean <- apply( X = wave3, MARGIN = 2, FUN = mean )
+wave4_mean <- apply( X = wave4, MARGIN = 2, FUN = mean )
+wave5_mean <- apply( X = wave5, MARGIN = 2, FUN = mean )
+
+wave2_quant <- apply( X = wave2, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.25, 0.75))
+wave3_quant <- apply( X = wave3, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.25, 0.75))
+wave4_quant <- apply( X = wave4, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.25, 0.75))
+wave5_quant <- apply( X = wave5, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.25, 0.75))
+
+wave2_quant <- data.frame(t(wave2_quant))
+wave3_quant <- data.frame(t(wave3_quant))
+wave4_quant <- data.frame(t(wave4_quant))
+wave5_quant <- data.frame(t(wave5_quant))
+
+names(wave2_quant) <- c("Q10", "Q90")
+names(wave3_quant) <- c("Q10", "Q90")
+names(wave4_quant) <- c("Q10", "Q90")
+names(wave5_quant) <- c("Q10", "Q90")
+
+r.wave2 <- data.frame( school = seq(1:6), mean = wave2_mean, wave2_quant, wave = 2 )
+r.wave3 <- data.frame( school = seq(1:6), mean = wave3_mean, wave3_quant, wave = 3 )
+r.wave4 <- data.frame( school = seq(1:6), mean = wave4_mean, wave4_quant, wave = 4 )
+r.wave5 <- data.frame( school = seq(1:6), mean = wave5_mean, wave5_quant, wave = 5 )
+r.full <- rbind.data.frame(r.wave2, r.wave3, r.wave4, r.wave5)
+```
+
+Graphical representation of results.
+
+```{r, eval=FALSE, include=FALSE}
+ggplot(data = r.full, 
+       aes(x = wave, 
+           y = mean)) +
+  geom_pointrange(aes(ymin = Q10, 
+                      ymax = Q90, group = school, color = school),
+                  position=position_dodge(width=0.50)) +
+  scale_x_discrete("Wave", limits = c(2,3,4,5) ) +
+  geom_hline(yintercept=0)
+```
+
+## Fit with `brms`
+
+### Estimation
+
+```{r, cache=TRUE}
+prior <- c(prior(normal(0, 5), class = Intercept),
+           prior(normal(0, 5), class = b),
+           prior(cauchy(0, 1), class = sd))
+m3 <- brm( lsat ~ treated + welle + tXw2 + tXw3 + tXw4 + tXw5 + 
+             (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
+           prior = prior, cores = 4, chains = 4, 
+           data = d3, seed=123,
+           file = "../results/m3")
+print(m3)
+```
+
+### Posterior predictions for average (or marginal) school
+
+Documentation of for using `brms` to compute predictions marginal of school (and pupil), see [here](# http://paul-buerkner.github.io/brms/reference/extract_draws.html).
+
+```{r}
+x_pred <- tibble( treated = as.factor( rep(c(0, 1), 5)),
+                  welle   = as.factor( c(1, 1, 2, 2, 3, 3, 4, 4, 5, 5) ),
+                  tXw2    = c(0,0,0,1,0,0,0,0,0,0),
+                  tXw3    = c(0,0,0,0,0,1,0,0,0,0),
+                  tXw4    = c(0,0,0,0,0,0,0,1,0,0),
+                  tXw5    = c(0,0,0,0,0,0,0,0,0,1))
+# Average school (and pupil)
+y_pred <- fitted( m3, newdata = x_pred, 
+                  re_formula = NA,
+                  probs = c(0.25, 0.75) )
+# Marginal of school
+#y_pred <- fitted( m2, newdata = x_pred,
+#                  re_formula = ~(1 + treated + tXw2 | school) + 
+#                    (1 | pid),
+#                  allow_new_levels = T,
+#                  sample_new_levels = "gaussian" ) 
+pred_df <- cbind.data.frame( y_pred, x_pred )
+pred_df
+```
+
+```{r}
+gr_lsat_pred <-  ggplot( pred_df, aes( x = welle, y = Estimate, group = treated) ) + 
+  geom_line( aes(color=treated) ) +
+  geom_point( aes(color=treated) ) +
+  geom_pointrange(aes(ymin = Q25, 
+                      ymax = Q75, color = treated ),
+                  position=position_dodge(width=0.1) ) +
+  ylab("Life satisfaction") +
+  scale_x_discrete("Wave", limits = seq(1:5) ) +
+  theme(legend.position="bottom")
+ggsave("../figures/lsat_pred.pdf", gr_lsat_pred, width = 7, height = 4, units = "in")
+gr_lsat_pred
+```
+
+### Average treatment effect
+
+```{r}
+post <- posterior_samples(m3)
+teff <- tibble( teff2 = post$`b_tXw2`,
+                teff3 = post$`b_tXw3`, 
+                teff4 = post$`b_tXw4`, 
+                teff5 = post$`b_tXw5` )
+teff_mean <- apply( X = teff, MARGIN = 2, FUN = mean )
+teff_quant <- t(apply( X = teff, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+su_teff <- tibble( mean = teff_mean, 
+                   Q10 = teff_quant[,1],
+                   Q90 = teff_quant[,2], 
+                   wave = seq(2:5) )
+su_teff
+```
+
+```{r} 
+gr_lsat_teff <- ggplot(data = su_teff, 
+       aes(x = wave, 
+           y = mean)) +
+  geom_pointrange(aes(ymin = Q10, ymax = Q90)) +
+  scale_x_discrete("Wave", limits=c("2", "3", "4", "5")) +
+  geom_hline(yintercept=0) +
+  ylab("Average treatment effect")
+ggsave("../figures/lsat_teff.pdf", gr_lsat_teff, width = 7, height = 4, units = "in")
+gr_lsat_teff
+```
+
+### Posterior predictions for existing schools
+
+```{r}
+x_pred <- tibble( treated = as.factor( rep(rep(c(0, 1), 5), 6) ),
+                  welle   = as.factor( rep(rep(1:5, each=2), 6) ),
+                  school  = as.factor( rep(1:6, each=10) ),
+                  tXw2    = rep(c(0,0,0,1,0,0,0,0,0,0), 6),
+                  tXw3    = rep(c(0,0,0,0,0,1,0,0,0,0), 6),
+                  tXw4    = rep(c(0,0,0,0,0,0,0,1,0,0), 6),
+                  tXw5    = rep(c(0,0,0,0,0,0,0,0,0,1), 6) )
+y_pred <- fitted( m3, newdata = x_pred, 
+                  re_formula = ~(1 + treated + tXw2 + tXw3 +
+                                   tXw4 + tXw5 | school) ) 
+pred_df <- cbind.data.frame( y_pred, x_pred )
+
+gr_lsat_pred_across_schools <- 
+  ggplot( pred_df, aes( x = welle, y = Estimate, group = treated) ) + 
+  geom_line( aes(color=treated) ) +
+  ylab("Life satisfaction") +
+  scale_x_discrete("Wave", limits = seq(1:5) ) +
+  facet_wrap(vars(school), labeller = labeller(
+    school = c("1" = "School: 1", "2" = "School: 2", "3" = "School: 3",
+               "4" = "School: 4", "5" = "School: 5", "6" = "School: 6" ))) +
+  theme(legend.position="bottom")
+ggsave("../figures/lsat_pred_across_schools.pdf", gr_lsat_pred_across_schools, 
+       width = 7, height = 4, units = "in")
+gr_lsat_pred_across_schools
+```
+
+### Treatment effect heterogeneity across schools
+
+```{r}
+post <- posterior_samples(m3)
+teff_w2 <- tibble( school1 = post$`b_tXw2` + post$`r_school[1,tXw21]`,
+                   school2 = post$`b_tXw2` + post$`r_school[2,tXw21]`,
+                   school3 = post$`b_tXw2` + post$`r_school[3,tXw21]`,
+                   school4 = post$`b_tXw2` + post$`r_school[4,tXw21]`,
+                   school5 = post$`b_tXw2` + post$`r_school[5,tXw21]`,
+                   school6 = post$`b_tXw2` + post$`r_school[6,tXw21]` )
+teff_mean_w2 <- apply( X = teff_w2, MARGIN = 2, FUN = mean )
+teff_quant_w2 <- t(apply( X = teff_w2, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+
+teff_w3 <- tibble( school1 = post$`b_tXw3` + post$`r_school[1,tXw31]`,
+                   school2 = post$`b_tXw3` + post$`r_school[2,tXw31]`,
+                   school3 = post$`b_tXw3` + post$`r_school[3,tXw31]`,
+                   school4 = post$`b_tXw3` + post$`r_school[4,tXw31]`,
+                   school5 = post$`b_tXw3` + post$`r_school[5,tXw31]`,
+                   school6 = post$`b_tXw3` + post$`r_school[6,tXw31]` )
+teff_mean_w3 <- apply( X = teff_w3, MARGIN = 2, FUN = mean )
+teff_quant_w3 <- t(apply( X = teff_w3, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+
+teff_w4 <- tibble( school1 = post$`b_tXw4` + post$`r_school[1,tXw41]`,
+                   school2 = post$`b_tXw4` + post$`r_school[2,tXw41]`,
+                   school3 = post$`b_tXw4` + post$`r_school[3,tXw41]`,
+                   school4 = post$`b_tXw4` + post$`r_school[4,tXw41]`,
+                   school5 = post$`b_tXw4` + post$`r_school[5,tXw41]`,
+                   school6 = post$`b_tXw4` + post$`r_school[6,tXw41]` )
+teff_mean_w4 <- apply( X = teff_w4, MARGIN = 2, FUN = mean )
+teff_quant_w4 <- t(apply( X = teff_w4, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+
+teff_w5 <- tibble( school1 = post$`b_tXw5` + post$`r_school[1,tXw51]`,
+                   school2 = post$`b_tXw5` + post$`r_school[2,tXw51]`,
+                   school3 = post$`b_tXw5` + post$`r_school[3,tXw51]`,
+                   school4 = post$`b_tXw5` + post$`r_school[4,tXw51]`,
+                   school5 = post$`b_tXw5` + post$`r_school[5,tXw51]`,
+                   school6 = post$`b_tXw5` + post$`r_school[6,tXw51]` )
+teff_mean_w5 <- apply( X = teff_w5, MARGIN = 2, FUN = mean )
+teff_quant_w5 <- t(apply( X = teff_w5, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+
+su_teff <- tibble( school = rep(seq(1:6), 4), 
+                   mean = c(teff_mean_w2, teff_mean_w3,
+                            teff_mean_w4, teff_mean_w5), 
+                   Q10 = c(teff_quant_w2[,1], teff_quant_w3[,1],
+                           teff_quant_w4[,1], teff_quant_w5[,1]),
+                   Q90 = c(teff_quant_w2[,2], teff_quant_w3[,2],
+                           teff_quant_w4[,2], teff_quant_w5[,2]),
+                   wave = rep(2:5, each=6) )
+```
+Graphical representation of results.
+
+```{r}
+gr_lsat_teff_across_schools <-
+  ggplot(data = su_teff, aes(x = wave, y = mean)) +
+  geom_pointrange(aes(ymin = Q10, 
+                      ymax = Q90, group = school, color = school),
+                  position=position_dodge(width=0.20)) +
+  scale_x_discrete("Wave", limits=seq(2:6) )  +
+  geom_hline(yintercept=0) + 
+  theme(legend.position="bottom")
+ggsave("../figures/lsat_teff_across_schools.pdf", gr_lsat_teff_across_schools, 
+       width = 7, height = 4, units = "in")
+gr_lsat_teff_across_schools
+```
+
+
+# Satisfaction with class
+
+## Estimation
+
+```{r, cache=TRUE}
+prior <- c(prior(normal(0, 5), class = Intercept),
+           prior(normal(0, 5), class = b),
+           prior(cauchy(0, 1), class = sd))
+m4 <- brm( sat_class ~ treated + welle + tXw2 + tXw3 + tXw4 + tXw5 + 
+             (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
+           prior = prior, cores = 4, chains = 4, 
+           data = d3, seed=123,
+           file = "../results/m4")
+print(m4)
+```
+
+## Posterior predictions for average (or marginal) school
+
+Documentation of for using `brms` to compute predictions marginal of school (and pupil), see [here](# http://paul-buerkner.github.io/brms/reference/extract_draws.html).
+
+```{r}
+x_pred <- tibble( treated = as.factor( rep(c(0, 1), 5)),
+                  welle   = as.factor( c(1, 1, 2, 2, 3, 3, 4, 4, 5, 5) ),
+                  tXw2    = c(0,0,0,1,0,0,0,0,0,0),
+                  tXw3    = c(0,0,0,0,0,1,0,0,0,0),
+                  tXw4    = c(0,0,0,0,0,0,0,1,0,0),
+                  tXw5    = c(0,0,0,0,0,0,0,0,0,1))
+# Average school (and pupil)
+y_pred <- fitted( m4, newdata = x_pred, 
+                  re_formula = NA,
+                  probs = c(0.25, 0.75) )
+# Marginal of school
+#y_pred <- fitted( m2, newdata = x_pred,
+#                  re_formula = ~(1 + treated + tXw2 | school) + 
+#                    (1 | pid),
+#                  allow_new_levels = T,
+#                  sample_new_levels = "gaussian" ) 
+pred_df <- cbind.data.frame( y_pred, x_pred )
+pred_df
+```
+
+```{r}
+gr_sat_class_pred <-  
+  ggplot( pred_df, aes( x = welle, y = Estimate, group = treated) ) + 
+  geom_line( aes(color=treated) ) +
+  geom_point( aes(color=treated) ) +
+  geom_pointrange(aes(ymin = Q25, 
+                      ymax = Q75, color = treated ),
+                  position=position_dodge(width=0.1) ) +
+  ylab("Satisfaction with class") +
+  scale_x_discrete("Wave", limits = seq(1:5) ) +
+  theme(legend.position="bottom")
+ggsave("../figures/sat_class_pred.pdf", gr_sat_class_pred, width = 7, height = 4, units = "in")
+gr_sat_class_pred
+```
+
+### Average treatment effect
+
+```{r}
+post <- posterior_samples(m4)
+teff <- tibble( teff2 = post$`b_tXw2`,
+                teff3 = post$`b_tXw3`, 
+                teff4 = post$`b_tXw4`, 
+                teff5 = post$`b_tXw5` )
+teff_mean <- apply( X = teff, MARGIN = 2, FUN = mean )
+teff_quant <- t(apply( X = teff, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+su_teff <- tibble( mean = teff_mean, 
+                   Q10 = teff_quant[,1],
+                   Q90 = teff_quant[,2], 
+                   wave = seq(2:5) )
+su_teff
+```
+
+```{r} 
+gr_sat_class_teff <- ggplot(data = su_teff, 
+       aes(x = wave, 
+           y = mean)) +
+  geom_pointrange(aes(ymin = Q10, ymax = Q90)) +
+  scale_x_discrete("Wave", limits=c("2", "3", "4", "5")) +
+  geom_hline(yintercept=0) +
+  ylab("Average treatment effect")
+ggsave("../figures/sat_class_teff.pdf", gr_sat_class_teff, width = 7, height = 4, units = "in")
+gr_sat_class_teff
+```
+
+### Posterior predictions for existing schools
+
+```{r}
+x_pred <- tibble( treated = as.factor( rep(rep(c(0, 1), 5), 6) ),
+                  welle   = as.factor( rep(rep(1:5, each=2), 6) ),
+                  school  = as.factor( rep(1:6, each=10) ),
+                  tXw2    = rep(c(0,0,0,1,0,0,0,0,0,0), 6),
+                  tXw3    = rep(c(0,0,0,0,0,1,0,0,0,0), 6),
+                  tXw4    = rep(c(0,0,0,0,0,0,0,1,0,0), 6),
+                  tXw5    = rep(c(0,0,0,0,0,0,0,0,0,1), 6) )
+y_pred <- fitted( m4, newdata = x_pred, 
+                  re_formula = ~(1 + treated + tXw2 + tXw3 +
+                                   tXw4 + tXw5 | school) ) 
+pred_df <- cbind.data.frame( y_pred, x_pred )
+
+gr_sat_class_pred_across_schools <- 
+  ggplot( pred_df, aes( x = welle, y = Estimate, group = treated) ) + 
+  geom_line( aes(color=treated) ) +
+  ylab("Satisfaction with class") +
+  scale_x_discrete("Wave", limits = seq(1:5) ) +
+  facet_wrap(vars(school), labeller = labeller(
+    school = c("1" = "School: 1", "2" = "School: 2", "3" = "School: 3",
+               "4" = "School: 4", "5" = "School: 5", "6" = "School: 6" ))) +
+  theme(legend.position="bottom")
+ggsave("../figures/sat_class_pred_across_schools.pdf", gr_sat_class_pred_across_schools, 
+       width = 7, height = 4, units = "in")
+gr_sat_class_pred_across_schools
+```
+
+### Treatment effect heterogeneity across schools
+
+```{r}
+post <- posterior_samples(m4)
+teff_w2 <- tibble( school1 = post$`b_tXw2` + post$`r_school[1,tXw21]`,
+                   school2 = post$`b_tXw2` + post$`r_school[2,tXw21]`,
+                   school3 = post$`b_tXw2` + post$`r_school[3,tXw21]`,
+                   school4 = post$`b_tXw2` + post$`r_school[4,tXw21]`,
+                   school5 = post$`b_tXw2` + post$`r_school[5,tXw21]`,
+                   school6 = post$`b_tXw2` + post$`r_school[6,tXw21]` )
+teff_mean_w2 <- apply( X = teff_w2, MARGIN = 2, FUN = mean )
+teff_quant_w2 <- t(apply( X = teff_w2, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+
+teff_w3 <- tibble( school1 = post$`b_tXw3` + post$`r_school[1,tXw31]`,
+                   school2 = post$`b_tXw3` + post$`r_school[2,tXw31]`,
+                   school3 = post$`b_tXw3` + post$`r_school[3,tXw31]`,
+                   school4 = post$`b_tXw3` + post$`r_school[4,tXw31]`,
+                   school5 = post$`b_tXw3` + post$`r_school[5,tXw31]`,
+                   school6 = post$`b_tXw3` + post$`r_school[6,tXw31]` )
+teff_mean_w3 <- apply( X = teff_w3, MARGIN = 2, FUN = mean )
+teff_quant_w3 <- t(apply( X = teff_w3, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+
+teff_w4 <- tibble( school1 = post$`b_tXw4` + post$`r_school[1,tXw41]`,
+                   school2 = post$`b_tXw4` + post$`r_school[2,tXw41]`,
+                   school3 = post$`b_tXw4` + post$`r_school[3,tXw41]`,
+                   school4 = post$`b_tXw4` + post$`r_school[4,tXw41]`,
+                   school5 = post$`b_tXw4` + post$`r_school[5,tXw41]`,
+                   school6 = post$`b_tXw4` + post$`r_school[6,tXw41]` )
+teff_mean_w4 <- apply( X = teff_w4, MARGIN = 2, FUN = mean )
+teff_quant_w4 <- t(apply( X = teff_w4, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+
+teff_w5 <- tibble( school1 = post$`b_tXw5` + post$`r_school[1,tXw51]`,
+                   school2 = post$`b_tXw5` + post$`r_school[2,tXw51]`,
+                   school3 = post$`b_tXw5` + post$`r_school[3,tXw51]`,
+                   school4 = post$`b_tXw5` + post$`r_school[4,tXw51]`,
+                   school5 = post$`b_tXw5` + post$`r_school[5,tXw51]`,
+                   school6 = post$`b_tXw5` + post$`r_school[6,tXw51]` )
+teff_mean_w5 <- apply( X = teff_w5, MARGIN = 2, FUN = mean )
+teff_quant_w5 <- t(apply( X = teff_w5, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+
+su_teff <- tibble( school = rep(seq(1:6), 4), 
+                   mean = c(teff_mean_w2, teff_mean_w3,
+                            teff_mean_w4, teff_mean_w5), 
+                   Q10 = c(teff_quant_w2[,1], teff_quant_w3[,1],
+                           teff_quant_w4[,1], teff_quant_w5[,1]),
+                   Q90 = c(teff_quant_w2[,2], teff_quant_w3[,2],
+                           teff_quant_w4[,2], teff_quant_w5[,2]),
+                   wave = rep(2:5, each=6) )
+```
+Graphical representation of results.
+
+```{r}
+gr_sat_class_teff_across_schools <-
+  ggplot(data = su_teff, aes(x = wave, y = mean)) +
+  geom_pointrange(aes(ymin = Q10, 
+                      ymax = Q90, group = school, color = school),
+                  position=position_dodge(width=0.20)) +
+  scale_x_discrete("Wave", limits=seq(2:6) )  +
+  geom_hline(yintercept=0) + 
+  theme(legend.position="bottom")
+ggsave("../figures/sat_class_teff_across_schools.pdf", gr_sat_class_teff_across_schools, 
+       width = 7, height = 4, units = "in")
+gr_sat_class_teff_across_schools
+```
+
+
+# Satisfaction with friends
+
+## Estimation
+
+```{r, cache=TRUE}
+prior <- c(prior(normal(0, 5), class = Intercept),
+           prior(normal(0, 5), class = b),
+           prior(cauchy(0, 1), class = sd))
+m5 <- brm( sat_friends ~ treated + welle + tXw2 + tXw3 + tXw4 + tXw5 + 
+             (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
+           prior = prior, cores = 4, chains = 4, 
+           data = d3, seed=123,
+           file = "../results/m5")
+print(m5)
+```
+
+## Posterior predictions for average (or marginal) school
+
+Documentation of for using `brms` to compute predictions marginal of school (and pupil), see [here](# http://paul-buerkner.github.io/brms/reference/extract_draws.html).
+
+```{r}
+x_pred <- tibble( treated = as.factor( rep(c(0, 1), 5)),
+                  welle   = as.factor( c(1, 1, 2, 2, 3, 3, 4, 4, 5, 5) ),
+                  tXw2    = c(0,0,0,1,0,0,0,0,0,0),
+                  tXw3    = c(0,0,0,0,0,1,0,0,0,0),
+                  tXw4    = c(0,0,0,0,0,0,0,1,0,0),
+                  tXw5    = c(0,0,0,0,0,0,0,0,0,1))
+# Average school (and pupil)
+y_pred <- fitted( m5, newdata = x_pred, 
+                  re_formula = NA,
+                  probs = c(0.25, 0.75) )
+# Marginal of school
+#y_pred <- fitted( m2, newdata = x_pred,
+#                  re_formula = ~(1 + treated + tXw2 | school) + 
+#                    (1 | pid),
+#                  allow_new_levels = T,
+#                  sample_new_levels = "gaussian" ) 
+pred_df <- cbind.data.frame( y_pred, x_pred )
+pred_df
+```
+
+```{r}
+gr_sat_friends_pred <-  
+  ggplot( pred_df, aes( x = welle, y = Estimate, group = treated) ) + 
+  geom_line( aes(color=treated) ) +
+  geom_point( aes(color=treated) ) +
+  geom_pointrange(aes(ymin = Q25, 
+                      ymax = Q75, color = treated ),
+                  position=position_dodge(width=0.1) ) +
+  ylab("Satisfaction with friends") +
+  scale_x_discrete("Wave", limits = seq(1:5) ) +
+  theme(legend.position="bottom")
+ggsave("../figures/sat_friends_pred.pdf", gr_sat_friends_pred, width = 7, height = 4, units = "in")
+gr_sat_friends_pred
+```
+
+### Average treatment effect
+
+```{r}
+post <- posterior_samples(m5)
+teff <- tibble( teff2 = post$`b_tXw2`,
+                teff3 = post$`b_tXw3`, 
+                teff4 = post$`b_tXw4`, 
+                teff5 = post$`b_tXw5` )
+teff_mean <- apply( X = teff, MARGIN = 2, FUN = mean )
+teff_quant <- t(apply( X = teff, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+su_teff <- tibble( mean = teff_mean, 
+                   Q10 = teff_quant[,1],
+                   Q90 = teff_quant[,2], 
+                   wave = seq(2:5) )
+su_teff
+```
+
+```{r} 
+gr_sat_friends_teff <- ggplot(data = su_teff, 
+       aes(x = wave, 
+           y = mean)) +
+  geom_pointrange(aes(ymin = Q10, ymax = Q90)) +
+  scale_x_discrete("Wave", limits=c("2", "3", "4", "5")) +
+  geom_hline(yintercept=0) +
+  ylab("Average treatment effect")
+ggsave("../figures/sat_friends_teff.pdf", gr_sat_friends_teff, width = 7, height = 4, units = "in")
+gr_sat_friends_teff
+```
+
+### Posterior predictions for existing schools
+
+```{r}
+x_pred <- tibble( treated = as.factor( rep(rep(c(0, 1), 5), 6) ),
+                  welle   = as.factor( rep(rep(1:5, each=2), 6) ),
+                  school  = as.factor( rep(1:6, each=10) ),
+                  tXw2    = rep(c(0,0,0,1,0,0,0,0,0,0), 6),
+                  tXw3    = rep(c(0,0,0,0,0,1,0,0,0,0), 6),
+                  tXw4    = rep(c(0,0,0,0,0,0,0,1,0,0), 6),
+                  tXw5    = rep(c(0,0,0,0,0,0,0,0,0,1), 6) )
+y_pred <- fitted( m4, newdata = x_pred, 
+                  re_formula = ~(1 + treated + tXw2 + tXw3 +
+                                   tXw4 + tXw5 | school) ) 
+pred_df <- cbind.data.frame( y_pred, x_pred )
+
+gr_sat_friends_pred_across_schools <- 
+  ggplot( pred_df, aes( x = welle, y = Estimate, group = treated) ) + 
+  geom_line( aes(color=treated) ) +
+  ylab("Satisfaction with friends") +
+  scale_x_discrete("Wave", limits = seq(1:5) ) +
+  facet_wrap(vars(school), labeller = labeller(
+    school = c("1" = "School: 1", "2" = "School: 2", "3" = "School: 3",
+               "4" = "School: 4", "5" = "School: 5", "6" = "School: 6" ))) +
+  theme(legend.position="bottom")
+ggsave("../figures/sat_friends_pred_across_schools.pdf", gr_sat_friends_pred_across_schools, 
+       width = 7, height = 4, units = "in")
+gr_sat_friends_pred_across_schools
+```
+
+### Treatment effect heterogeneity across schools
+
+```{r}
+post <- posterior_samples(m5)
+teff_w2 <- tibble( school1 = post$`b_tXw2` + post$`r_school[1,tXw21]`,
+                   school2 = post$`b_tXw2` + post$`r_school[2,tXw21]`,
+                   school3 = post$`b_tXw2` + post$`r_school[3,tXw21]`,
+                   school4 = post$`b_tXw2` + post$`r_school[4,tXw21]`,
+                   school5 = post$`b_tXw2` + post$`r_school[5,tXw21]`,
+                   school6 = post$`b_tXw2` + post$`r_school[6,tXw21]` )
+teff_mean_w2 <- apply( X = teff_w2, MARGIN = 2, FUN = mean )
+teff_quant_w2 <- t(apply( X = teff_w2, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+
+teff_w3 <- tibble( school1 = post$`b_tXw3` + post$`r_school[1,tXw31]`,
+                   school2 = post$`b_tXw3` + post$`r_school[2,tXw31]`,
+                   school3 = post$`b_tXw3` + post$`r_school[3,tXw31]`,
+                   school4 = post$`b_tXw3` + post$`r_school[4,tXw31]`,
+                   school5 = post$`b_tXw3` + post$`r_school[5,tXw31]`,
+                   school6 = post$`b_tXw3` + post$`r_school[6,tXw31]` )
+teff_mean_w3 <- apply( X = teff_w3, MARGIN = 2, FUN = mean )
+teff_quant_w3 <- t(apply( X = teff_w3, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+
+teff_w4 <- tibble( school1 = post$`b_tXw4` + post$`r_school[1,tXw41]`,
+                   school2 = post$`b_tXw4` + post$`r_school[2,tXw41]`,
+                   school3 = post$`b_tXw4` + post$`r_school[3,tXw41]`,
+                   school4 = post$`b_tXw4` + post$`r_school[4,tXw41]`,
+                   school5 = post$`b_tXw4` + post$`r_school[5,tXw41]`,
+                   school6 = post$`b_tXw4` + post$`r_school[6,tXw41]` )
+teff_mean_w4 <- apply( X = teff_w4, MARGIN = 2, FUN = mean )
+teff_quant_w4 <- t(apply( X = teff_w4, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+
+teff_w5 <- tibble( school1 = post$`b_tXw5` + post$`r_school[1,tXw51]`,
+                   school2 = post$`b_tXw5` + post$`r_school[2,tXw51]`,
+                   school3 = post$`b_tXw5` + post$`r_school[3,tXw51]`,
+                   school4 = post$`b_tXw5` + post$`r_school[4,tXw51]`,
+                   school5 = post$`b_tXw5` + post$`r_school[5,tXw51]`,
+                   school6 = post$`b_tXw5` + post$`r_school[6,tXw51]` )
+teff_mean_w5 <- apply( X = teff_w5, MARGIN = 2, FUN = mean )
+teff_quant_w5 <- t(apply( X = teff_w5, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+
+su_teff <- tibble( school = rep(seq(1:6), 4), 
+                   mean = c(teff_mean_w2, teff_mean_w3,
+                            teff_mean_w4, teff_mean_w5), 
+                   Q10 = c(teff_quant_w2[,1], teff_quant_w3[,1],
+                           teff_quant_w4[,1], teff_quant_w5[,1]),
+                   Q90 = c(teff_quant_w2[,2], teff_quant_w3[,2],
+                           teff_quant_w4[,2], teff_quant_w5[,2]),
+                   wave = rep(2:5, each=6) )
+```
+Graphical representation of results.
+
+```{r}
+gr_sat_friends_teff_across_schools <-
+  ggplot(data = su_teff, aes(x = wave, y = mean)) +
+  geom_pointrange(aes(ymin = Q10, 
+                      ymax = Q90, group = school, color = school),
+                  position=position_dodge(width=0.20)) +
+  scale_x_discrete("Wave", limits=seq(2:6) )  +
+  geom_hline(yintercept=0) + 
+  theme(legend.position="bottom")
+ggsave("../figures/sat_friends_teff_across_schools.pdf", gr_sat_friends_teff_across_schools, 
+       width = 7, height = 4, units = "in")
+gr_sat_friends_teff_across_schools
+```
+
+
+```{r}
+knitr::knit_exit()
+```
+
+
+# Including gender interactions
+
+```{r}
+table(d2$female, d2$school, useNA = "ifany")
+```
+
+
+```{r, message=FALSE, cache=TRUE}
+bayes4 <- stan_lmer( lsat ~ treated + welle + tXw2 + female + female:tXw2 +
+                       (1 + treated + tXw2 + female + female:tXw2 | school) + (1 | pid), 
+                data=d2, chains = 4, cores = 4, seed=123 )
+summary(bayes4, 
+        pars = c("(Intercept)", "treated1", "welle2", "tXw21", "female1", "tXw21:female1",
+                 "b[tXw21 school:1]", "b[tXw21 school:2]", "b[tXw21 school:3]",
+                 "b[tXw21 school:4]", "b[tXw21 school:5]", "b[tXw21 school:6]",
+                 "b[tXw21:female1 school:1]", "b[tXw21:female1 school:2]", "b[tXw21:female1 school:3]",
+                 "b[tXw21:female1 school:4]", "b[tXw21:female1 school:5]", "b[tXw21:female1 school:6]"),
+        probs = c(0.1, 0.5, 0.9),
+        digits = 4)
+```
+
+```{r}
+teff2_gender <- as.matrix(bayes4, 
+                   pars = c("tXw21", "tXw21:female1",
+                            "b[tXw21 school:1]", "b[tXw21:female1 school:1]",
+                            "b[tXw21 school:2]", "b[tXw21:female1 school:2]",
+                            "b[tXw21 school:3]", "b[tXw21:female1 school:3]",
+                            "b[tXw21 school:4]", "b[tXw21:female1 school:4]",
+                            "b[tXw21 school:5]", "b[tXw21:female1 school:5]",
+                            "b[tXw21 school:6]", "b[tXw21:female1 school:6]")) 
+
+school1_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:1]"]
+school2_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:2]"]
+school3_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:3]"]
+school4_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:4]"]
+school5_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:5]"]
+school6_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:6]"]
+school1_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:1]"] + teff2_gender[,"b[tXw21:female1 school:1]"]
+school2_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:2]"] + teff2_gender[,"b[tXw21:female1 school:2]"]
+school3_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:3]"] + teff2_gender[,"b[tXw21:female1 school:3]"]
+school4_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:4]"] + teff2_gender[,"b[tXw21:female1 school:4]"]
+school5_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:5]"] + teff2_gender[,"b[tXw21:female1 school:5]"]
+school6_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:6]"] + teff2_gender[,"b[tXw21:female1 school:6]"]
+
+teff2_boys <- data.frame( 
+                     school1 = school1_boys,
+                     school2 = school2_boys,
+                     school3 = school3_boys,
+                     school4 = school4_boys,
+                     school5 = school5_boys,
+                     school6 = school6_boys)
+
+teff2_girls <- data.frame( 
+                     school1 = school1_girls,
+                     school2 = school2_girls,
+                     school3 = school3_girls,
+                     school4 = school4_girls,
+                     school5 = school5_girls,
+                     school6 = school6_girls)
+
+```
+
+```{r}
+r2_mean_boys <- apply( X = teff2_boys, MARGIN = 2, FUN = mean )
+r2_mean_girls <- apply( X = teff2_girls, MARGIN = 2, FUN = mean )
+r2_quant_boys <- apply( X = teff2_boys, MARGIN = 2, FUN = quantile, probs = c(0.1, 0.9))
+r2_quant_girls <- apply( X = teff2_girls, MARGIN = 2, FUN = quantile, probs = c(0.1, 0.9))
+r2_quant_boys <- data.frame(t(r2_quant_boys))
+r2_quant_girls <- data.frame(t(r2_quant_girls))
+names(r2_quant_boys) <- c("Q10", "Q90")
+names(r2_quant_girls) <- c("Q10", "Q90")
+r2_boys <- data.frame( school = seq(1:6), mean = r2_mean_boys, r2_quant_boys, wave = 2, female = as.factor(0) )
+r2_girls <- data.frame( school = seq(1:6), mean = r2_mean_girls, r2_quant_girls, wave = 2, female = as.factor(1) )
+r2_gender <- rbind.data.frame(r2_boys, r2_girls)
+r2_gender
+```
+
+```{r}
+ggplot(data = r2_gender, 
+       aes(x = wave, 
+           y = mean)) +
+  geom_pointrange(aes(ymin = Q10, 
+                      ymax = Q90, group = school, color = school),
+                  position=position_dodge(width=0.20)) +
+  scale_x_discrete("Wave", limits = c(2)) +
+  geom_hline(yintercept=0) + facet_grid(~ female)
+```
+
+
+# Full model for six schools and five waves: varying intercepts for time trend across schools 
+
+## Model statement
+
+We allow for different time trends across schools. This preserves the common trend assumption within schools. The regression equation is:
+$$
+\begin{align}
+y_{ijt} = \beta_0 + \beta_{1j[i]} T_i + \sum\limits_{l=2}^5\delta_{lj[i]} (T_{i} \times \text{Period}_{t}) + \lambda_{t}[i] + \mu_{j[i]} + \alpha_{i} + \epsilon_{ijt},
+\end{align}
+$$
+
+where
+
+* $y_{ijt}$ is the outcome of pupil $i$ in school $j$ at time $t$.
+* $T_{i}$ is a binary indicator of whether or not pupil $i$ is in the treatment group. We model a fixed effect for the treatment group because the treatment takes place at the aggregate level (class). Therefore, bias in the estimate of the treatment effect may results from unobserved factors at the class level. 
+* $\delta_{l2j[i]}$ is the treatment effect in wave $l$. The effect is allowed to vary across schools. 
+* $\lambda_t$ denotes period fixed effects. 
+* $\alpha_{i}$ models individual-specific unobserved factors. Individual heterogeneity is model because we have repeated observations for the same pupils over time. 
+* $\epsilon_{it}$ is an error term.
+
+## Fit with `rstanarm`
+
+```{r, message=FALSE, cache=TRUE}
+bayes4 <- stan_lmer( lsat ~ treated + welle + tXw2 + tXw3 + tXw4 + tXw5 + 
+                       (1 + treated + welle + tXw2 + tXw3 + tXw4 + tXw5 | school) +
+                       (1 | pid), 
+                data=d3, chains = 4, cores = 4, seed=123)
+```
+
+## Posterior means
+
+We extract the posterior draws to summarize the effect of the treatment.
+
+```{r}
+summary(bayes4, 
+        pars = c("tXw41", 
+                 "b[tXw41 school:1]", "b[tXw41 school:2]", "b[tXw41 school:3]", 
+                 "b[tXw41 school:4]", "b[tXw41 school:5]", "b[tXw41 school:6]"),
+        probs = c(0.1, 0.5, 0.9), digits = 4)
+```
+
+
+```{r}
+teff5 <- as.matrix(bayes4, 
+                   pars = c("tXw21",
+                            "b[tXw21 school:1]",
+                            "b[tXw21 school:2]",
+                            "b[tXw21 school:3]",
+                            "b[tXw21 school:4]",
+                            "b[tXw21 school:5]",
+                            "b[tXw21 school:6]",
+                            "tXw31",
+                            "b[tXw31 school:1]",
+                            "b[tXw31 school:2]",
+                            "b[tXw31 school:3]",
+                            "b[tXw31 school:4]",
+                            "b[tXw31 school:5]",
+                            "b[tXw31 school:6]",
+                            "tXw41",
+                            "b[tXw41 school:1]",
+                            "b[tXw41 school:2]",
+                            "b[tXw41 school:3]",
+                            "b[tXw41 school:4]",
+                            "b[tXw41 school:5]",
+                            "b[tXw41 school:6]",
+                            "tXw51",
+                            "b[tXw51 school:1]",
+                            "b[tXw51 school:2]",
+                            "b[tXw51 school:3]",
+                            "b[tXw51 school:4]",
+                            "b[tXw51 school:5]",
+                            "b[tXw51 school:6]")) 
+
+wave2.school1 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school:1]"]
+wave2.school2 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school:2]"]
+wave2.school3 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school:3]"]
+wave2.school4 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school:4]"]
+wave2.school5 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school:5]"]
+wave2.school6 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school:6]"]
+wave3.school1 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:1]"]
+wave3.school2 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:2]"]
+wave3.school3 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:3]"]
+wave3.school4 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:4]"]
+wave3.school5 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:5]"]
+wave3.school6 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:6]"]
+wave4.school1 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:1]"]
+wave4.school2 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:2]"]
+wave4.school3 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:3]"]
+wave4.school4 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:4]"]
+wave4.school5 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:5]"]
+wave4.school6 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:6]"]
+wave5.school1 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:1]"]
+wave5.school2 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:2]"]
+wave5.school3 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:3]"]
+wave5.school4 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:4]"]
+wave5.school5 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:5]"]
+wave5.school6 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:6]"]
+
+wave2 <- data.frame( school1 = wave2.school1,
+                     school2 = wave2.school2,
+                     school3 = wave2.school3,
+                     school4 = wave2.school4,
+                     school5 = wave2.school5,
+                     school6 = wave2.school6)
+wave3 <- data.frame( school1 = wave3.school1,
+                     school2 = wave3.school2,
+                     school3 = wave3.school3,
+                     school4 = wave3.school4,
+                     school5 = wave3.school5,
+                     school6 = wave3.school6)
+wave4 <- data.frame( school1 = wave4.school1,
+                     school2 = wave4.school2,
+                     school3 = wave4.school3,
+                     school4 = wave4.school4,
+                     school5 = wave4.school5,
+                     school6 = wave4.school6)
+wave5 <- data.frame( school1 = wave5.school1,
+                     school2 = wave5.school2,
+                     school3 = wave5.school3,
+                     school4 = wave5.school4,
+                     school5 = wave5.school5,
+                     school6 = wave5.school6)
+```
+
+```{r}
+wave2_mean <- apply( X = wave2, MARGIN = 2, FUN = mean )
+wave3_mean <- apply( X = wave3, MARGIN = 2, FUN = mean )
+wave4_mean <- apply( X = wave4, MARGIN = 2, FUN = mean )
+wave5_mean <- apply( X = wave5, MARGIN = 2, FUN = mean )
+
+wave2_quant <- apply( X = wave2, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.25, 0.75))
+wave3_quant <- apply( X = wave3, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.25, 0.75))
+wave4_quant <- apply( X = wave4, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.25, 0.75))
+wave5_quant <- apply( X = wave5, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.25, 0.75))
+
+wave2_quant <- data.frame(t(wave2_quant))
+wave3_quant <- data.frame(t(wave3_quant))
+wave4_quant <- data.frame(t(wave4_quant))
+wave5_quant <- data.frame(t(wave5_quant))
+
+names(wave2_quant) <- c("Q10", "Q90")
+names(wave3_quant) <- c("Q10", "Q90")
+names(wave4_quant) <- c("Q10", "Q90")
+names(wave5_quant) <- c("Q10", "Q90")
+
+r.wave2 <- data.frame( school = seq(1:6), mean = wave2_mean, wave2_quant, wave = 2 )
+r.wave3 <- data.frame( school = seq(1:6), mean = wave3_mean, wave3_quant, wave = 3 )
+r.wave4 <- data.frame( school = seq(1:6), mean = wave4_mean, wave4_quant, wave = 4 )
+r.wave5 <- data.frame( school = seq(1:6), mean = wave5_mean, wave5_quant, wave = 5 )
+r.full <- rbind.data.frame(r.wave2, r.wave3, r.wave4, r.wave5)
+```
+Graphical representation of results.
+
+```{r}
+ggplot(data = r.full, 
+       aes(x = wave, 
+           y = mean)) +
+  geom_pointrange(aes(ymin = Q10, 
+                      ymax = Q90, group = school, color = school),
+                  position=position_dodge(width=0.50)) +
+  scale_x_discrete("Wave", limits = c(2,3,4,5) ) +
+  geom_hline(yintercept=0)
+```
+
+
+# Full model for six schools and five waves: individual fixed effects
+
+## Model statement
+
+$$
+\begin{align}
+y_{ijt} = \beta_0 + \beta_{1j[i]} T_i + \sum\limits_{l=2}^5\delta_{lj[i]} (T_{i} \times \text{Period}_{t}) + \lambda_{t}[i] + \mu_{j[i]} + \alpha_{i} + \epsilon_{ijt},
+\end{align}
+$$
+
+* $\alpha_{i}$ models individual-specific unobserved factors. Individual heterogeneity is model because we have repeated observations for the same pupils over time. We do not specify a model the individual-specific term $\alpha_i$ here. This is equivalent to using dummy variables for all pupils (and omitting the overall intercept).
+
+
+## Fit with `rstanarm`
+
+```{r, message=FALSE, cache=TRUE}
+bayes4 <- stan_lmer( lsat ~ treated + welle + tXw2 + tXw3 + tXw4 + tXw5 + pid +
+                       (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school), 
+                data=d3, chains = 4, cores = 4, seed=123)
+```
+
+## Posterior means
+
+We extract the posterior draws to summarize the effect of the treatment.
+
+```{r}
+summary(bayes4, 
+        pars = c("tXw41", 
+                 "b[tXw41 school:1]", "b[tXw41 school:2]", "b[tXw41 school:3]", 
+                 "b[tXw41 school:4]", "b[tXw41 school:5]", "b[tXw41 school:6]"),
+        probs = c(0.1, 0.5, 0.9), digits = 4)
+```
+
+
+```{r}
+teff5 <- as.matrix(bayes4, 
+                   pars = c("tXw21",
+                            "b[tXw21 school:1]",
+                            "b[tXw21 school:2]",
+                            "b[tXw21 school:3]",
+                            "b[tXw21 school:4]",
+                            "b[tXw21 school:5]",
+                            "b[tXw21 school:6]",
+                            "tXw31",
+                            "b[tXw31 school:1]",
+                            "b[tXw31 school:2]",
+                            "b[tXw31 school:3]",
+                            "b[tXw31 school:4]",
+                            "b[tXw31 school:5]",
+                            "b[tXw31 school:6]",
+                            "tXw41",
+                            "b[tXw41 school:1]",
+                            "b[tXw41 school:2]",
+                            "b[tXw41 school:3]",
+                            "b[tXw41 school:4]",
+                            "b[tXw41 school:5]",
+                            "b[tXw41 school:6]",
+                            "tXw51",
+                            "b[tXw51 school:1]",
+                            "b[tXw51 school:2]",
+                            "b[tXw51 school:3]",
+                            "b[tXw51 school:4]",
+                            "b[tXw51 school:5]",
+                            "b[tXw51 school:6]")) 
+
+wave2.school1 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school:1]"]
+wave2.school2 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school:2]"]
+wave2.school3 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school:3]"]
+wave2.school4 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school:4]"]
+wave2.school5 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school:5]"]
+wave2.school6 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school:6]"]
+wave3.school1 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:1]"]
+wave3.school2 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:2]"]
+wave3.school3 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:3]"]
+wave3.school4 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:4]"]
+wave3.school5 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:5]"]
+wave3.school6 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school:6]"]
+wave4.school1 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:1]"]
+wave4.school2 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:2]"]
+wave4.school3 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:3]"]
+wave4.school4 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:4]"]
+wave4.school5 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:5]"]
+wave4.school6 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school:6]"]
+wave5.school1 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:1]"]
+wave5.school2 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:2]"]
+wave5.school3 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:3]"]
+wave5.school4 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:4]"]
+wave5.school5 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:5]"]
+wave5.school6 <- teff5[,"tXw51"] + teff5[,"b[tXw51 school:6]"]
+
+wave2 <- data.frame( school1 = wave2.school1,
+                     school2 = wave2.school2,
+                     school3 = wave2.school3,
+                     school4 = wave2.school4,
+                     school5 = wave2.school5,
+                     school6 = wave2.school6)
+wave3 <- data.frame( school1 = wave3.school1,
+                     school2 = wave3.school2,
+                     school3 = wave3.school3,
+                     school4 = wave3.school4,
+                     school5 = wave3.school5,
+                     school6 = wave3.school6)
+wave4 <- data.frame( school1 = wave4.school1,
+                     school2 = wave4.school2,
+                     school3 = wave4.school3,
+                     school4 = wave4.school4,
+                     school5 = wave4.school5,
+                     school6 = wave4.school6)
+wave5 <- data.frame( school1 = wave5.school1,
+                     school2 = wave5.school2,
+                     school3 = wave5.school3,
+                     school4 = wave5.school4,
+                     school5 = wave5.school5,
+                     school6 = wave5.school6)
+```
+
+```{r}
+wave2_mean <- apply( X = wave2, MARGIN = 2, FUN = mean )
+wave3_mean <- apply( X = wave3, MARGIN = 2, FUN = mean )
+wave4_mean <- apply( X = wave4, MARGIN = 2, FUN = mean )
+wave5_mean <- apply( X = wave5, MARGIN = 2, FUN = mean )
+
+wave2_quant <- apply( X = wave2, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.25, 0.75))
+wave3_quant <- apply( X = wave3, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.25, 0.75))
+wave4_quant <- apply( X = wave4, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.25, 0.75))
+wave5_quant <- apply( X = wave5, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.25, 0.75))
+
+wave2_quant <- data.frame(t(wave2_quant))
+wave3_quant <- data.frame(t(wave3_quant))
+wave4_quant <- data.frame(t(wave4_quant))
+wave5_quant <- data.frame(t(wave5_quant))
+
+names(wave2_quant) <- c("Q10", "Q90")
+names(wave3_quant) <- c("Q10", "Q90")
+names(wave4_quant) <- c("Q10", "Q90")
+names(wave5_quant) <- c("Q10", "Q90")
+
+r.wave2 <- data.frame( school = seq(1:6), mean = wave2_mean, wave2_quant, wave = 2 )
+r.wave3 <- data.frame( school = seq(1:6), mean = wave3_mean, wave3_quant, wave = 3 )
+r.wave4 <- data.frame( school = seq(1:6), mean = wave4_mean, wave4_quant, wave = 4 )
+r.wave5 <- data.frame( school = seq(1:6), mean = wave5_mean, wave5_quant, wave = 5 )
+r.full <- rbind.data.frame(r.wave2, r.wave3, r.wave4, r.wave5)
+```
+Graphical representation of results.
+
+```{r}
+ggplot(data = r.full, 
+       aes(x = wave, 
+           y = mean)) +
+  geom_pointrange(aes(ymin = Q10, 
+                      ymax = Q90, group = school, color = school),
+                  position=position_dodge(width=0.50)) +
+  scale_x_discrete("Wave", limits = c(2,3,4,5) ) +
+  geom_hline(yintercept=0)
+```
+
+# Complete pooling
+
+```{r}
+pooled <- lm(lsat ~ treated + welle + treated*welle, data = d3)
+summary(pooled)
+wave2.pooled <- summary(pooled)$coefficient["treated1:welle2",1]
+wave3.pooled <- summary(pooled)$coefficient["treated1:welle3",1]
+wave4.pooled <- summary(pooled)$coefficient["treated1:welle4",1]
+wave5.pooled <- summary(pooled)$coefficient["treated1:welle5",1]
+wave2.se <- summary(pooled)$coefficient["treated1:welle2",2]
+wave3.se <- summary(pooled)$coefficient["treated1:welle3",2]
+wave4.se <- summary(pooled)$coefficient["treated1:welle4",2]
+wave5.se <- summary(pooled)$coefficient["treated1:welle5",2]
+r.pooled <- data.frame( pooled = c(wave2.pooled, wave3.pooled, wave4.pooled, wave5.pooled),
+                        lower = c(wave2.pooled - 2*wave2.se,
+                                  wave3.pooled - 2*wave3.se, 
+                                  wave4.pooled - 2*wave4.se, 
+                                  wave5.pooled - 2*wave5.se),
+                        upper = c(wave2.pooled + 2*wave2.se,
+                                  wave3.pooled + 2*wave3.se, 
+                                  wave4.pooled + 2*wave4.se, 
+                                  wave5.pooled + 2*wave5.se),
+                        wave = seq(2:5))
+r.pooled
+```
+```{r}
+ggplot(data = r.pooled, 
+       aes(x = wave, 
+           y = pooled)) +
+  geom_pointrange(aes(ymin = lower, 
+                      ymax = upper),
+                  position=position_dodge(width=0.50)) +
+  scale_x_discrete("Wave", limits = c(2,3,4,5) ) +
+  geom_hline(yintercept=0)
+```
+
+# No pooling
+
+```{r}
+# library(lfe)
+nopooled <- lm(lsat ~ treated*welle*school + 
+                 female + school , data = d3)
+summary(nopooled)
+```
+
+# Original computing environment
+
+```{r, results='hide'}
+devtools::session_info()
+```
+

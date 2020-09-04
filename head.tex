@@ -1,0 +1,246 @@
+\usepackage[]{graphicx}
+\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+
+\usepackage{alltt}
+
+%\usepackage{stata}
+\usepackage[utf8]{inputenc}
+\usepackage{layout,fancyhdr,longtable,graphicx,float}%wrapfig,shortvrb
+\usepackage{setspace,booktabs,multirow,lscape,tabularx,url,colortbl,fancyvrb,relsize,ltxtable, enumitem}
+\usepackage{fancyvrb,framed,rotating}%,ulem
+
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{wrapfig}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable} 
+\usepackage{threeparttablex} 
+\usepackage[normalem]{ulem} 
+\usepackage{makecell}
+\usepackage{xcolor}
+
+
+\usepackage{pslatex}%
+\usepackage[T1]{fontenc} %
+\usepackage[english]{babel}
+\usepackage{amsfonts,amsmath,amssymb}
+\newdimen\jot \jot=15pt
+\DeclareMathVersion{euler} \DeclareMathVersion{eulerbold} \SetSymbolFont{letters}{euler}{U}{eur}{m}{n} \SetSymbolFont{letters}{eulerbold}{U}{eur}{b}{n} \SetSymbolFont{operators}{eulerbold}{OT1}{cmr}{bx}{n} \SetSymbolFont{symbols}{eulerbold}{OMS}{cmsy}{b}{n} \SetMathAlphabet\mathsf{eulerbold}{OT1}{cmss}{bx}{n} \SetMathAlphabet\mathit{eulerbold}{OT1}{cmr}{bx}{it}
+\newcommand{\eqexcl}{\ensuremath{\stackrel{\mathrm{!}}{=}}}
+
+\makeatletter
+\def\eulermath{\@nomath\eulermath
+              \mathversion{euler}}
+\def\uneulermath{\@nomath\uneulermath
+              \mathversion{normal}}
+\def\eulerbfmath{\@nomath\eulerbfmath
+              \mathversion{eulerbold}}
+\def\uneulerbfmath{\@nomath\uneulerbfmath
+              \mathversion{normal}}
+\newcommand{\bfmath}[1]{\mbox{\boldmath$#1$\unboldmath}}
+\newcommand{\eumath}[1]{\mbox{\eulermath$#1$\uneulermath}}
+\newcommand{\eubmath}[1]{\mbox{\eulerbfmath$#1$\uneulerbfmath}}
+\def\Var{\textrm{Var}}%
+\def\Cov{\textrm{Cov}}%
+\def\d{\textrm{d}}%
+\makeatother%
+
+% Seitenumbruch
+\clubpenalty = 10000 % schliesst Schusterjungen aus
+\widowpenalty = 10000 % schliesst Hurenkinder aus
+
+%Inhaltsverzeichnis
+\usepackage{tocloft}
+\renewcommand{\cfttoctitlefont}{}%\large\bf
+\renewcommand{\cftloftitlefont}{\large\bf}
+\renewcommand{\cftlottitlefont}{\large\bf}
+%\renewcommand\cftsecfont{}
+%\addtocontents{toc}{\hfill Seite\endgraf}
+%\addtocontents{lof}{\ Abbildung\hfill Seite}
+%\renewcommand{\cftsecfont}{\normal} %  
+%\renewcommand{\cftsecleader}{\normal\cftdotfill{\cftsecdotsep}} 
+%\renewcommand{\cftsecpagefont}{\normal} 
+% \renewcommand{\cftsecpresnum}{SOMETHING } 
+% \renewcommand{\cftsecaftersnum}{:} 
+% \renewcommand{\cftsecaftersnumb}{\\}
+
+%% List of Appendices
+\newcommand\listappendixname{}
+\newcommand\appcaption[1]{%
+  \addcontentsline{app}{section}{#1}}
+\makeatletter
+\newcommand\listofappendices{%
+  \section*{\listappendixname}\@starttoc{app}}
+\makeatother
+
+
+% PAGE-STYLE: Kopf- u. Fu{\ss}zeilen
+\addtolength{\parskip}{+0.5cm}%Paragraph Spacing // Absatz
+\parindent=0pt
+\emergencystretch20pt%
+
+% Page-Style: Fancy
+\pagestyle{plain}
+%\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+
+\renewcommand{\subsectionmark}[1]{\markright{\textit{\thesubsection\
+#1}}{}}
+\renewcommand{\sectionmark}[1]{\markright{\textit{\thesection.
+#1}}}%
+\addtolength{\headheight}{1pt} \lhead[\fancyplain{}{\thepage}] {\fancyplain{}{\rightmark}} \rhead[\fancyplain{}{\leftmark}] {\fancyplain{}{\thepage}}
+\chead[\fancyplain{}{}]%
+{\fancyplain{}{}} \cfoot{} \lfoot{\tiny }%\isodayandtime
+
+% Page-Style: Seite
+\fancypagestyle{seite}{ \fancyhf{} \lhead[\fancyplain{}{\thepage}] {\fancyplain{}{XXX}} \rhead[\fancyplain{}{\leftmark}] {\fancyplain{}{\thepage}}
+\chead[\fancyplain{}{}]%
+{\fancyplain{}{}} \cfoot{} }
+
+% Page-Style: Seite
+\fancypagestyle{Landscape}{
+\fancyhf{}
+\lhead[\fancyplain{}{\thepage}]{\parbox[b]{14cm}{\fancyplain{}{\rightmark}}}
+\rhead[\fancyplain{}{\leftmark}]{\fancyplain{}{\thepage}}
+\chead[\fancyplain{}{}]{\fancyplain{}{}}
+\cfoot{}
+\lfoot{\tiny } %\isodayandtime
+}
+
+
+% \"{U}BERSCHRIFTEN
+\setcounter{secnumdepth}{4}% Tiefe der Nummerierung
+\setcounter{tocdepth}{4}% Ebenen im TOC
+
+%% Section begins on new page 
+
+\makeatletter
+\renewcommand{\section}{%
+    \@startsection {section}{1}{\z@}%
+                   {-3.5ex plus -1ex minus -.2ex}%
+                   {2.3ex plus.2ex}%
+                   {\normalfont\normalsize\bfseries}}
+\renewcommand{\subsection}{%
+    \@startsection {subsection}{2}{\z@}%
+                   {-3.5ex plus -1ex minus -.2ex}%
+                   {2.3ex plus.2ex}%
+                   {\normalfont\normalsize\bfseries}}
+% \renewcommand{\subsubsection}{%
+%     \@startsection {subsubsection}{3}{\z@}%
+%                    {-3.5ex plus -1ex minus -.2ex}%
+%                    {2.3ex plus.2ex}%
+%                    {\normalfont\normalsize}}
+\newcommand\subsubsubsection{\@startsection{paragraph}{4}{\z@}%
+                   {-3.5ex plus -1ex minus -.2ex}%
+                   {2.3ex plus.2ex}%
+                   {\normalfont\normalsize\bfseries}}
+\newcommand\mysubparagraph{\@startsection{subparagraph}{5}{\z@}%
+             {-3ex}%
+             {-1em}%
+             {\reset@font\normalsize}}
+
+\usepackage{titlesec}
+% \newcommand{\sectionbreak}{\clearpage}
+% Fu{\ss}noten
+\usepackage[multiple]{footmisc}
+\makeatletter
+\newlength{\myFootnoteWidth}
+\newlength{\myFootnoteLabel}
+\setlength{\myFootnoteLabel}{1.2em}
+\renewcommand{\@makefntext}[1]{%
+  \setlength{\myFootnoteWidth}{\columnwidth}%
+  \addtolength{\myFootnoteWidth}{-\myFootnoteLabel}%
+  \noindent\makebox[\myFootnoteLabel][r]{\@makefnmark\ }%
+  \parbox[t]{\myFootnoteWidth}{#1}%
+}
+\makeatother
+\renewcommand{\footnotelayout}{\doublespacing}
+
+% Datum und Uhrzeit
+\newcount\m \newcount\n \begingroup
+\count0=\time \divide\count0by60 % Hour
+\count2=\count0 \multiply\count2by-60
+\advance\count2by\time % Min
+\def\2#1{\ifnum#1<10 0\fi\the#1}
+\xdef\isodayandtime{\the\year-\2\month-\2
+\day\space\2{\count0}:%
+\2{\count2}} \endgroup
+
+
+% Randbemerkungen
+\let\margin\marginpar
+\newcommand\myMargin[1]{\margin{\raggedright\renewcommand{\baselinestretch}{1}\footnotesize\textcolor{red}{#1}}}
+\renewcommand{\marginpar}[1]{\myMargin{#1}}
+
+%CAPTIONS
+\usepackage{caption}[2004/11/28]
+%\captionsetup{margin=0pt,font=normalsize,labelfont=,singlelinecheck=true,textfont={},belowskip=10pt}%labelsep=newline
+\captionsetup{margin=0pt,font=normalsize,labelfont={bf},singlelinecheck=false,labelsep=newline,textfont={bf},belowskip=10pt}
+\DeclareCaptionLabelFormat{simple}{#1 #2}%
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   COLORED LISTING
+%   Source: https://tex.stackexchange.com/questions/163412/how-fancyvrb-background-color-fill-completely-with-fillcolor
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{courier}
+\usepackage{tcolorbox,listings}
+\lstdefinestyle{mystyle}{
+     basicstyle=\relsize{-2.5}\ttfamily, 
+     numbers=none, 
+     numberstyle=\tiny, 
+     numbersep=0pt,
+     showspaces=false,
+     breaklines=false
+ }
+\tcbuselibrary{listings,skins,breakable}
+\definecolor{light-gray}{gray}{0.95}
+\definecolor{mid-gray}{gray}{0.5}
+\newtcblisting{BGVerbatim}{
+      arc=0mm,
+      top=-2mm,
+      bottom=-2mm,
+      left=0mm,
+      right=0mm,
+      width=\linewidth,
+      boxrule=0.5,
+      colback=light-gray,
+      spartan,
+      listing only,
+      listing options={style=mystyle},
+      breaklines=false
+}
+
+\RecustomVerbatimCommand{\VerbatimInput}{VerbatimInput}%
+{fontsize=\footnotesize,
+ %
+ frame=lines,  % top and bottom rule only
+ framesep=2em, % separation between frame and text
+ % rulecolor=\color{mid-gray},
+ %
+ % label=\fbox{\color{Black}data.txt},
+ % labelposition=topline,
+ %
+ % commandchars=\|\(\), % escape character and argument delimiters for
+                      % commands within the verbatim
+ % commentchar=*        % comment character
+}
+

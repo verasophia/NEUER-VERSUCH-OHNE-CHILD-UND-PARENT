@@ -1,0 +1,370 @@
+% ____________________________________________________________________________
+%	What's new?
+% ____________________________________________________________________________
+% ____________________________________________________________________________
+
+%\documentclass[letterpaper,12pt]{article}
+\documentclass[a4,12pt]{article}
+
+% LaTeX Settings (fold)
+\usepackage[utf8]{inputenc}
+
+% Load Packages
+%\usepackage{a4wide}%
+\usepackage[top=3.0cm,left=3.0cm,right=3.0cm,bottom=3cm,headheight=1.5cm,headsep=1cm,footnotesep=1cm]{geometry}%
+\usepackage{layout,fancyhdr,longtable,graphicx,float}%endfloat, wrapfig,shortvrb
+\usepackage{setspace,natbib,booktabs,multirow,eurosym,lscape,tabularx,colortbl,fancyvrb,relsize,hvfloat}
+\usepackage{fancyvrb,framed,rotating}%,ulem
+\usepackage{pslatex}%
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc} %
+%\usepackage[inline]{trackchanges}
+
+\bibpunct{(}{)}{,}{a}{}{,}
+%% Format URL
+\usepackage{url}
+%% Define a new 'leo' style for the package that will use a smaller font.
+\makeatletter
+\def\url@leostyle{%
+  \@ifundefined{selectfont}{\def\UrlFont{\it}}{\def\UrlFont{\small\it}}}
+\makeatother
+%% Now actually use the newly defined style.
+\urlstyle{leo}
+
+% PSTricks
+\usepackage{pstricks,pst-3dplot}%,pst-tree
+
+\usepackage{amsfonts,amsmath,amssymb}
+\newdimen\jot \jot=15pt
+%\input{ueur.fd}
+\DeclareMathVersion{euler} \DeclareMathVersion{eulerbold} \SetSymbolFont{letters}{euler}{U}{eur}{m}{n} \SetSymbolFont{letters}{eulerbold}{U}{eur}{b}{n} \SetSymbolFont{operators}{eulerbold}{OT1}{cmr}{bx}{n} \SetSymbolFont{symbols}{eulerbold}{OMS}{cmsy}{b}{n} \SetMathAlphabet\mathsf{eulerbold}{OT1}{cmss}{bx}{n} \SetMathAlphabet\mathit{eulerbold}{OT1}{cmr}{bx}{it}
+\newcommand{\eqexcl}{\ensuremath{\stackrel{\mathrm{!}}{=}}}
+
+\makeatletter
+\def\eulermath{\@nomath\eulermath
+              \mathversion{euler}}
+\def\uneulermath{\@nomath\uneulermath
+              \mathversion{normal}}
+\def\eulerbfmath{\@nomath\eulerbfmath
+              \mathversion{eulerbold}}
+\def\uneulerbfmath{\@nomath\uneulerbfmath
+              \mathversion{normal}}
+\newcommand{\bfmath}[1]{\mbox{\boldmath$#1$\unboldmath}}
+\newcommand{\eumath}[1]{\mbox{\eulermath$#1$\uneulermath}}
+\newcommand{\eubmath}[1]{\mbox{\eulerbfmath$#1$\uneulerbfmath}}
+\def\Var{\textrm{Var}}%
+\def\Cov{\textrm{Cov}}%
+\def\d{\textrm{d}}%
+\makeatother%
+
+
+
+% FORMATIERUNG
+
+% Seitenumbruch
+\clubpenalty = 10000 % schliesst Schusterjungen aus
+\widowpenalty = 10000 % schliesst Hurenkinder aus
+
+%Inhaltsverzeichnis
+\usepackage{tocloft}
+\renewcommand{\cfttoctitlefont}{}%\large\bf
+\renewcommand{\cftloftitlefont}{\large\bf}
+\renewcommand{\cftlottitlefont}{\large\bf}
+%\renewcommand\cftsecfont{}
+%\addtocontents{toc}{\hfill Seite\endgraf}
+%\addtocontents{lof}{\ Abbildung\hfill Seite}
+\renewcommand{\cftsecfont}{\normal} %  
+%\renewcommand{\cftsecleader}{\normal\cftdotfill{\cftsecdotsep}} 
+\renewcommand{\cftsecpagefont}{\normal} 
+% \renewcommand{\cftsecpresnum}{SOMETHING } 
+% \renewcommand{\cftsecaftersnum}{:} 
+% \renewcommand{\cftsecaftersnumb}{\\}
+
+%% List of Appendices
+\newcommand\listappendixname{}
+\newcommand\appcaption[1]{%
+  \addcontentsline{app}{section}{#1}}
+\makeatletter
+\newcommand\listofappendices{%
+  \section*{\listappendixname}\@starttoc{app}}
+\makeatother
+
+
+% PAGE-STYLE: Kopf- u. Fu{\ss}zeilen
+%\addtolength{\parskip}{+0.5cm}%Paragraph Spacing // Absatz
+%\parindent=0pt
+\emergencystretch20pt%
+
+% Page-Style: Fancy
+%\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+
+\renewcommand{\subsectionmark}[1]{\markright{\textit{\thesubsection\
+#1}}{}}
+\renewcommand{\sectionmark}[1]{\markright{\textit{\thesection.
+#1}}}%
+\addtolength{\headheight}{1pt} \lhead[\fancyplain{}{\thepage}] {\fancyplain{}{\rightmark}} \rhead[\fancyplain{}{\leftmark}] {\fancyplain{}{\thepage}}
+\chead[\fancyplain{}{}]%
+{\fancyplain{}{}} \cfoot{} \lfoot{\tiny }%\isodayandtime
+
+
+% \"{U}BERSCHRIFTEN
+\setcounter{secnumdepth}{3}% Tiefe der Nummerierung
+\setcounter{tocdepth}{3}% Ebenen im TOC
+
+\makeatletter
+\renewcommand{\section}{%
+    \@startsection {section}{1}{\z@}%
+                   {-3.5ex plus -1ex minus -.2ex}%
+                   {2.3ex plus.2ex}%
+                   {\normalfont\normalsize\bfseries}}
+\renewcommand{\subsection}{%
+    \@startsection {subsection}{2}{\z@}%
+                   {-3.5ex plus -1ex minus -.2ex}%
+                   {2.3ex plus.2ex}%
+                   {\normalfont\normalsize\bfseries}}
+\renewcommand{\subsubsection}{%
+    \@startsection {subsubsection}{3}{\z@}%
+                   {-3.5ex plus -1ex minus -.2ex}%
+                   {2.3ex plus.2ex}%
+                   {\normalfont\normalsize\bfseries}}
+\newcommand\myparagraph{\@startsection{paragraph}{4}{\z@}%
+             {-3ex}%
+             {0em}%
+             {\reset@font\normalsize\textit}}
+\newcommand\mysubparagraph{\@startsection{subparagraph}{5}{\z@}%
+             {-3ex}%
+             {-1em}%
+             {\reset@font\normalsize}}
+
+% Fu{\ss}noten
+\usepackage[multiple]{footmisc}
+\makeatletter
+\newlength{\myFootnoteWidth}
+\newlength{\myFootnoteLabel}
+\setlength{\myFootnoteLabel}{1.2em}
+\renewcommand{\@makefntext}[1]{%
+  \setlength{\myFootnoteWidth}{\columnwidth}%
+  \addtolength{\myFootnoteWidth}{-\myFootnoteLabel}%
+  \noindent\makebox[\myFootnoteLabel][r]{\@makefnmark\ }%
+  \parbox[t]{\myFootnoteWidth}{#1}%
+}
+\makeatother
+
+% Datum und Uhrzeit
+\newcount\m \newcount\n \begingroup
+\count0=\time \divide\count0by60 % Hour
+\count2=\count0 \multiply\count2by-60
+\advance\count2by\time % Min
+\def\2#1{\ifnum#1<10 0\fi\the#1}
+\xdef\isodayandtime{\the\year-\2\month-\2
+\day\space\2{\count0}:%
+\2{\count2}} \endgroup
+
+
+% Randbemerkungen
+\let\margin\marginpar
+\newcommand\myMargin[1]{\margin{\raggedright\renewcommand{\baselinestretch}{1}\footnotesize\textcolor{red}{#1}}}
+\renewcommand{\marginpar}[1]{\myMargin{#1}}
+
+%CAPTIONS
+\usepackage{caption}[2004/11/28]
+%\captionsetup{margin=0pt,font=normalsize,labelfont=,singlelinecheck=true,textfont={},belowskip=10pt}%labelsep=newline
+\captionsetup{margin=0pt,font=normalsize,labelfont={bf},singlelinecheck=false,labelsep=newline,textfont={bf},belowskip=10pt}
+\DeclareCaptionLabelFormat{simple}{#1 #2}%
+
+\newenvironment{remark}{%
+\renewcommand{\baselinestretch}{1.0}\normalsize
+  \color{red}
+  \raggedright
+  \begin{framed}
+  }
+  {%
+    \end{framed}%
+    \color{black}
+    \renewcommand{\baselinestretch}{1.5}\normalsize
+}
+
+\newtheorem{myhypo}{Hypothesis}
+
+
+% LaTeX Settings (end)
+
+
+\begin{document}
+\pagestyle{plain}
+
+\thispagestyle{empty}%
+\begin{center}
+\renewcommand{\baselinestretch}{1.5} %
+\textbf{Projekt: Klasse im Puls -- Konzeptentwurf für eine Evaluation }\\[0.25cm]
+\renewcommand{\baselinestretch}{1.5}\normalsize
+Andrea Knecht, Gerhard Krug, Christoph Wunder\\ %$^\text{}$
+Universität Erlangen-Nürnberg \\[0.15cm]
+\today
+\end{center}
+\vspace{0.5cm}%
+\noindent\renewcommand{\baselinestretch}{1.0}\normalsize %
+% $^\text{a}$ University of Erlangen-Nuremberg \\
+% $^\text{*}$ Corresponding author: Christoph Wunder, University of Erlangen-Nuremberg, Department of Economics, Lange Gasse 20, 90403 Nuremberg, Germany. Tel.: +49 911 5302 260; Fax: +49 911 5302 178. Email: christoph.wunder@wiso.uni-erlangen.de
+% 
+% \newpage
+
+\section{Anhand welcher Auswirkungen soll das Projekt evaluiert werden?} % (fold)
+
+
+\subsection{Nicht leistungsorientierte Auswirkungen}
+
+	\begin{itemize}
+
+		\item affirmative Grundeinstellung
+
+			\begin{itemize}
+				\item Zufriedenheit mit der schulischen Situation (NEPS \#6f) 
+
+				\item Zeit für Hausaufgaben, Lernen
+
+			\end{itemize}
+
+		\item Integration insbesondere von Kindern mit Migrationshintergrund,
+        hyperaktiven Schülern und Kindern mit sozialen Störungen
+		
+			\begin{itemize}
+
+				\item Erhebung von Freundschaftsbeziehungen
+
+				\item Hilfe von Mitschülern bei Hausaufgaben (NEPS \#22c)
+
+				\item Migrationshintergrund 
+				
+					\begin{itemize}
+					
+					\item eigene Herkunft und Sprache (NEPS \#52-57)
+
+					\item Herkunft und Sprache der Familie (NEPS \#15-19)
+
+					\end{itemize}
+
+				\item ,,Auffällige“ Schüler müssen evtl. über Lehrkraft
+                identifiziert werden.
+				
+				 \end{itemize}
+				
+				 \item Freizeitverhalten (Sport, Musik), Lesen außerhalb der
+                Schule
+
+		\item abweichendes Verhalten (Gewaltbereitschaft)
+
+		\item Selbstkonzept der Schüler/Softskills
+
+			\begin{itemize}
+		
+			\item Zufriedenheit mit dem Leben, Gesundheit, Familie,
+	              Bekannten- und Freundeskreis (NEPS \#6a-e)
+
+			\item Einstellungsfragen (NEPS \#8) \\
+			\includegraphics[scale=0.8]{../graphs/NEPS8.eps}
+
+			\end{itemize}
+
+
+	\end{itemize}
+	
+
+\subsection{Leistungsorientierte Auswirkungen}
+
+	\begin{itemize}
+		
+		\item standardisierte Tests, Kompetenzen
+
+		\item Noten im letzten Jahreszeugnis, aktuelle Noten,
+        Selbsteinschätzung der schulischen Leistung
+
+		\item sonderpädagogischer Förderbedarf
+
+		\item Klassenwiederholung 
+
+		\item Übergang in höhere Schule
+		
+		\item Selbsteinschätzung des Gesundheitszustandes (NEPS \#7)
+
+	\end{itemize}
+
+ 
+% section section_name (end)
+
+\section{Methodische Ansätze} 
+
+\subsection{\emph{Difference-in-differences} Ansatz} 
+
+	\begin{itemize}
+
+		\item Vergleich der Veränderung (der interessierenden Größe) in der
+        Projekt-Klasse mit der Veränderung in einer Kontrollklasse. Es wird
+        angenommen, dass sich die Schüler in beiden Klassen gleich entwickelt
+        hätten, wenn das Projekt nicht durchgeführt worden wäre.
+
+		\begin{center}
+			\begin{tabular}{|l|c|c|}
+				\hline
+				& vorher 	& nachher \\
+				\hline
+				Projekt-Klasse & $y_{10}$ & $y_{11}$  \\
+				\hline
+				Kontrollklasse & $y_{00}$ & $y_{01}$ \\
+				\hline
+			\end{tabular}
+		\end{center}
+		
+		$$ \text{Effekt} =  (y_{11} - y_{10}) - (y_{01} - y_{00}) $$
+
+		\item erster Messzeitpunkt \underline{vor} Beginn des Projekts
+
+        \item Messung der interessierenden Größen in einer Kontrollgruppe
+
+	\end{itemize}
+
+\subsection{Dynamische Netzwerkanalyse}
+
+	\begin{itemize}
+
+ 		\item Beschreibung der Integration einer Schulklasse mittels
+        dynamischer Netzwerkanalyse
+
+		\item Bei neuer Klassenzusammensetzung sollten Messzeitpunkte
+        (insbesondere für Netzwerk) in kurzen Abständen folgen ($<3$ Monate?).
+
+	\end{itemize}
+
+\subsection{Sonstiges}
+
+	\begin{itemize}
+
+ 		\item Informationen zum Familienhintergrund (Bildung der Eltern)
+
+		\item Information zur Schule (allgemeine Ausstattung, Stadt-Land,
+        Ausländeranteil, Regionalinformation kann evtl. aus anderen Quellen
+        zugespielt werden)
+
+        \item Befragung durch Lehrer oder Interviewer? (Lehrer als Vertrauensperson ist u.~U. nicht neutral.)
+
+        \item Pre-Test
+
+        \item Datenschutz: keine Erhebung von Namen, Beziehungen werden über Ziffern kodiert.
+
+        \item geschätzte Dauer: 1 Schulstunde
+
+	\end{itemize}
+
+
+
+% section methodischer_ansatz (end)
+
+\newpage
+% References (fold)	
+\renewcommand{\baselinestretch}{1.0}\normalsize
+\bibliographystyle{dcu}%apalikedcu
+\addcontentsline{toc}{chapter}{\numberline{}\bibname}%
+\bibliography{/Users/Christoph/Documents/Uni/Literatur/lit_DB/litdb_sp}
+% (end)
+
+\end{document}
