@@ -1,0 +1,138 @@
+---
+title: Klasse im Puls
+author: 
+  - Christoph Wunder
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_document:
+    fig_caption: yes
+    theme: spacelab 
+    highlight: pygments
+    toc: TRUE
+    toc_depth: 2
+    number_sections: TRUE
+    toc_float:
+      smooth_scroll: FALSE
+bibliography: literature.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment=NA)
+rm(list=ls())
+```
+```{r, include=TRUE, message = FALSE}
+library(tidyverse)
+library(Hmisc)
+library(mosaic)
+library(foreign)
+library(lme4)
+library(rstanarm)
+library(brms)
+library(tableone)
+library(RColorBrewer)
+library(xtable)
+library(knitr)
+library(kableExtra)
+```
+
+
+# Data
+
+```{r}
+welle1 <- readRDS("../data/d_welle1.RDS")
+```
+
+
+## Pre-treatment Analysis
+```{r, eval=FALSE}
+# Mean differences life satisfaction treatment group vs. control group
+welle1 <- left_join(welle1, welle1 %>% group_by(school, treated) %>%
+                      summarise( mean.lsat = mean(lsat, na.rm = TRUE), 
+                                 sd.lsat=sd(lsat, na.rm=TRUE) ),
+                    by=c("school", "treated"))
+lsat_pre_treat <- ggplot( welle1, aes(x=school, y=mean.lsat, fill=treated)) +
+  geom_bar (stat="identity", position = "dodge") + coord_cartesian(ylim = c(0, 11)) + labs(title = "Life satisfaction", caption = "Mean pretreatment life satisfaction (+ 1 sd) (wave 1) for treatment and control group per School") + 
+  geom_errorbar(aes(ymin=mean.lsat-sd.lsat, ymax=mean.lsat+sd.lsat), width=.2,
+                position=position_dodge(.9)) +
+  scale_fill_brewer(palette="Blues")
+
+ggsave("../figures/lsat_pre_treat.pdf", lsat_pre_treat, width = 7, height = 5, units = "in")
+
+lsat_pre_treat
+```
+
+```{r}
+# Mean differences life satisfaction treatment group vs. control group
+su_welle1 <- welle1 %>% group_by(school, treated) %>%
+                      summarise( mean.lsat = mean(lsat, na.rm = TRUE), 
+                                 sd.lsat=sd(lsat, na.rm=TRUE) )
+lsat_pre_treat <- ggplot( su_welle1, 
+                          aes(x=school, y=mean.lsat, fill=treated) ) +
+  geom_bar ( stat="identity", position = "dodge" ) + 
+  coord_cartesian( ylim = c(0, 11) ) + 
+  labs(title = "Life satisfaction", 
+       caption = "Mean pretreatment life satisfaction (+ 1 sd) (wave 1) for treatment and control group per School") +
+  geom_errorbar( aes(ymin=mean.lsat-sd.lsat, ymax=mean.lsat+sd.lsat), 
+                 width=.2, position=position_dodge(.9) ) +
+  scale_fill_brewer(palette="Blues")
+
+ggsave("../figures/lsat_pre_treat.pdf", lsat_pre_treat, width = 7, height = 5, units = "in")
+
+lsat_pre_treat
+```
+
+
+```{r}
+# Mean differences satisfaction with friends treatment group vs. control group
+welle1 <- left_join(welle1, welle1 %>% group_by(school, treated) %>% summarise( mean.frsat = mean(sat_friends, na.rm = TRUE),
+                                                                                sd.frsat=sd(sat_friends, na.rm=TRUE)),
+                    by=c("school", "treated"))
+
+sat_friends_pre_treat <- ggplot (welle1, aes(x=school, y=mean.frsat, fill=treated)) + 
+  geom_bar (stat="identity", position = "dodge") + coord_cartesian(ylim = c(0, 11)) + labs(title = "Satisfaction with friends", caption = "Mean pretreatment satisfaction (+ 1 sd) with friends (wave 1) for treatment and control group per School") + 
+  geom_errorbar(aes(ymin=mean.frsat-sd.frsat, ymax=mean.frsat+sd.frsat), width=.2,
+                position=position_dodge(.9)) +
+  scale_fill_brewer(palette="Blues")
+
+ggsave("../figures/sat_friends_pre_treat.pdf", sat_friends_pre_treat, width = 7, height = 5, units = "in")
+
+sat_friends_pre_treat
+```
+
+```{r}
+welle1 <- left_join(welle1, welle1 %>% group_by(school, treated) %>% summarise( mean.clsat = mean(sat_class, na.rm = TRUE),
+                                                                                sd.clsat=sd(sat_class, na.rm=TRUE)),
+                    by=c("school", "treated"))
+
+sat_class_pre_treat <- ggplot (welle1, aes(x=school, y=mean.clsat, fill=treated)) + 
+  geom_bar (stat="identity", position = "dodge") + coord_cartesian(ylim = c(0, 11)) + labs(title = "Satisfaction with the class", caption = "Mean pretreatment satisfaction (+ 1 sd) with the class (wave 1) for treatment and control group per School") + 
+  geom_errorbar(aes(ymin=mean.clsat-sd.frsat, ymax=mean.clsat+sd.frsat), width=.2,
+                position=position_dodge(.9)) +
+  scale_fill_brewer(palette="Blues")
+
+ggsave("../figures/sat_class_pre_treat.pdf", sat_class_pre_treat, width = 7, height = 5, units = "in")
+
+sat_class_pre_treat
+```
+
+```{r}
+vars <- c("lsat","female", "sat_friends", "sat_class", "classsit.prob", "classsit.excl", "note.deu", "note.mat", "note.mus", "hob.mus.making", "hob.mus.lis", "dauer.mus.lis", "dauer.mus.making", "play.instr", "mus.active", "migback")
+smd <- CreateTableOne(vars = vars, strata = "treated", data = welle1, test = FALSE, includeNA = F)
+
+print(smd, smd = TRUE) 
+ExtractSmd(smd)
+
+# 2020-09-03 vs: Preferred method to compute smd was "stddiff" but an error occured that I could not fix:
+# stddiff.numeric(data=welle1, gcol=4, vcol=5)
+# Queston: How can I integrate the resultsing smd in KIP_paper.Rmd?
+
+#ptd <- print(smd, printToggle = FALSE, noSpaces = TRUE)
+#xtable(ptd)
+```
+
+# Original computing environment
+
+```{r, results='hide'}
+devtools::session_info()
+```
+

@@ -1,0 +1,483 @@
+---
+title:  | 
+        | Klasse im Puls
+        | Model statement
+author: 
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_document:
+    fig_caption: yes
+    theme: spacelab 
+    highlight: pygments
+    toc: TRUE
+    toc_depth: 2
+    number_sections: TRUE
+    toc_float:
+      smooth_scroll: FALSE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment=NA)
+rm(list=ls()) # rm() needs to be specified; using list removes a bunch of objects; ls() lists all objects in the current workspace --> command removes all objects from R memory
+library(tidyverse)
+library(plm)       # Panel data analysis library
+library(stargazer)
+library(effects)
+library(ggplot2)
+library(brms)
+library(ggdist)
+library(Hmisc)
+library(mosaic)
+library(foreign)
+library(lme4)
+library(rstanarm)
+set.seed(132435)
+```
+
+
+The purpose of this vignette is to develop and test a model framework for analyzing experiments in school classes.
+
+
+# Data generating process 
+
+
+Our aim is to estimate the effect of a classroom experiment. We consider one treatment group and one control group.
+
+
+```{r}
+class.size <- 30 # number of students in each class
+student.id <- seq(1:class.size)
+class.id <- seq(1:12)
+
+wave <- seq(1:5) - 1
+
+d <- expand.grid(wave = wave, student.id = student.id, class.id = class.id)
+
+rm(wave, class.id, student.id)
+```
+
+First, we define the data structure for `r max(d$class.id)` groups (classrooms), `r class.size` students per class, and `r max(d$wave)+1` measurement occasions.
+
+```{r}
+
+
+
+d$treated <- ifelse(d$class.id %% 2 == 1, 1, 0)
+
+  
+  # ifelse(d$class.id==1 | d$class.id==3 | d$class.id==5 | d$class.id==7 | d$class.id==9 | d$class.id==11, 1, 0)
+
+
+d$school.id <- ceiling(d$class.id / 2)
+
+
+# d$school.id <- ifelse(d$class.id==1 | d$class.id==2, 1, ifelse(d$class.id==3 | d$class.id==4, 2, ifelse(d$class.id==5 | d$class.id==6, 3, ifelse(d$class.id==7 | d$class.id==8, 4, ifelse(d$class.id==9 | d$class.id==10, 5, ifelse(d$class.id==11 | d$class.id==12, 6,0))))))
+
+df <- unique(d[c("student.id", "class.id")]) # creates new data sheet with those two variables from first data sheet
+df <- df %>% mutate(ustudent.id = 1:nrow(df)) %>%
+#mutate() adds new variables and preserves existing ones
+    select(ustudent.id, everything()) #student ID für jeden einzelnen Schüler unabhängig von der Klasse
+df$student.effect <- rnorm(nrow(df), mean=0, sd=1)
+d <- left_join(d, df, by=c("class.id", "student.id"))
+df <- unique(df <- unique(d[c("school.id")]))
+df$school.effect <- rnorm(nrow(df), mean=0, sd=1.5)
+d <- left_join(d, df, by="school.id")
+tail(d)
+```
+
+The outcomes are determined by the following data generating process.
+
+```{r}
+teffect <- 1 # treatment effect
+wave.effects <- -1 # wave effects
+class.effect <- 2
+cons <- 0
+d$y <- cons + class.effect*d$treated + 
+              wave.effects*d$wave + 
+              teffect*(d$treated*d$wave) +
+              d$student.effect +
+              d$school.effect +
+              rnorm(nrow(d), mean=0, sd=1)
+```
+
+
+
+
+
+## Posterior means
+
+We extract the posterior draws to summarize the effect of the treatment.
+
+```{r}
+summary(bayes3, 
+        pars = c("tXw31", 
+                 "b[tXw31 school:1]", "b[tXw31 school:2]", "b[tXw31 school:3]", 
+                 "b[tXw31 school:4]", "b[tXw31 school:5]", "b[tXw31 school:6]"),
+        probs = c(0.1, 0.5, 0.9), digits = 4)
+```
+
+```{r}
+teff5 <- as.matrix(bayes3, 
+                   pars = c("tXw11",
+                            "b[tXw11 school.id:1]",
+                            "b[tXw11 school.id:2]",
+                            "b[tXw11 school.id:3]",
+                            "b[tXw11 school.id:4]",
+                            "b[tXw11 school.id:5]",
+                            "b[tXw11 school.id:6]",
+                            "tXw21",
+                            "b[tXw21 school.id:1]",
+                            "b[tXw21 school.id:2]",
+                            "b[tXw21 school.id:3]",
+                            "b[tXw21 school.id:4]",
+                            "b[tXw21 school.id:5]",
+                            "b[tXw21 school.id:6]",
+                            "tXw31",
+                            "b[tXw31 school.id:1]",
+                            "b[tXw31 school.id:2]",
+                            "b[tXw31 school.id:3]",
+                            "b[tXw31 school.id:4]",
+                            "b[tXw31 school.id:5]",
+                            "b[tXw31 school.id:6]",
+                            "tXw41",
+                            "b[tXw41 school.id:1]",
+                            "b[tXw41 school.id:2]",
+                            "b[tXw41 school.id:3]",
+                            "b[tXw41 school.id:4]",
+                            "b[tXw41 school.id:5]",
+                            "b[tXw41 school.id:6]")) 
+
+wave1.school.id1 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:1]"]
+wave1.school.id2 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:2]"]
+wave1.school.id3 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:3]"]
+wave1.school.id4 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:4]"]
+wave1.school.id5 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:5]"]
+wave1.school.id6 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:6]"]
+wave2.school.id1 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:1]"]
+wave2.school.id2 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:2]"]
+wave2.school.id3 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:3]"]
+wave2.school.id4 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:4]"]
+wave2.school.id5 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:5]"]
+wave2.school.id6 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:6]"]
+wave3.school.id1 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:1]"]
+wave3.school.id2 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:2]"]
+wave3.school.id3 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:3]"]
+wave3.school.id4 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:4]"]
+wave3.school.id5 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:5]"]
+wave3.school.id6 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:6]"]
+wave4.school.id1 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:1]"]
+wave4.school.id2 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:2]"]
+wave4.school.id3 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:3]"]
+wave4.school.id4 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:4]"]
+wave4.school.id5 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:5]"]
+wave4.school.id6 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:6]"]
+
+wave1 <- data.frame( school.id1 = wave1.school.id1,
+                     school.id2 = wave1.school.id2,
+                     school.id3 = wave1.school.id3,
+                     school.id4 = wave1.school.id4,
+                     school.id5 = wave1.school.id5,
+                     school.id6 = wave1.school.id6)
+wave2 <- data.frame( school.id1 = wave2.school.id1,
+                     school.id2 = wave2.school.id2,
+                     school.id3 = wave2.school.id3,
+                     school.id4 = wave2.school.id4,
+                     school.id5 = wave2.school.id5,
+                     school.id6 = wave2.school.id6)
+wave3 <- data.frame( school.id1 = wave3.school.id1,
+                     school.id2 = wave3.school.id2,
+                     school.id3 = wave3.school.id3,
+                     school.id4 = wave3.school.id4,
+                     school.id5 = wave3.school.id5,
+                     school.id6 = wave3.school.id6)
+wave4 <- data.frame( school.id1 = wave4.school.id1,
+                     school.id2 = wave4.school.id2,
+                     school.id3 = wave4.school.id3,
+                     school.id4 = wave4.school.id4,
+                     school.id5 = wave4.school.id5,
+                     school.id6 = wave4.school.id6)
+
+```
+
+```{r}
+wave1_mean <- apply( X = wave1, MARGIN = 2, FUN = mean )
+wave2_mean <- apply( X = wave2, MARGIN = 2, FUN = mean )
+wave3_mean <- apply( X = wave3, MARGIN = 2, FUN = mean )
+wave4_mean <- apply( X = wave4, MARGIN = 2, FUN = mean )
+
+wave1_quant <- apply( X = wave1, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.25, 0.75))
+wave2_quant <- apply( X = wave2, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.25, 0.75))
+wave3_quant <- apply( X = wave3, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.25, 0.75))
+wave4_quant <- apply( X = wave4, MARGIN = 2, 
+                   FUN = quantile, probs = c(0.25, 0.75))
+
+wave1_quant <- data.frame(t(wave1_quant))
+wave2_quant <- data.frame(t(wave2_quant))
+wave3_quant <- data.frame(t(wave3_quant))
+wave4_quant <- data.frame(t(wave4_quant))
+
+names(wave1_quant) <- c("Q10", "Q90")
+names(wave2_quant) <- c("Q10", "Q90")
+names(wave3_quant) <- c("Q10", "Q90")
+names(wave4_quant) <- c("Q10", "Q90")
+
+r.wave1 <- data.frame( school.id = seq(1:6), mean = wave1_mean, wave1_quant, wave = 5 )
+r.wave2 <- data.frame( school.id = seq(1:6), mean = wave2_mean, wave2_quant, wave = 2 )
+r.wave3 <- data.frame( school.id = seq(1:6), mean = wave3_mean, wave3_quant, wave = 3 )
+r.wave4 <- data.frame( school.id = seq(1:6), mean = wave4_mean, wave4_quant, wave = 4 )
+r.full <- rbind.data.frame(r.wave1, r.wave2, r.wave3, r.wave4)
+```
+
+Graphical representation of results.
+
+```{r}
+ggplot(data = r.full, 
+       aes(x = wave, 
+           y = mean)) +
+  geom_pointrange(aes(ymin = Q10, 
+                      ymax = Q90, group = school.id, color = school.id),
+                  position=position_dodge(width=0.50)) +
+  scale_x_discrete("Wave", limits = c(2,3,4,5) ) +
+  geom_hline(yintercept=0)
+```
+
+# BRMS
+## Varying effects and the underfitting/overfittin trade-off
+Varying intercepts are just regularized estimates, but adaptively regularized by estimating how diverse the clusters are while estimating the features of each cluster. This fact is not easy to grasp... A major benefit of using varying effects estimates, instead of the empirical raw estimates, is that they provide more accurate estimates of the individual cluster (school) intercepts. On average, the verying effects actually provid a better estimate of the individual school (cluster) means. The reson that the varying intercepts provide better estimates is that they do a better job of trading off underfitting and overfitting (9408).
+
+In this section, we explicate this by contrasting three persepectives:
+* complete pooling (i.e. a singel-$\alpha$ model)
+* no pooling (i.e., the single-level $\alpha_{tank[i]}$ model), and
+* partial pooling [i.e., the multilevel model for which $\alpha_j \sim {\sf Normal}(\overline{\alpha}, \sigma)$].
+
+To demonstrate the [the magic of the multilevel model], we'll simulate some *tadpole* data. That way, we'll know the true *per-pond survival* probabilities. Then we can compare the no-pooling estimates to the partial pooling estimates, by computing how close each gets to the true values they are trying to estimate. The rest of this section shows how to do such a simulation (p409).
+
+### The model.
+
+The simulation formula should look familiar.
+${\sf surv}_i \sim {\sf Binomial}(n_i,p_i)$
+${\sf logit}(p_i) = \alpha_{{\sf pond}[i]}}$
+$\alpha_j \sim {\sf Normal }(\overline{\alpha}, \sigma)$
+$\overline{\alpha} \sim {\sf Normal}(0,1.5)$
+$\sigma \sim {\sf Exponential}(1)$
+
+### Assign values to the parameters.
+
+Here we follow along with McElreath and ""assign specific values representative of the actual *tadpole data* p409. Because he includes a `set.seed()` line, our results should match his exactly.
+
+```{r}
+a_bar <- 1.5
+sigma <- 1.5
+n_ponds <- 60
+
+set.seed(5005)
+
+dsim <- 
+  tibble(pond   = 1:n_ponds,
+         ni     = rep(c(5, 10, 25, 35), each = n_ponds / 4) %>% as.integer(),
+         true_a = rnorm(n = n_ponds, mean = a_bar, sd = sigma))
+
+head(dsim)
+```
+McElreath twice urged us to inspect the contents of this simulation. In addition to looking at the data with `head()`, we might as well plot.
+
+```{r}
+dsim %>% 
+  mutate(ni = factor(ni)) %>% 
+  
+  ggplot(aes(x = true_a, y = ni)) +
+  stat_dotsinterval(fill = "orange2", slab_size = 0, .width = .5) +
+  ggtitle("Log-odds varying by # tadpoles per pond") +
+  theme(plot.title = element_text(size = 14))
+```
+### Sumulate survivors.
+Each *pond* $i$ has $n_i$ potential *survivors*, and nature flips each tadpoles's coin, so to speak, with probability *of survival* $p_i$. This probability $p_i$ is implied by the model definition, and is equal to:
+
+$p_i = \frac{{\sf exp}(\alpha_i)}{1+{\sf exp}(\alpha_i)}$
+
+The model uses a logit link, and so the probability is defined by the [`inv_logit_scaled()`] function p411.
+
+Although McElreath shared his `set.seed()` number in the last section, he didn't share it for this bit. We'll go ahead and carr over the one from last time. Hoever, in a moment we'll see this clearly wasn't the one he uses here. As a consequence, our results will deviate a bit from his.
+
+```{r}
+set.seed(5005)
+(
+  dsim <-
+  dsim %>%
+  mutate(si = rbinom(n = n(), prob = inv_logit_scaled(true_a), size = ni))
+)
+```
+### Compute the no-pooling estimates.
+The no-pooling estimates (i.e., $\alpha_{{\sf tank}_i}$) are the results of simple algebra.
+
+```{r}
+(
+  dsim <-
+  dsim %>%
+  mutate(p_nopool = si / ni)
+)
+```
+"These are the same no-pooling estimates you'd get by fittin a model with a dummy variable for each *pond* and flat priors induce no regularization" p411. That is, these are the same kinds of estimates we got back when we fit `b13.1`.
+
+### Compute the partial pooling estimates.
+Fit the multilevel (partial-pooling) model.
+
+```{r}
+b13.3 <- 
+  brm(data = dsim, 
+      family = binomial,
+      si | trials(ni) ~ 1 + (1 | pond),
+      prior = c(prior(normal(0, 1.5), class = Intercept),
+                prior(exponential(1), class = sd)),
+      iter = 200, warmup = 100, chains = 4, cores = 4,
+      seed = 13,
+      # file = "fits/b13.03"
+  )
+```
+Here's our standard **brms** summary
+```{r}
+print(b13.3)
+```
+I'm not aware that you can use McElreath's `depth=2` trick in **brms** for `Summary()` or `print`. However, you can get most of that information and more with the Stan-like summary using the $fit syntax
+
+```{r}
+b13.3$fit
+```
+As an aside, notice how this summary still reports the old-style `n_eff` values, rather than the updated `Bulk_ESS` and `Trail_ESS` values. I suspect this will change sometime soon.
+
+Let's get ready for the diagnostic plot of Figure 13.3. First we add the partially pooled estimates, as summarized by their posterior means, to the `dsim` data. Then we compute error values.
+
+```{r}
+# we could have included this step in the clock of code below, if we wanted
+p_partpool <- 
+  coef(b13.3)$pond[, , ] %>% 
+  data.frame() %>%
+  transmute(p_partpool = inv_logit_scaled(Estimate))
+
+dsim <- 
+  dsim %>%
+  bind_cols(p_partpool) %>% 
+  mutate(p_true = inv_logit_scaled(true_a)) %>%
+  mutate(nopool_error   = abs(p_nopool   - p_true),
+         partpool_error = abs(p_partpool - p_true))
+
+dsim %>% 
+  glimpse()
+```
+Here is our code for Figure 13.3. The extra data processing for `dfline` is how we get the values necessary for the horizontal summary lines.
+
+```{r}
+dfline <- 
+  dsim %>%
+  select(ni, nopool_error:partpool_error) %>%
+  pivot_longer(-ni) %>%
+  group_by(name, ni) %>%
+  summarise(mean_error = mean(value)) %>%
+  mutate(x    = c( 1, 16, 31, 46),
+         xend = c(15, 30, 45, 60))
+  
+dsim %>% 
+  ggplot(aes(x = pond)) +
+  geom_vline(xintercept = c(15.5, 30.5, 45.4), 
+             color = "white", size = 2/3) +
+  geom_point(aes(y = nopool_error), color = "orange2") +
+  geom_point(aes(y = partpool_error), shape = 1) +
+  geom_segment(data = dfline, 
+               aes(x = x, xend = xend, 
+                   y = mean_error, yend = mean_error),
+               color = rep(c("orange2", "black"), each = 4),
+               linetype = rep(1:2, each = 4)) +
+  annotate(geom = "text", 
+           x = c(15 - 7.5, 30 - 7.5, 45 - 7.5, 60 - 7.5), y = .45, 
+           label = c("tiny (5)", "small (10)", "medium (25)", "large (35)")) +
+  scale_x_continuous(breaks = c(1, 10, 20, 30, 40, 50, 60)) +
+  labs(title = "Estimate error by model type",
+       subtitle = "The horizontal axis displays pond number. The vertical axis measures\nthe absolute error in the predicted proportion of survivors, compared to\nthe true value used in the simulation. The higher the point, the worse\nthe estimate. No-pooling shown in orange. Partial pooling shown in black.\nThe orange and dashed black lines show the average error for each kind\nof estimate, across each initial density of tadpoles (pond size).",
+       y = "absolute error") +
+  theme(panel.grid.major = element_blank(),
+        plot.subtitle = element_text(size = 10))
+```
+If you wanted to quantify the differences in simple summaries, you might execute something like this.
+```{r}
+dsim %>%
+  select(ni, nopool_error:partpool_error) %>%
+  pivot_longer(-ni) %>%
+  group_by(name) %>%
+  summarise(mean_error   = mean(value) %>% round(digits = 3),
+            median_error = median(value) %>% round(digits = 3))
+```
+Although many years of work in statistic have shown that partially pooled estimates are better, on average, this is not always the case. Our results are an example of this. Mc Elreath addressed this directly:
+
+*But there are some cases in which the no-pooling estimates are better. These exceptions often result from ponds with extreme probabilities of survival. The partial pooling estimates shrink such extreme ponds towards the mean, because few ponds exhibit such extreme behavior. But sometimes outliers really are outliers. p414*
+
+I originally learned about the multilevel in order to work with longitudinal data. In that context, I found the basic principles of a multilevel structure quite intuitive. The concept of partial pooling, however, wook me some time to wap my head around. If you're sturggling with this, be patient and keep chipping away.
+
+When McElreath lectured on this topic in 2015, he traced partial pooling to statistician Charles M. Stein. Efron and Morris (1977) wrote the now classic paper, *Stein's paradaox* in statistics, whcih does a nice job breaking down why partial pooling can be so powerful. One of the primary examples they used in the paper was of 1970 batting average data. If you'd like more practice seeing how partial pooling works -- or if you just like baseball --, check ou my blog post, *Stein's paradox and what partial pooling can do for you*.
+
+
+```{r}
+ggplot(data = d, mapping = aes(x = school.id, y = y)) +
+  stat_dotsinterval(fill = "orange2", slab_size = 0, .width = .5) +
+  ggtitle("Log-odds varying by # tadpoles per pond") +
+  theme(plot.title = element_text(size = 14))
+
+ggplot(data = d, mapping = aes(x = school.id, y = treated)) +
+  stat_dotsinterval(quantiles = 100) +
+  ggtitle("Log-odds varying by # tadpoles per pond") +
+  theme(plot.title = element_text(size = 14))
+```
+```{r}
+set.seed(5005)
+
+  dsim <-
+    dsim %>%
+    mutate(si = rbinom(n =n(), prob = inv_logit_scaled(school.effect), size = ))
+
+```
+```{r}
+try <- 
+  brm(data = d,
+      y ~ 1 + (1 | school.id),
+      prior = c(prior(normal(0, 1.5), class = Intercept),
+                prior(exponential(1), class = sd)),
+      iter = 200, warmup = 100, chains = 4, cores = 4,
+      seed = 13,
+      # file = "fits/b13.03"
+  )
+```
+```{r}
+print(try)
+```
+```{r}
+try$fit
+```
+```{r}
+# we could have included this step in the clock of code below, if we wanted
+p_partpool <- 
+  coef(try)$school.id[, , ] %>% 
+  data.frame() %>%
+  transmute(p_partpool = inv_logit_scaled(Estimate))
+
+d <- 
+  d %>%
+  bind_cols(p_partpool) %>% 
+  mutate(p_true = inv_logit_scaled(student.effect)) %>%
+  mutate(nopool_error   = abs(y   - student.effect),
+         partpool_error = abs(p_partpool - student.effect))
+
+dsim %>% 
+  glimpse()
+```
+
+
+
+
+# Original computing environment
+
+```{r}
+devtools::session_info()
+```
+

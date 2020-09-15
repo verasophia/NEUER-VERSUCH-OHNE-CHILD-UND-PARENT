@@ -1,0 +1,172 @@
+---
+title: | 
+       | Masterarbeit KIP
+       | Data coding
+author: 
+  - Vera Schramm
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_document:
+    fig_caption: yes
+    theme: spacelab 
+    highlight: pygments
+    toc: TRUE
+    toc_depth: 2
+    number_sections: TRUE
+    toc_float:
+      smooth_scroll: FALSE
+bibliography: "../paper/masterarbeit.bib"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment=NA)
+rm(list=ls())
+```
+```{r, include=TRUE, message = FALSE}
+library(tidyverse)
+library(Hmisc)
+library(mosaic)
+library(foreign)
+library(lme4)
+library(rstanarm)
+library(brms)
+library(tableone)
+library(RColorBrewer)
+library(xtable)
+library(knitr)
+library(kableExtra)
+```
+
+# Data
+
+## Select variables
+
+```{r}
+d <- read.dta("~/NEUER-VERSUCH-OHNE-CHILD-UND-PARENT/data/master_kip+netwerk_Stata12.dta")
+# Primary outcomes
+names(d)[names(d) == 'v07a'] <- 'lsat'
+names(d)[names(d) == 'v07e'] <- 'sat_friends'
+names(d)[names(d) == 'v08a'] <- 'sat_class'
+names(d)[names(d) == 'v08b'] <- 'sat_school'
+#names(d)[names(d) == 'v08c'] <- 'sat_music' # nur in WElle 4 und 5 vorhanden
+names(d)[names(d) == 'v12c'] <- 'lonely' # Emotionen letzte Woche: Einsamkeit
+names(d)[names(d) == 'v12d'] <- 'fear' # Emotionen letzte Woche: Angst
+names(d)[names(d) == 'v10e'] <- 'exanx' # exam anxiety
+names(d)[names(d) == 'std_big5index'] <- 'std_big5' 
+
+# Covariates
+names(d)[names(d) == 'Treatment'] <- 'treated'
+names(d)[names(d) == 'v09a'] <- 'class.prob' # problems in classroom
+names(d)[names(d) == 'v09c'] <- 'class.excl' # exclusion in classroom
+names(d)[names(d) == 'v11a'] <- 'note.deu' # Note Vorjahr deutsch
+names(d)[names(d) == 'v11b'] <- 'note.mat' # Note Vorjahr Mathe
+names(d)[names(d) == 'v11c'] <- 'note.mus' # Note Vorjahr Musik
+names(d)[names(d) == 'v01a'] <- 'hob.mus.making' # Hobby Musik machen
+names(d)[names(d) == 'v01b'] <- 'hob.mus.lis' # Hobby Musik hören
+names(d)[names(d) == 'v02d'] <- 'dauer.mus.lis' # Dauer Musik hören
+names(d)[names(d) == 'v02g'] <- 'dauer.mus.making' # Dauer Musikinstrument spielen
+names(d)[names(d) == 'v04a'] <- 'play.instr' # Musikalisch aktiv: Musikinsrument
+names(d)[names(d) == 'v04b'] <- 'orch' # Musikalisch aktiv im Orchester
+names(d)[names(d) == 'v04c'] <- 'choir' # Musikalisch aktiv im Chor
+names(d)[names(d) == 'v04o'] <- 'sonst' # Musikalisch aktiv: Sonstiges
+names(d)[names(d) == 'v14a'] <- 'migback.f' # Herkunftsland: Vater
+names(d)[names(d) == 'v14b'] <- 'migback.m' # Herkunftsland: Mutter
+names(d)[names(d) == 'v15']  <- 'immigr' # Herkunftsland: Schüler
+names(d)[names(d) == 'v16']  <- 'spr.deu' # Wird zuhause deutschgesprochen? 1 - "überwiegend deutsch", 2 - "überwiegend andere Sprache", 3 - "teils-teils, "unknown" - "Keine Angabe"
+names(d)[names(d) == 'v22b'] <- 'betr.tg' # Taschengeld: Betrag (Problem: Nicht sicher, ob hier Variable v22a (Tschengeld: Rythmus) bereits berücksichtigt wurde
+```
+
+## Define labels
+
+```{r, eval=FALSE}
+# label(d$lsat)         <- "Life satisfaction"
+# label(d$sat_friends)  <- "Satisfaction with friends"
+# label(d$sat_class)    <- "Satisfaction with class"
+# label(d$sat_school)   <- "Satisfaction with school"
+# label(d$lonely)       <- "Emotions: loneliness (last week)"
+# label(d$fear)         <- "Emotions: fear (last week)"
+# label(d$exanx)        <- "Exam anxiety"
+# label(d$std_big5)     <- "Big 5 index"
+# describe(d)
+```
+
+
+## Manipulate variables
+
+```{r}
+d$school <- as.factor(d$school)
+d$pid <- as.factor(d$pid)
+d$treated <- as.factor(d$treated)
+d$welle <- as.factor(d$welle)
+d$female <- as.factor(d$female)
+d$mus.active = ifelse(d$play.instr=="Ja" | d$orch=="Ja" | d$choir=="Ja", 1, 0) 
+
+# replacing NAs by category "unknown"
+levels(d$female) <- c(levels(d$female), "unknown")
+d$female[which(is.na(d$female))] <- "unknown"
+
+# replacing NAs by category "unknown"
+levels(d$spr.deu) <- c(levels(d$spr.deu), "unknown")
+d$spr.deu[which(is.na(d$spr.deu))] <- "unknown"
+
+# create treated-wave interactions: "tXw"
+d$tXw2 <- as.factor( ifelse( (d$treated==1 & d$welle==2), 1, 0) )
+d$tXw3 <- as.factor( ifelse( (d$treated==1 & d$welle==3), 1, 0) )
+d$tXw4 <- as.factor( ifelse( (d$treated==1 & d$welle==4), 1, 0) )
+d$tXw5 <- as.factor( ifelse( (d$treated==1 & d$welle==5), 1, 0) )
+```
+
+## Fill in missing values
+
+```{r}
+# BIG 5
+summary( d$std_big5 )
+d <- d %>% group_by( pid ) %>% fill( std_big5, .direction="downup" )
+summary(d$std_big5)
+
+# fill missing information in wave 2-5
+d$immigr[d$immigr==""] <- NA
+d$immigr[d$immigr==" - 99 fehlender Wert"] <- NA
+d$migback.f[d$migback.f==""] <- NA
+d$migback.f[d$migback.f==" - 88 unplausible Angabe"] <- NA
+d$migback.f[d$migback.f==" - 99 fehlender Wert"] <- NA
+d$migback.m[d$migback.m==""] <- NA
+d$migback.m[d$migback.m==" - 99 fehlender Wert"] <- NA
+d <- d %>% group_by( pid ) %>% fill( immigr, migback.f, migback.m, .direction="down" )
+d$migback <- factor( 
+  if_else(is.na(d$immigr) & is.na(d$migback.f) & is.na(d$migback.m), 3, 
+          if_else(d$immigr=="1 Deutschland" & d$migback.f=="1 Deutschland" & d$migback.m=="1 Deutschland", 1, 2)))
+d$migback <- factor(x=d$migback, labels=c("Native", "Immigrant", "Unkown"))
+d <- d %>% arrange(school, treated, pid, welle)
+```
+
+# Create subsamples
+
+```{r}
+# Dataframe for wave 1 (pre-treatment)
+welle1 <- d %>% filter(welle==1) %>% 
+  select(school, pid, welle, treated,
+         lsat, sat_friends, sat_class, sat_school,
+         std_big5, lonely, fear, exanx,
+         class.prob, class.excl, 
+         note.deu, note.mat, note.mus, 
+         hob.mus.making, dauer.mus.lis, dauer.mus.making, play.instr, mus.active,
+         spr.deu, migback, female)
+saveRDS(welle1, file = "../data/d_welle1s.RDS")
+```
+
+```{r}
+d_sat <- d %>% 
+  select(school, pid, welle, treated, tXw2, tXw3, tXw4, tXw5, 
+         lsat, sat_friends, sat_class, sat_school,
+         hob.mus.making, migback, female) %>% 
+  arrange( school, treated, pid, welle) %>% ungroup()
+saveRDS(d_sat, file = "../data/d_satisfaction.RDS")
+```
+
+# Original computing environment
+
+```{r}
+devtools::session_info()
+```
+
