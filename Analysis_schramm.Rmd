@@ -38,7 +38,7 @@ library(RColorBrewer)
 ## Data manipulation
 
 ```{r}
-d <- read.dta("../data/master_kip+netwerk_Stata12.dta")
+d <- read.dta("../NEUER-VERSUCH-OHNE-CHILD-UND-PARENT/data/master_kip+netwerk_Stata12.dta")
 names(d)[names(d) == 'v07a'] <- 'lsat'
 names(d)[names(d) == 'v07e'] <- 'sat_friends'
 names(d)[names(d) == 'v08a'] <- 'sat_class'
@@ -57,15 +57,26 @@ names(d)[names(d) == 'v04b'] <- 'orch' # Musikalisch aktiv im Orchester
 names(d)[names(d) == 'v04c'] <- 'choir' # Musikalisch aktiv im Chor
 names(d)[names(d) == 'v04o'] <- 'sonst' # Musikalisch aktiv: Sonstiges
 names(d)[names(d) == 'v15'] <- 'immigr' # Herkunftsland: Schüler
+names(d)[names(d) == 'v14a'] <- 'migback.f' # Herkunftsland: Vater
+names(d)[names(d) == 'v14b'] <- 'migback.m' # Herkunftsland: Mutter
 names(d)[names(d) == 'v16'] <- 'spr.deu' # Wird zuhause deutschgesprochen? 1 - "überwiegend deutsch", 2 - "überwiegend andere Sprache", 3 - "teils-teils, "unknown" - "Keine Angabe"
+names(d)[names(d) == 'v18'] <- 'age'
 names(d)[names(d) == 'v22b'] <- 'betr.tg' # Taschengeld: Betrag (Problem: Nicht sicher, ob hier Variable v22a (Tschengeld: Rythmus) bereits berücksichtigt wurde)
-d <- d %>% select( school, pid, welle, lsat, sat_friends, sat_class, treated, female, classsit.prob, classsit.excl, note.deu, note.mat, note.mus, hob.mus.making, hob.mus.lis, dauer.mus.lis, dauer.mus.making, play.instr, orch, choir, sonst, spr.deu,immigr, betr.tg )
+d <- d %>% select( school, pid, welle, lsat, sat_friends, sat_class, treated, female, classsit.prob, classsit.excl, note.deu, note.mat, note.mus, hob.mus.making, hob.mus.lis, dauer.mus.lis, dauer.mus.making, play.instr, orch, choir, sonst, spr.deu,immigr, betr.tg, age, migback.f, migback.m)
 d$school <- as.factor(d$school)
 d$pid <- as.factor(d$pid)
 d$treated <- as.factor(d$treated)
 d$welle <- as.factor(d$welle)
 d$female <- as.factor(d$female)
 d$mus.active = ifelse(d$play.instr==1 | d$orch==1 | d$choir==1, 1, 0)
+d[d==""]<-NA
+d[d=="- 99 fehlender Wert"]<-NA
+d <- d %>% group_by(pid) %>% fill(immigr, migback.f, migback.m)
+d$migback <- ifelse(d$immigr=="1 Deutschland" & d$migback.f=="1 Deutschland" & d$migback.m=="1 Deutschland", 0, 1)
+d$immigr <- NULL
+d$migback.f <- NULL
+d$migback.m <- NULL
+
 
 # replacing NAs by category "unknown"
 levels(d$female) <- c(levels(d$female), "unknown")
@@ -75,15 +86,9 @@ d$female[which(is.na(d$female))] <- "unknown"
 levels(d$spr.deu) <- c(levels(d$spr.deu), "unknown")
 d$spr.deu[which(is.na(d$spr.deu))] <- "unknown"
 
-# attempt to fill missing information in wave 2-5
-# not working yet
-dd <- d %>% select(pid, immigr)
-dd <- as_tibble(dd)
-dd <- dd %>% group_by( pid ) %>% fill( immigr )
-
 # Dataframe for wave 1 (pre-treatment)
 welle1 <- d %>% filter(welle==1) %>% 
-  select(school, pid, welle, lsat, sat_friends, sat_class, treated, female, classsit.prob, classsit.excl, note.deu, note.mat, note.mus, hob.mus.making, hob.mus.lis, dauer.mus.lis, dauer.mus.making, play.instr, mus.active, spr.deu,immigr)
+  select(school, pid, welle, lsat, sat_friends, sat_class, treated, female, classsit.prob, classsit.excl, note.deu, note.mat, note.mus, hob.mus.making, hob.mus.lis, dauer.mus.lis, dauer.mus.making, play.instr, mus.active, spr.deu,immigr, age)
 
 # create treated-wave interactions: "tXw"
 d$tXw2 <- as.factor( ifelse( (d$treated==1 & d$welle==2), 1, 0) )
@@ -110,6 +115,7 @@ We observe treatments in six schools. The number of observations are shown below
 
 ```{r}
 table(d$school, d$treated)
+table(welle1$female)
 ```
 
 ```{r}
@@ -206,9 +212,23 @@ ggsave("../figures/sat_class_pre_treat.pdf", sat_class_pre_treat, width = 7, hei
 vars <- c("lsat","female", "sat_friends", "sat_class", "classsit.prob", "classsit.excl", "note.deu", "note.mat", "note.mus", "hob.mus.making", "hob.mus.lis", "dauer.mus.lis", "dauer.mus.making", "play.instr", "mus.active", "immigr")
 smd <- CreateTableOne(vars = vars, strata = "treated", data = welle1, test = FALSE, includeNA = F)
 
-print(smd, smd = TRUE) 
+xtable(kable(print(smd, smd = TRUE))) %>%
+  save_kable("results/smd.png")
+
+
+smd <- knitr::kable(print(smd, smd = TRUE))
 
 ExtractSmd(smd)
+
+Variables <- c("Life satisfaction", "Sex", "Satisfaction with friends", "Satisfaction with the class", "Hobby music", "Duration music", "Migration background")
+
+SMD <- c(0.1547, 0.1590, 0.1567, 0.1558, 0.5372, 0.4497, 0.3320)
+
+smddf <- data.frame(Variables, SMD)
+
+tablesmd <- xtable(smddf, caption="Pre-treatment standardized mean differences")
+
+print(tablesmd, file="results/tablesmd.tex")
 ```
 
 # Simple model: one treatment, one control, two waves
