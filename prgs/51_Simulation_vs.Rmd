@@ -100,150 +100,6 @@ d$y <- cons + class.effect*d$treated +
               rnorm(nrow(d), mean=0, sd=1)
 ```
 
-
-
-
-
-## Posterior means
-
-We extract the posterior draws to summarize the effect of the treatment.
-
-```{r}
-summary(bayes3, 
-        pars = c("tXw31", 
-                 "b[tXw31 school:1]", "b[tXw31 school:2]", "b[tXw31 school:3]", 
-                 "b[tXw31 school:4]", "b[tXw31 school:5]", "b[tXw31 school:6]"),
-        probs = c(0.1, 0.5, 0.9), digits = 4)
-```
-
-```{r}
-teff5 <- as.matrix(bayes3, 
-                   pars = c("tXw11",
-                            "b[tXw11 school.id:1]",
-                            "b[tXw11 school.id:2]",
-                            "b[tXw11 school.id:3]",
-                            "b[tXw11 school.id:4]",
-                            "b[tXw11 school.id:5]",
-                            "b[tXw11 school.id:6]",
-                            "tXw21",
-                            "b[tXw21 school.id:1]",
-                            "b[tXw21 school.id:2]",
-                            "b[tXw21 school.id:3]",
-                            "b[tXw21 school.id:4]",
-                            "b[tXw21 school.id:5]",
-                            "b[tXw21 school.id:6]",
-                            "tXw31",
-                            "b[tXw31 school.id:1]",
-                            "b[tXw31 school.id:2]",
-                            "b[tXw31 school.id:3]",
-                            "b[tXw31 school.id:4]",
-                            "b[tXw31 school.id:5]",
-                            "b[tXw31 school.id:6]",
-                            "tXw41",
-                            "b[tXw41 school.id:1]",
-                            "b[tXw41 school.id:2]",
-                            "b[tXw41 school.id:3]",
-                            "b[tXw41 school.id:4]",
-                            "b[tXw41 school.id:5]",
-                            "b[tXw41 school.id:6]")) 
-
-wave1.school.id1 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:1]"]
-wave1.school.id2 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:2]"]
-wave1.school.id3 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:3]"]
-wave1.school.id4 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:4]"]
-wave1.school.id5 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:5]"]
-wave1.school.id6 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:6]"]
-wave2.school.id1 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:1]"]
-wave2.school.id2 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:2]"]
-wave2.school.id3 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:3]"]
-wave2.school.id4 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:4]"]
-wave2.school.id5 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:5]"]
-wave2.school.id6 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:6]"]
-wave3.school.id1 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:1]"]
-wave3.school.id2 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:2]"]
-wave3.school.id3 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:3]"]
-wave3.school.id4 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:4]"]
-wave3.school.id5 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:5]"]
-wave3.school.id6 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:6]"]
-wave4.school.id1 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:1]"]
-wave4.school.id2 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:2]"]
-wave4.school.id3 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:3]"]
-wave4.school.id4 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:4]"]
-wave4.school.id5 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:5]"]
-wave4.school.id6 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:6]"]
-
-wave1 <- data.frame( school.id1 = wave1.school.id1,
-                     school.id2 = wave1.school.id2,
-                     school.id3 = wave1.school.id3,
-                     school.id4 = wave1.school.id4,
-                     school.id5 = wave1.school.id5,
-                     school.id6 = wave1.school.id6)
-wave2 <- data.frame( school.id1 = wave2.school.id1,
-                     school.id2 = wave2.school.id2,
-                     school.id3 = wave2.school.id3,
-                     school.id4 = wave2.school.id4,
-                     school.id5 = wave2.school.id5,
-                     school.id6 = wave2.school.id6)
-wave3 <- data.frame( school.id1 = wave3.school.id1,
-                     school.id2 = wave3.school.id2,
-                     school.id3 = wave3.school.id3,
-                     school.id4 = wave3.school.id4,
-                     school.id5 = wave3.school.id5,
-                     school.id6 = wave3.school.id6)
-wave4 <- data.frame( school.id1 = wave4.school.id1,
-                     school.id2 = wave4.school.id2,
-                     school.id3 = wave4.school.id3,
-                     school.id4 = wave4.school.id4,
-                     school.id5 = wave4.school.id5,
-                     school.id6 = wave4.school.id6)
-
-```
-
-```{r}
-wave1_mean <- apply( X = wave1, MARGIN = 2, FUN = mean )
-wave2_mean <- apply( X = wave2, MARGIN = 2, FUN = mean )
-wave3_mean <- apply( X = wave3, MARGIN = 2, FUN = mean )
-wave4_mean <- apply( X = wave4, MARGIN = 2, FUN = mean )
-
-wave1_quant <- apply( X = wave1, MARGIN = 2, 
-                   FUN = quantile, probs = c(0.25, 0.75))
-wave2_quant <- apply( X = wave2, MARGIN = 2, 
-                   FUN = quantile, probs = c(0.25, 0.75))
-wave3_quant <- apply( X = wave3, MARGIN = 2, 
-                   FUN = quantile, probs = c(0.25, 0.75))
-wave4_quant <- apply( X = wave4, MARGIN = 2, 
-                   FUN = quantile, probs = c(0.25, 0.75))
-
-wave1_quant <- data.frame(t(wave1_quant))
-wave2_quant <- data.frame(t(wave2_quant))
-wave3_quant <- data.frame(t(wave3_quant))
-wave4_quant <- data.frame(t(wave4_quant))
-
-names(wave1_quant) <- c("Q10", "Q90")
-names(wave2_quant) <- c("Q10", "Q90")
-names(wave3_quant) <- c("Q10", "Q90")
-names(wave4_quant) <- c("Q10", "Q90")
-
-r.wave1 <- data.frame( school.id = seq(1:6), mean = wave1_mean, wave1_quant, wave = 5 )
-r.wave2 <- data.frame( school.id = seq(1:6), mean = wave2_mean, wave2_quant, wave = 2 )
-r.wave3 <- data.frame( school.id = seq(1:6), mean = wave3_mean, wave3_quant, wave = 3 )
-r.wave4 <- data.frame( school.id = seq(1:6), mean = wave4_mean, wave4_quant, wave = 4 )
-r.full <- rbind.data.frame(r.wave1, r.wave2, r.wave3, r.wave4)
-```
-
-Graphical representation of results.
-
-```{r}
-ggplot(data = r.full, 
-       aes(x = wave, 
-           y = mean)) +
-  geom_pointrange(aes(ymin = Q10, 
-                      ymax = Q90, group = school.id, color = school.id),
-                  position=position_dodge(width=0.50)) +
-  scale_x_discrete("Wave", limits = c(2,3,4,5) ) +
-  geom_hline(yintercept=0)
-```
-
 # BRMS
 ## Varying effects and the underfitting/overfittin trade-off
 Varying intercepts are just regularized estimates, but adaptively regularized by estimating how diverse the clusters are while estimating the features of each cluster. This fact is not easy to grasp... A major benefit of using varying effects estimates, instead of the empirical raw estimates, is that they provide more accurate estimates of the individual cluster (school) intercepts. On average, the verying effects actually provid a better estimate of the individual school (cluster) means. The reson that the varying intercepts provide better estimates is that they do a better job of trading off underfitting and overfitting (9408).
@@ -417,59 +273,37 @@ I originally learned about the multilevel in order to work with longitudinal dat
 
 When McElreath lectured on this topic in 2015, he traced partial pooling to statistician Charles M. Stein. Efron and Morris (1977) wrote the now classic paper, *Stein's paradaox* in statistics, whcih does a nice job breaking down why partial pooling can be so powerful. One of the primary examples they used in the paper was of 1970 batting average data. If you'd like more practice seeing how partial pooling works -- or if you just like baseball --, check ou my blog post, *Stein's paradox and what partial pooling can do for you*.
 
+# With my data:
+Here's the formula for the un-pooled model in which each school gets its own intercept:
+
+$$lsat_i \sim {\sf Normal}(\mu_i,\sigma_i)$$
+$$\mu = \alpha_{{\sf school}_[i]}$$
+$$\alpha_j \sim {\sf Normal}(7,2)$$ for $$j = 1..6$$
+$$\overline{\alpha} \sim {\sf Normal}(0,1.5)$$
+$\sigma ~ Exponentional(1)$
 
 ```{r}
-ggplot(data = d, mapping = aes(x = school.id, y = y)) +
+a_bar <- 1.5
+sigma <- 1.5
+n_schools <- 6
+
+set.seed(5005)
+
+dsim <-
+  tibble(school = 1:n_schools,
+         y = ,
+         true_a = rnorm(n = n_schools, mean = a_bar, sd = sigma))
+
+head(dsim)
+```
+```{r}
+dsim %>% 
+  mutate(school = factor(school)) %>% 
+  
+  ggplot(aes(x = true_a, y = school)) +
   stat_dotsinterval(fill = "orange2", slab_size = 0, .width = .5) +
   ggtitle("Log-odds varying by # tadpoles per pond") +
   theme(plot.title = element_text(size = 14))
-
-ggplot(data = d, mapping = aes(x = school.id, y = treated)) +
-  stat_dotsinterval(quantiles = 100) +
-  ggtitle("Log-odds varying by # tadpoles per pond") +
-  theme(plot.title = element_text(size = 14))
-```
-```{r}
-set.seed(5005)
-
-  dsim <-
-    dsim %>%
-    mutate(si = rbinom(n =n(), prob = inv_logit_scaled(school.effect), size = ))
-
-```
-```{r}
-try <- 
-  brm(data = d,
-      y ~ 1 + (1 | school.id),
-      prior = c(prior(normal(0, 1.5), class = Intercept),
-                prior(exponential(1), class = sd)),
-      iter = 200, warmup = 100, chains = 4, cores = 4,
-      seed = 13,
-      # file = "fits/b13.03"
-  )
-```
-```{r}
-print(try)
-```
-```{r}
-try$fit
-```
-```{r}
-# we could have included this step in the clock of code below, if we wanted
-p_partpool <- 
-  coef(try)$school.id[, , ] %>% 
-  data.frame() %>%
-  transmute(p_partpool = inv_logit_scaled(Estimate))
-
-d <- 
-  d %>%
-  bind_cols(p_partpool) %>% 
-  mutate(p_true = inv_logit_scaled(student.effect)) %>%
-  mutate(nopool_error   = abs(y   - student.effect),
-         partpool_error = abs(p_partpool - student.effect))
-
-dsim %>% 
-  glimpse()
 ```
 
 

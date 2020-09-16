@@ -136,7 +136,7 @@ d <- d %>% group_by( pid ) %>% fill( immigr, migback.f, migback.m, .direction="d
 d$migback <- factor( 
   if_else(is.na(d$immigr) & is.na(d$migback.f) & is.na(d$migback.m), 3, 
           if_else(d$immigr=="1 Deutschland" & d$migback.f=="1 Deutschland" & d$migback.m=="1 Deutschland", 1, 2)))
-d$migback <- factor(x=d$migback, labels=c("Native", "Immigrant", "Unkown"))
+d$migback <- factor(x=d$migback, labels=c("Native", "Immigrant", "Unknown"))
 d <- d %>% arrange(school, treated, pid, welle)
 ```
 

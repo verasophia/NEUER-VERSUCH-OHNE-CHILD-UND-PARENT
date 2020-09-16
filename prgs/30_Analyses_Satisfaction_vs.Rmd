@@ -93,9 +93,11 @@ x_pred_avg <- tibble( treated = as.factor( rep(c(0, 1), 5)),
                   migback = as.factor( rep("Native", 10) ),
                   hob.mus.making = as.factor( rep("Ja", 10) ) )
 # Average school (and pupil)
+x_pred_avg
 y_pred <- fitted( m1, newdata = x_pred_avg, 
                   re_formula = NA,
                   probs = c(0.25, 0.75) )
+y_pred
 # Marginal of school
 #y_pred <- fitted( m2, newdata = x_pred,
 #                  re_formula = ~(1 + treated + tXw2 | school) + 
@@ -103,6 +105,7 @@ y_pred <- fitted( m1, newdata = x_pred_avg,
 #                  allow_new_levels = T,
 #                  sample_new_levels = "gaussian" ) 
 pred_df <- cbind.data.frame( y_pred, x_pred_avg )
+pred_df
 ```
 
 ```{r}
@@ -114,7 +117,8 @@ gr_lsat_pred <-  ggplot( pred_df, aes( x = welle, y = Estimate, group = treated)
                   position=position_dodge(width=0.1) ) +
   ylab("Life satisfaction") +
   scale_x_discrete("Wave", limits = seq(1:5) ) +
-  theme(legend.position="bottom")
+  theme(legend.position="bottom") +
+  scale_color_brewer("treated", type = 'qual', palette = "Set1")
 ggsave("../figures/lsat_pred.pdf", gr_lsat_pred, width = 7, height = 4, units = "in")
 gr_lsat_pred
 ```
@@ -122,7 +126,10 @@ gr_lsat_pred
 ## Average treatment effect
 
 ```{r}
-post <- posterior_samples(m1)
+# Export the posterior samples into a data frame
+post <- posterior_samples(m1, add_chain = T)
+posterior_summary(m1, probs = c(0.1, 0.9))
+head(post)
 teff <- tibble( teff2 = post$`b_tXw2`,
                 teff3 = post$`b_tXw3`, 
                 teff4 = post$`b_tXw4`, 
@@ -162,10 +169,12 @@ x_pred_school <- tibble( treated = as.factor( rep(rep(c(0, 1), 5), 6) ),
                   female  = as.factor( rep(1, 60) ),
                   migback = as.factor( rep("Native", 60) ),
                   hob.mus.making = as.factor( rep("Ja", 60) ) )
+x_pred_school
 y_pred <- fitted( m1, newdata = x_pred_school, 
-                  re_formula = ~(1 + treated + tXw2 + tXw3 +
+                  re_formula = ~(1 + treated + migback  + tXw2 + tXw3 +
                                    tXw4 + tXw5 | school) ) 
 pred_df <- cbind.data.frame( y_pred, x_pred_school )
+pred_df
 
 gr_lsat_pred_across_schools <- 
   ggplot( pred_df, aes( x = welle, y = Estimate, group = treated) ) + 
@@ -233,6 +242,7 @@ su_teff <- tibble( school = rep(seq(1:6), 4),
                    Q90 = c(teff_quant_w2[,2], teff_quant_w3[,2],
                            teff_quant_w4[,2], teff_quant_w5[,2]),
                    wave = rep(2:5, each=6) )
+su_teff
 ```
 Graphical representation of results.
 
