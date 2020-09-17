@@ -33,6 +33,8 @@ library(RColorBrewer)
 library(xtable)
 library(knitr)
 library(kableExtra)
+library(ggdist)
+library(plm)
 ```
 
 # Data
@@ -42,7 +44,273 @@ d <- readRDS("../data/d_satisfaction.RDS")
 describe(d)
 ```
 
-# Model statement
+# Model statement - Linear model (no-pooling)
+```{r}
+d.p <- pdata.frame(d, index = c("pid", "welle"))
+m0 <- lm(lsat ~ treated + tXw2 + tXw3 + tXw4 + tXw5 + 
+             female + migback + hob.mus.making +
+             factor(school), data=d)
+summary(m0)
+```
+```{r}
+# school 1
+wave2m0.sch1 <- summary(m0)$coefficient["tXw21",1]
+wave3m0.sch1 <- summary(m0)$coefficient["tXw31",1]
+wave4m0.sch1 <- summary(m0)$coefficient["tXw41",1]
+wave5m0.sch1 <- summary(m0)$coefficient["tXw51",1]
+wave2m0.sch1.se <- summary(m0)$coefficient["tXw21",2]
+wave3m0.sch1.se <- summary(m0)$coefficient["tXw31",2]
+wave4m0.sch1.se <- summary(m0)$coefficient["tXw41",2]
+wave5m0.sch1.se <- summary(m0)$coefficient["tXw51",2]
+m0.sch1.df <- data.frame(estimate = c(wave2m0.sch1, wave3m0.sch1, wave4m0.sch1, wave5m0.sch1),
+                         lower = c(wave2m0.sch1 - wave2m0.sch1.se,
+                                   wave3m0.sch1 - wave3m0.sch1.se,
+                                   wave4m0.sch1 - wave4m0.sch1.se,
+                                   wave5m0.sch1 - wave5m0.sch1.se),
+                         upper = c(wave2m0.sch1 + wave2m0.sch1.se,
+                                   wave3m0.sch1 + wave3m0.sch1.se,
+                                   wave4m0.sch1 + wave4m0.sch1.se,
+                                   wave5m0.sch1 + wave5m0.sch1.se),
+                         wave = seq(2:5),
+                         school = c(1, 1, 1, 1))
+m0.sch1.df
+
+# school 2
+wave2m0.sch2 <- summary(m0)$coefficient["tXw21",1] + summary(m0)$coefficient["factor(school)2",1]
+wave3m0.sch2 <- summary(m0)$coefficient["tXw31",1] + summary(m0)$coefficient["factor(school)2",1]
+wave4m0.sch2 <- summary(m0)$coefficient["tXw41",1] + summary(m0)$coefficient["factor(school)2",1]
+wave5m0.sch2 <- summary(m0)$coefficient["tXw51",1] + summary(m0)$coefficient["factor(school)2",1]
+wave2m0.sch2.se <- summary(m0)$coefficient["tXw21",2] + summary(m0)$coefficient["factor(school)2",2]
+wave3m0.sch2.se <- summary(m0)$coefficient["tXw31",2] + summary(m0)$coefficient["factor(school)2",2]
+wave4m0.sch2.se <- summary(m0)$coefficient["tXw41",2] + summary(m0)$coefficient["factor(school)2",2]
+wave5m0.sch2.se <- summary(m0)$coefficient["tXw51",2] + summary(m0)$coefficient["factor(school)2",2]
+m0.sch2.df <- data.frame(estimate = c(wave2m0.sch2, wave3m0.sch2, wave4m0.sch2, wave5m0.sch2),
+                         lower = c(wave2m0.sch2 - wave2m0.sch2.se,
+                                   wave3m0.sch2 - wave3m0.sch2.se,
+                                   wave4m0.sch2 - wave4m0.sch2.se,
+                                   wave5m0.sch2 - wave5m0.sch2.se),
+                         upper = c(wave2m0.sch2 + wave2m0.sch2.se,
+                                   wave3m0.sch2 + wave3m0.sch2.se,
+                                   wave4m0.sch2 + wave4m0.sch2.se,
+                                   wave5m0.sch2 + wave5m0.sch2.se),
+                         wave = seq(2:5),
+                         school = c(2, 2, 2, 2))
+m0.sch2.df
+
+# school 3
+wave2m0.sch3 <- summary(m0)$coefficient["tXw21",1] + summary(m0)$coefficient["factor(school)3",1]
+wave3m0.sch3 <- summary(m0)$coefficient["tXw31",1] + summary(m0)$coefficient["factor(school)3",1]
+wave4m0.sch3 <- summary(m0)$coefficient["tXw41",1] + summary(m0)$coefficient["factor(school)3",1]
+wave5m0.sch3 <- summary(m0)$coefficient["tXw51",1] + summary(m0)$coefficient["factor(school)3",1]
+wave2m0.sch3.se <- summary(m0)$coefficient["tXw21",2] + summary(m0)$coefficient["factor(school)3",2]
+wave3m0.sch3.se <- summary(m0)$coefficient["tXw31",2] + summary(m0)$coefficient["factor(school)3",2]
+wave4m0.sch3.se <- summary(m0)$coefficient["tXw41",2] + summary(m0)$coefficient["factor(school)3",2]
+wave5m0.sch3.se <- summary(m0)$coefficient["tXw51",2] + summary(m0)$coefficient["factor(school)3",2]
+m0.sch3.df <- data.frame(estimate = c(wave2m0.sch3, wave3m0.sch3, wave4m0.sch3, wave5m0.sch3),
+                         lower = c(wave2m0.sch3 - wave2m0.sch3.se,
+                                   wave3m0.sch3 - wave3m0.sch3.se,
+                                   wave4m0.sch3 - wave4m0.sch3.se,
+                                   wave5m0.sch3 - wave5m0.sch3.se),
+                         upper = c(wave2m0.sch3 + wave2m0.sch3.se,
+                                   wave3m0.sch3 + wave3m0.sch3.se,
+                                   wave4m0.sch3 + wave4m0.sch3.se,
+                                   wave5m0.sch3 + wave5m0.sch3.se),
+                         wave = seq(2:5),
+                         school = c(3, 3, 3, 3))
+m0.sch3.df
+
+# school 4
+wave2m0.sch4 <- summary(m0)$coefficient["tXw21",1] + summary(m0)$coefficient["factor(school)4",1]
+wave3m0.sch4 <- summary(m0)$coefficient["tXw31",1] + summary(m0)$coefficient["factor(school)4",1]
+wave4m0.sch4 <- summary(m0)$coefficient["tXw41",1] + summary(m0)$coefficient["factor(school)4",1]
+wave5m0.sch4 <- summary(m0)$coefficient["tXw51",1] + summary(m0)$coefficient["factor(school)4",1]
+wave2m0.sch4.se <- summary(m0)$coefficient["tXw21",2] + summary(m0)$coefficient["factor(school)4",2]
+wave3m0.sch4.se <- summary(m0)$coefficient["tXw31",2] + summary(m0)$coefficient["factor(school)4",2]
+wave4m0.sch4.se <- summary(m0)$coefficient["tXw41",2] + summary(m0)$coefficient["factor(school)4",2]
+wave5m0.sch4.se <- summary(m0)$coefficient["tXw51",2] + summary(m0)$coefficient["factor(school)4",2]
+m0.sch4.df <- data.frame(estimate = c(wave2m0.sch4, wave3m0.sch4, wave4m0.sch4, wave5m0.sch4),
+                         lower = c(wave2m0.sch4 - wave2m0.sch4.se,
+                                   wave3m0.sch4 - wave3m0.sch4.se,
+                                   wave4m0.sch4 - wave4m0.sch4.se,
+                                   wave5m0.sch4 - wave5m0.sch4.se),
+                         upper = c(wave2m0.sch4 + wave2m0.sch4.se,
+                                   wave3m0.sch4 + wave3m0.sch4.se,
+                                   wave4m0.sch4 + wave4m0.sch4.se,
+                                   wave5m0.sch4 + wave5m0.sch4.se),
+                         wave = seq(2:5),
+                         school = c(4, 4, 4, 4))
+m0.sch4.df
+
+# school 5
+wave2m0.sch5 <- summary(m0)$coefficient["tXw21",1] + summary(m0)$coefficient["factor(school)5",1]
+wave3m0.sch5 <- summary(m0)$coefficient["tXw31",1] + summary(m0)$coefficient["factor(school)5",1]
+wave4m0.sch5 <- summary(m0)$coefficient["tXw41",1] + summary(m0)$coefficient["factor(school)5",1]
+wave5m0.sch5 <- summary(m0)$coefficient["tXw51",1] + summary(m0)$coefficient["factor(school)5",1]
+wave2m0.sch5.se <- summary(m0)$coefficient["tXw21",2] + summary(m0)$coefficient["factor(school)5",2]
+wave3m0.sch5.se <- summary(m0)$coefficient["tXw31",2] + summary(m0)$coefficient["factor(school)5",2]
+wave4m0.sch5.se <- summary(m0)$coefficient["tXw41",2] + summary(m0)$coefficient["factor(school)5",2]
+wave5m0.sch5.se <- summary(m0)$coefficient["tXw51",2] + summary(m0)$coefficient["factor(school)5",2]
+m0.sch5.df <- data.frame(estimate = c(wave2m0.sch5, wave3m0.sch5, wave4m0.sch5, wave5m0.sch5),
+                         lower = c(wave2m0.sch5 - wave2m0.sch5.se,
+                                   wave3m0.sch5 - wave3m0.sch5.se,
+                                   wave4m0.sch5 - wave4m0.sch5.se,
+                                   wave5m0.sch5 - wave5m0.sch5.se),
+                         upper = c(wave2m0.sch5 + wave2m0.sch5.se,
+                                   wave3m0.sch5 + wave3m0.sch5.se,
+                                   wave4m0.sch5 + wave4m0.sch5.se,
+                                   wave5m0.sch5 + wave5m0.sch5.se),
+                         wave = seq(2:5),
+                         school = c(5, 5, 5, 5))
+m0.sch5.df
+
+# school 6
+wave2m0.sch6 <- summary(m0)$coefficient["tXw21",1] + summary(m0)$coefficient["factor(school)4",1]
+wave3m0.sch6 <- summary(m0)$coefficient["tXw31",1] + summary(m0)$coefficient["factor(school)4",1]
+wave4m0.sch6 <- summary(m0)$coefficient["tXw41",1] + summary(m0)$coefficient["factor(school)4",1]
+wave5m0.sch6 <- summary(m0)$coefficient["tXw51",1] + summary(m0)$coefficient["factor(school)4",1]
+wave2m0.sch6.se <- summary(m0)$coefficient["tXw21",2] + summary(m0)$coefficient["factor(school)6",2]
+wave3m0.sch6.se <- summary(m0)$coefficient["tXw31",2] + summary(m0)$coefficient["factor(school)6",2]
+wave4m0.sch6.se <- summary(m0)$coefficient["tXw41",2] + summary(m0)$coefficient["factor(school)6",2]
+wave5m0.sch6.se <- summary(m0)$coefficient["tXw51",2] + summary(m0)$coefficient["factor(school)6",2]
+m0.sch6.df <- data.frame(estimate = c(wave2m0.sch6, wave3m0.sch6, wave4m0.sch6, wave5m0.sch6),
+                         lower = c(wave2m0.sch6 - wave2m0.sch6.se,
+                                   wave3m0.sch6 - wave3m0.sch6.se,
+                                   wave4m0.sch6 - wave4m0.sch6.se,
+                                   wave5m0.sch6 - wave5m0.sch6.se),
+                         upper = c(wave2m0.sch6 + wave2m0.sch6.se,
+                                   wave3m0.sch6 + wave3m0.sch6.se,
+                                   wave4m0.sch6 + wave4m0.sch6.se,
+                                   wave5m0.sch6 + wave5m0.sch6.se),
+                         wave = seq(2:5),
+                         school = c(6, 6, 6, 6))
+m0.sch6.df
+```
+```{r}
+all.schools <- rbind(m0.sch1.df, m0.sch2.df, m0.sch3.df, m0.sch4.df, m0.sch5.df, m0.sch6.df)
+```
+
+```{r}
+# school 1
+sch1 <- ggplot(data = m0.sch1.df,
+       aes(x = wave,
+           y = estimate)) +
+  geom_pointrange(aes(ymin = lower,
+                      ymax = upper),
+                      position=position_dodge(width=0.50)) +
+                    scale_x_discrete("Wave", limits = c(2,3,4,5)) +
+                                       geom_hline(yintercept=0)
+# school 2
+sch2 <- ggplot(data = m0.sch2.df,
+       aes(x = wave,
+           y = estimate)) +
+  geom_pointrange(aes(ymin = lower,
+                      ymax = upper),
+                      position=position_dodge(width=0.50)) +
+                    scale_x_discrete("Wave", limits = c(2,3,4,5)) +
+                                       geom_hline(yintercept=0)
+
+# school 3
+sch3 <- ggplot(data = m0.sch3.df,
+       aes(x = wave,
+           y = estimate)) +
+  geom_pointrange(aes(ymin = lower,
+                      ymax = upper),
+                      position=position_dodge(width=0.50)) +
+                    scale_x_discrete("Wave", limits = c(2,3,4,5)) +
+                                       geom_hline(yintercept=0)
+
+# school 4
+sch4 <- ggplot(data = m0.sch4.df,
+       aes(x = wave,
+           y = estimate)) +
+  geom_pointrange(aes(ymin = lower,
+                      ymax = upper),
+                      position=position_dodge(width=0.50)) +
+                    scale_x_discrete("Wave", limits = c(2,3,4,5)) +
+                                       geom_hline(yintercept=0)
+
+# school 5
+sch5 <- ggplot(data = m0.sch5.df,
+       aes(x = wave,
+           y = estimate)) +
+  geom_pointrange(aes(ymin = lower,
+                      ymax = upper),
+                      position=position_dodge(width=0.50)) +
+                    scale_x_discrete("Wave", limits = c(2,3,4,5)) +
+                                       geom_hline(yintercept=0)
+
+# school 6
+sch6 <- ggplot(data = m0.sch6.df,
+       aes(x = wave,
+           y = estimate)) +
+  geom_pointrange(aes(ymin = lower,
+                      ymax = upper),
+                      position=position_dodge(width=0.50)) +
+                    scale_x_discrete("Wave", limits = c(2,3,4,5)) +
+                                       geom_hline(yintercept=0)
+
+ggarrange(list(sch1, sch2, sch3, sch4, sch5, sch6), ncol = 2, nrow = 3)
+
+m0_lsat_across_schools <-
+  ggplot(data = all.schools, aes(x = wave, y = estimate)) +
+  geom_pointrange(aes(ymin = lower, 
+                      ymax = upper, group = school, color = school),
+                  position=position_dodge(width=0.40)) +
+  scale_x_discrete("Wave", limits=seq(2:6) )  +
+  geom_hline(yintercept=0) + 
+  theme(legend.position="bottom")
+ggsave("../figures/m0_lsat_across_schools.pdf", m0_lsat_across_schools, 
+       width = 7, height = 4, units = "in")
+m0_lsat_across_schools
+```
+
+# Model statement - Linerar model (complete pooling)
+```{r}
+m01 <- plm(lsat ~ welle + tXw2 + tXw3 + tXw4 + tXw5 + hob.mus.making, data=d.p)
+summary(m01)
+wave2m01 <- summary(m01)$coefficient["tXw21",1]
+wave3m01 <- summary(m01)$coefficient["tXw31",1]
+wave4m01 <- summary(m01)$coefficient["tXw41",1]
+wave5m01 <- summary(m01)$coefficient["tXw51",1]
+wave2m01.se <- summary(m01)$coefficient["tXw21",2]
+wave3m01.se <- summary(m01)$coefficient["tXw31",2]
+wave4m01.se <- summary(m01)$coefficient["tXw41",2]
+wave5m01.se <- summary(m01)$coefficient["tXw51",2]
+m01.df <- data.frame(complete = c(wave2m01, wave3m01, wave4m01, wave5m01),
+                     lower = c(wave2m01 - wave2m01.se,
+                               wave3m01 - wave3m01.se,
+                               wave4m01 - wave4m01.se,
+                               wave5m01 - wave5m01.se),
+                     upper = c(wave2m01 + wave2m01.se,
+                               wave3m01 + wave3m01.se,
+                               wave4m01 + wave4m01.se,
+                               wave5m01 + wave5m01.se),
+                     wave = seq(2:5))
+m01.df
+```
+
+```{r}
+ggplot(data = m01.df,
+       aes(x = wave,
+           y = complete)) +
+  geom_pointrange(aes(ymin = lower,
+                      ymax = upper),
+                      position=position_dodge(width=0.50)) +
+                    scale_x_discrete("Wave", limits = c(2,3,4,5)) +
+                                       geom_hline(yintercept=0)
+```
+
+```{r}
+m02 <- lm(lsat ~ welle + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making, data=d)
+summary(m02)
+```
+```{r}
+m03 <- plm(lsat ~ welle + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making, data=d.p)
+summary(m02)
+```
+
+
+# Model statement - Multilevel model (partial pooling)
 
 We simultaneously investigate the treatments in six different schools. We restrict the analysis to wave 1 (pre treatment) and wave 2 (post treatment). The regression equation is:
 $$
@@ -169,12 +437,10 @@ x_pred_school <- tibble( treated = as.factor( rep(rep(c(0, 1), 5), 6) ),
                   female  = as.factor( rep(1, 60) ),
                   migback = as.factor( rep("Native", 60) ),
                   hob.mus.making = as.factor( rep("Ja", 60) ) )
-x_pred_school
 y_pred <- fitted( m1, newdata = x_pred_school, 
-                  re_formula = ~(1 + treated + migback  + tXw2 + tXw3 +
+                  re_formula = ~(1 + treated + tXw2 + tXw3 +
                                    tXw4 + tXw5 | school) ) 
 pred_df <- cbind.data.frame( y_pred, x_pred_school )
-pred_df
 
 gr_lsat_pred_across_schools <- 
   ggplot( pred_df, aes( x = welle, y = Estimate, group = treated) ) + 
@@ -257,6 +523,7 @@ gr_lsat_teff_across_schools <-
   theme(legend.position="bottom")
 ggsave("../figures/lsat_teff_across_schools.pdf", gr_lsat_teff_across_schools, 
        width = 7, height = 4, units = "in")
+ggsave("../figures/lsat_teff_across_schools.png", gr_lsat_teff_across_schools, width = 7, height = 4)
 gr_lsat_teff_across_schools
 ```
 
