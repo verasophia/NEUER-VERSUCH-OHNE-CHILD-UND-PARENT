@@ -46,58 +46,75 @@ Our aim is to estimate the effect of a classroom experiment. We consider one tre
 
 ```{r}
 class.size <- 30 # number of students in each class
-student.id <- seq(1:class.size)
-class.id <- seq(1:12)
+student <- seq(1:class.size)
+class <- seq(1:12)
 
-wave <- seq(1:5) - 1
+wave <- seq(1:5)
 
-d <- expand.grid(wave = wave, student.id = student.id, class.id = class.id)
+d <- expand.grid(wave = wave, student = student, class = class)
 
-rm(wave, class.id, student.id)
+rm(wave, class, student)
 ```
 
-First, we define the data structure for `r max(d$class.id)` groups (classrooms), `r class.size` students per class, and `r max(d$wave)+1` measurement occasions.
+First, we define the data structure for `r max(d$class)` groups (classrooms), `r class.size` students per class, and `r max(d$wave)+1` measurement occasions.
 
 ```{r}
 
 
 
-d$treated <- ifelse(d$class.id %% 2 == 1, 1, 0)
+d$treated <- ifelse(d$class %% 2 == 1, 1, 0)
 
+# create treated-wave interactions: "tXw"
+d$tXw2 <- ifelse( (d$treated==1 & d$wave==2), 1, 0)
+d$tXw3 <- ifelse( (d$treated==1 & d$wave==3), 1, 0)
+d$tXw4 <- ifelse( (d$treated==1 & d$wave==4), 1, 0)
+d$tXw5 <- ifelse( (d$treated==1 & d$wave==5), 1, 0)
   
-  # ifelse(d$class.id==1 | d$class.id==3 | d$class.id==5 | d$class.id==7 | d$class.id==9 | d$class.id==11, 1, 0)
+  # ifelse(d$class==1 | d$class==3 | d$class==5 | d$class==7 | d$class==9 | d$class==11, 1, 0)
 
 
-d$school.id <- ceiling(d$class.id / 2)
+d$school <- ceiling(d$class / 2)
 
 
-# d$school.id <- ifelse(d$class.id==1 | d$class.id==2, 1, ifelse(d$class.id==3 | d$class.id==4, 2, ifelse(d$class.id==5 | d$class.id==6, 3, ifelse(d$class.id==7 | d$class.id==8, 4, ifelse(d$class.id==9 | d$class.id==10, 5, ifelse(d$class.id==11 | d$class.id==12, 6,0))))))
+# d$school <- ifelse(d$class==1 | d$class==2, 1, ifelse(d$class==3 | d$class==4, 2, ifelse(d$class==5 | d$class==6, 3, ifelse(d$class==7 | d$class==8, 4, ifelse(d$class==9 | d$class==10, 5, ifelse(d$class==11 | d$class==12, 6,0))))))
 
-df <- unique(d[c("student.id", "class.id")]) # creates new data sheet with those two variables from first data sheet
-df <- df %>% mutate(ustudent.id = 1:nrow(df)) %>%
+df <- unique(d[c("student", "class")]) # creates new data sheet with those two variables from first data sheet
+df <- df %>% mutate(ustudent = 1:nrow(df)) %>%
 #mutate() adds new variables and preserves existing ones
-    select(ustudent.id, everything()) #student ID für jeden einzelnen Schüler unabhängig von der Klasse
+    select(ustudent, everything()) #student ID für jeden einzelnen Schüler unabhängig von der Klasse
 df$student.effect <- rnorm(nrow(df), mean=0, sd=1)
-d <- left_join(d, df, by=c("class.id", "student.id"))
-df <- unique(df <- unique(d[c("school.id")]))
+d <- left_join(d, df, by=c("class", "student"))
+df <- unique(df <- unique(d[c("school")]))
 df$school.effect <- rnorm(nrow(df), mean=0, sd=1.5)
-d <- left_join(d, df, by="school.id")
+d <- left_join(d, df, by="school")
 tail(d)
+
 ```
 
 The outcomes are determined by the following data generating process.
 
 ```{r}
-teffect <- 1 # treatment effect
-wave.effects <- -1 # wave effects
+teffect2 <- 0.6 # treatment effect wave 2
+teffect3 <- 0.8 # treatment effect wave 3
+teffect4 <- 1 # treatment effect wave 4
+teffect5 <- 1.2 # treatment effect wave 5
+wave.effect <- -1 # wave effects
 class.effect <- 2
 cons <- 0
 d$y <- cons + class.effect*d$treated + 
-              wave.effects*d$wave + 
-              teffect*(d$treated*d$wave) +
+              wave.effect*d$wave +
+              teffect2*d$tXw2 +
+              teffect3*d$tXw3 +
+              teffect4*d$tXw4 +
+              teffect5*d$tXw5 +
               d$student.effect +
               d$school.effect +
               rnorm(nrow(d), mean=0, sd=1)
+saveRDS(d, file = "../data/simulation.RDS")
+
+head(d)
+schule2 <- d %>% filter(school==2) %>% 
+  select(wave, student, class, treated, tXw2, tXw3, tXw4, tXw5, school, ustudent, student.effect, school.effect, y)
 ```
 
 # BRMS
@@ -274,37 +291,223 @@ I originally learned about the multilevel in order to work with longitudinal dat
 When McElreath lectured on this topic in 2015, he traced partial pooling to statistician Charles M. Stein. Efron and Morris (1977) wrote the now classic paper, *Stein's paradaox* in statistics, whcih does a nice job breaking down why partial pooling can be so powerful. One of the primary examples they used in the paper was of 1970 batting average data. If you'd like more practice seeing how partial pooling works -- or if you just like baseball --, check ou my blog post, *Stein's paradox and what partial pooling can do for you*.
 
 # With my data:
-Here's the formula for the un-pooled model in which each school gets its own intercept:
 
-$$lsat_i \sim {\sf Normal}(\mu_i,\sigma_i)$$
-$$\mu = \alpha_{{\sf school}_[i]}$$
-$$\alpha_j \sim {\sf Normal}(7,2)$$ for $$j = 1..6$$
-$$\overline{\alpha} \sim {\sf Normal}(0,1.5)$$
-$\sigma ~ Exponentional(1)$
 
 ```{r}
-a_bar <- 1.5
-sigma <- 1.5
-n_schools <- 6
-
-set.seed(5005)
-
-dsim <-
-  tibble(school = 1:n_schools,
-         y = ,
-         true_a = rnorm(n = n_schools, mean = a_bar, sd = sigma))
-
-head(dsim)
+d.p <- pdata.frame(d, index = c("ustudent", "wave"))
 ```
 ```{r}
-dsim %>% 
-  mutate(school = factor(school)) %>% 
-  
-  ggplot(aes(x = true_a, y = school)) +
-  stat_dotsinterval(fill = "orange2", slab_size = 0, .width = .5) +
-  ggtitle("Log-odds varying by # tadpoles per pond") +
-  theme(plot.title = element_text(size = 14))
+m0 <- plm(y ~ wave + treated + tXw2 + tXw3 + tXw4 + tXw5 + student.effect + factor(school), data=d.p, model = "random")
+saveRDS(m0, file = "../results/simulation/no_pooling_sim.RDS")
+m0 <- readRDS("../results/simulation/no_pooling_sim.RDS")
+summary(m0)
 ```
+
+
+```{r}
+# school 1
+wave2m0.sch1 <- summary(m0)$coefficient["tXw2",1]
+wave3m0.sch1 <- summary(m0)$coefficient["tXw3",1]
+wave4m0.sch1 <- summary(m0)$coefficient["tXw4",1]
+wave5m0.sch1 <- summary(m0)$coefficient["tXw5",1]
+wave2m0.sch1.se <- summary(m0)$coefficient["tXw2",2]
+wave3m0.sch1.se <- summary(m0)$coefficient["tXw3",2]
+wave4m0.sch1.se <- summary(m0)$coefficient["tXw4",2]
+wave5m0.sch1.se <- summary(m0)$coefficient["tXw5",2]
+m0.sch1.df <- data.frame(school = c(1, 1, 1, 1),
+                         wave = seq(2:5),
+                         estimate = c(wave2m0.sch1, wave3m0.sch1, wave4m0.sch1, wave5m0.sch1),
+                         lower = c(wave2m0.sch1 - wave2m0.sch1.se,
+                                   wave3m0.sch1 - wave3m0.sch1.se,
+                                   wave4m0.sch1 - wave4m0.sch1.se,
+                                   wave5m0.sch1 - wave5m0.sch1.se),
+                         upper = c(wave2m0.sch1 + wave2m0.sch1.se,
+                                   wave3m0.sch1 + wave3m0.sch1.se,
+                                   wave4m0.sch1 + wave4m0.sch1.se,
+                                   wave5m0.sch1 + wave5m0.sch1.se))
+m0.sch1.df
+
+names(d)[names(d) == 'school'] <- 'school'
+
+# school 2
+wave2m0.sch2 <- summary(m0)$coefficient["tXw2",1] + summary(m0)$coefficient["factor(school)2",1]
+wave3m0.sch2 <- summary(m0)$coefficient["tXw3",1] + summary(m0)$coefficient["factor(school)2",1]
+wave4m0.sch2 <- summary(m0)$coefficient["tXw4",1] + summary(m0)$coefficient["factor(school)2",1]
+wave5m0.sch2 <- summary(m0)$coefficient["tXw5",1] + summary(m0)$coefficient["factor(school)2",1]
+wave2m0.sch2.se <- summary(m0)$coefficient["tXw2",2] + summary(m0)$coefficient["factor(school)2",2]
+wave3m0.sch2.se <- summary(m0)$coefficient["tXw3",2] + summary(m0)$coefficient["factor(school)2",2]
+wave4m0.sch2.se <- summary(m0)$coefficient["tXw4",2] + summary(m0)$coefficient["factor(school)2",2]
+wave5m0.sch2.se <- summary(m0)$coefficient["tXw5",2] + summary(m0)$coefficient["factor(school)2",2]
+m0.sch2.df <- data.frame(school = c(2, 2, 2, 2),
+                         wave = seq(2:5),
+                         estimate = c(wave2m0.sch2, wave3m0.sch2, wave4m0.sch2, wave5m0.sch2),
+                         lower = c(wave2m0.sch2 - wave2m0.sch2.se,
+                                   wave3m0.sch2 - wave3m0.sch2.se,
+                                   wave4m0.sch2 - wave4m0.sch2.se,
+                                   wave5m0.sch2 - wave5m0.sch2.se),
+                         upper = c(wave2m0.sch2 + wave2m0.sch2.se,
+                                   wave3m0.sch2 + wave3m0.sch2.se,
+                                   wave4m0.sch2 + wave4m0.sch2.se,
+                                   wave5m0.sch2 + wave5m0.sch2.se))
+m0.sch2.df
+
+# school 3
+wave2m0.sch3 <- summary(m0)$coefficient["tXw2",1] + summary(m0)$coefficient["factor(school)3",1]
+wave3m0.sch3 <- summary(m0)$coefficient["tXw3",1] + summary(m0)$coefficient["factor(school)3",1]
+wave4m0.sch3 <- summary(m0)$coefficient["tXw4",1] + summary(m0)$coefficient["factor(school)3",1]
+wave5m0.sch3 <- summary(m0)$coefficient["tXw5",1] + summary(m0)$coefficient["factor(school)3",1]
+wave2m0.sch3.se <- summary(m0)$coefficient["tXw2",2] + summary(m0)$coefficient["factor(school)3",2]
+wave3m0.sch3.se <- summary(m0)$coefficient["tXw3",2] + summary(m0)$coefficient["factor(school)3",2]
+wave4m0.sch3.se <- summary(m0)$coefficient["tXw4",2] + summary(m0)$coefficient["factor(school)3",2]
+wave5m0.sch3.se <- summary(m0)$coefficient["tXw5",2] + summary(m0)$coefficient["factor(school)3",2]
+m0.sch3.df <- data.frame(school = c(3, 3, 3, 3),
+                         wave = seq(2:5),
+                         estimate = c(wave2m0.sch3, wave3m0.sch3, wave4m0.sch3, wave5m0.sch3),
+                         lower = c(wave2m0.sch3 - wave2m0.sch3.se,
+                                   wave3m0.sch3 - wave3m0.sch3.se,
+                                   wave4m0.sch3 - wave4m0.sch3.se,
+                                   wave5m0.sch3 - wave5m0.sch3.se),
+                         upper = c(wave2m0.sch3 + wave2m0.sch3.se,
+                                   wave3m0.sch3 + wave3m0.sch3.se,
+                                   wave4m0.sch3 + wave4m0.sch3.se,
+                                   wave5m0.sch3 + wave5m0.sch3.se))
+m0.sch3.df
+
+# school 4
+wave2m0.sch4 <- summary(m0)$coefficient["tXw2",1] + summary(m0)$coefficient["factor(school)4",1]
+wave3m0.sch4 <- summary(m0)$coefficient["tXw3",1] + summary(m0)$coefficient["factor(school)4",1]
+wave4m0.sch4 <- summary(m0)$coefficient["tXw4",1] + summary(m0)$coefficient["factor(school)4",1]
+wave5m0.sch4 <- summary(m0)$coefficient["tXw5",1] + summary(m0)$coefficient["factor(school)4",1]
+wave2m0.sch4.se <- summary(m0)$coefficient["tXw2",2] + summary(m0)$coefficient["factor(school)4",2]
+wave3m0.sch4.se <- summary(m0)$coefficient["tXw3",2] + summary(m0)$coefficient["factor(school)4",2]
+wave4m0.sch4.se <- summary(m0)$coefficient["tXw4",2] + summary(m0)$coefficient["factor(school)4",2]
+wave5m0.sch4.se <- summary(m0)$coefficient["tXw5",2] + summary(m0)$coefficient["factor(school)4",2]
+m0.sch4.df <- data.frame(school = c(4, 4, 4, 4),
+                         wave = seq(2:5),
+                         estimate = c(wave2m0.sch4, wave3m0.sch4, wave4m0.sch4, wave5m0.sch4),
+                         lower = c(wave2m0.sch4 - wave2m0.sch4.se,
+                                   wave3m0.sch4 - wave3m0.sch4.se,
+                                   wave4m0.sch4 - wave4m0.sch4.se,
+                                   wave5m0.sch4 - wave5m0.sch4.se),
+                         upper = c(wave2m0.sch4 + wave2m0.sch4.se,
+                                   wave3m0.sch4 + wave3m0.sch4.se,
+                                   wave4m0.sch4 + wave4m0.sch4.se,
+                                   wave5m0.sch4 + wave5m0.sch4.se))
+m0.sch4.df
+
+# school 5
+wave2m0.sch5 <- summary(m0)$coefficient["tXw2",1] + summary(m0)$coefficient["factor(school)5",1]
+wave3m0.sch5 <- summary(m0)$coefficient["tXw3",1] + summary(m0)$coefficient["factor(school)5",1]
+wave4m0.sch5 <- summary(m0)$coefficient["tXw4",1] + summary(m0)$coefficient["factor(school)5",1]
+wave5m0.sch5 <- summary(m0)$coefficient["tXw5",1] + summary(m0)$coefficient["factor(school)5",1]
+wave2m0.sch5.se <- summary(m0)$coefficient["tXw2",2] + summary(m0)$coefficient["factor(school)5",2]
+wave3m0.sch5.se <- summary(m0)$coefficient["tXw3",2] + summary(m0)$coefficient["factor(school)5",2]
+wave4m0.sch5.se <- summary(m0)$coefficient["tXw4",2] + summary(m0)$coefficient["factor(school)5",2]
+wave5m0.sch5.se <- summary(m0)$coefficient["tXw5",2] + summary(m0)$coefficient["factor(school)5",2]
+m0.sch5.df <- data.frame(school = c(5, 5, 5, 5),
+                         wave = seq(2:5),
+                         estimate = c(wave2m0.sch5, wave3m0.sch5, wave4m0.sch5, wave5m0.sch5),
+                         lower = c(wave2m0.sch5 - wave2m0.sch5.se,
+                                   wave3m0.sch5 - wave3m0.sch5.se,
+                                   wave4m0.sch5 - wave4m0.sch5.se,
+                                   wave5m0.sch5 - wave5m0.sch5.se),
+                         upper = c(wave2m0.sch5 + wave2m0.sch5.se,
+                                   wave3m0.sch5 + wave3m0.sch5.se,
+                                   wave4m0.sch5 + wave4m0.sch5.se,
+                                   wave5m0.sch5 + wave5m0.sch5.se))
+m0.sch5.df
+
+# school 6
+wave2m0.sch6 <- summary(m0)$coefficient["tXw2",1] + summary(m0)$coefficient["factor(school)4",1]
+wave3m0.sch6 <- summary(m0)$coefficient["tXw3",1] + summary(m0)$coefficient["factor(school)4",1]
+wave4m0.sch6 <- summary(m0)$coefficient["tXw4",1] + summary(m0)$coefficient["factor(school)4",1]
+wave5m0.sch6 <- summary(m0)$coefficient["tXw5",1] + summary(m0)$coefficient["factor(school)4",1]
+wave2m0.sch6.se <- summary(m0)$coefficient["tXw2",2] + summary(m0)$coefficient["factor(school)6",2]
+wave3m0.sch6.se <- summary(m0)$coefficient["tXw3",2] + summary(m0)$coefficient["factor(school)6",2]
+wave4m0.sch6.se <- summary(m0)$coefficient["tXw4",2] + summary(m0)$coefficient["factor(school)6",2]
+wave5m0.sch6.se <- summary(m0)$coefficient["tXw5",2] + summary(m0)$coefficient["factor(school)6",2]
+m0.sch6.df <- data.frame(school = c(6, 6, 6, 6),
+                         wave = seq(2:5),
+                         estimate = c(wave2m0.sch6, wave3m0.sch6, wave4m0.sch6, wave5m0.sch6),
+                         lower = c(wave2m0.sch6 - wave2m0.sch6.se,
+                                   wave3m0.sch6 - wave3m0.sch6.se,
+                                   wave4m0.sch6 - wave4m0.sch6.se,
+                                   wave5m0.sch6 - wave5m0.sch6.se),
+                         upper = c(wave2m0.sch6 + wave2m0.sch6.se,
+                                   wave3m0.sch6 + wave3m0.sch6.se,
+                                   wave4m0.sch6 + wave4m0.sch6.se,
+                                   wave5m0.sch6 + wave5m0.sch6.se))
+m0.sch6.df
+```
+
+```{r}
+all.schools <- rbind(m0.sch1.df, m0.sch2.df, m0.sch3.df, m0.sch4.df, m0.sch5.df, m0.sch6.df)
+saveRDS(all.schools, file = "../results/simulation/no_pooling_sim.RDS")
+all.schools <- readRDS("../results/simulation/no_pooling_sim.RDS")
+```
+```{r}
+m0_lsat_across_schools <-
+  ggplot(data = all.schools, aes(x = wave, y = estimate)) +
+  geom_pointrange(aes(ymin = lower, 
+                      ymax = upper, group = school, color = school),
+                  position=position_dodge(width=0.40)) +
+  scale_x_discrete("Wave", limits=seq(2:6) )  +
+  geom_hline(yintercept=0) + 
+  theme(legend.position="bottom")
+ggsave("../figures/no_pooling_lsat_across_schools.pdf", m0_lsat_across_schools, 
+       width = 7, height = 4, units = "in")
+m0_lsat_across_schools
+```
+```{r}
+m01 <- plm(y ~ wave + treated + tXw2 + tXw3 + tXw4 + tXw5, data=d.p)
+summary(m01)
+wave2m01 <- summary(m01)$coefficient["tXw2",1]
+wave3m01 <- summary(m01)$coefficient["tXw3",1]
+wave4m01 <- summary(m01)$coefficient["tXw4",1]
+wave5m01 <- summary(m01)$coefficient["tXw5",1]
+wave2m01.se <- summary(m01)$coefficient["tXw2",2]
+wave3m01.se <- summary(m01)$coefficient["tXw3",2]
+wave4m01.se <- summary(m01)$coefficient["tXw4",2]
+wave5m01.se <- summary(m01)$coefficient["tXw5",2]
+m01.df <- data.frame(wave = seq(2:5),
+                     complete = c(wave2m01, wave3m01, wave4m01, wave5m01),
+                     lower = c(wave2m01 - wave2m01.se,
+                               wave3m01 - wave3m01.se,
+                               wave4m01 - wave4m01.se,
+                               wave5m01 - wave5m01.se),
+                     upper = c(wave2m01 + wave2m01.se,
+                               wave3m01 + wave3m01.se,
+                               wave4m01 + wave4m01.se,
+                               wave5m01 + wave5m01.se))
+saveRDS(m01.df, file = "../results/simulation/compl_pooling_sim.RDS")
+m01.df <- readRDS("../results/simulation/compl_pooling_sim.RDS")
+# complete.tibble <- tibble(school = c(7,7,7,7),
+#                           wave = seq(2:5),
+#                           estimate = m01.df$complete,
+#                           lower = m01.df$lower,
+#                           upper = m01.df$upper,
+#                           Q10 = NA,
+#                           Q90 = NA,
+#                           method = "comppool")
+```
+
+```{r}
+m01_lsat_across_schools_sim <- 
+  ggplot(data = m01.df,
+       aes(x = wave,
+           y = complete)) +
+  geom_pointrange(aes(ymin = lower,
+                      ymax = upper),
+                      position=position_dodge(width=0.50)) +
+                    scale_x_discrete("Wave", limits = c(2,3,4,5)) +
+                                       geom_hline(yintercept=0)
+ggsave("../figures/compl_pooling_lsat_across_schools_sim.pdf", m01_lsat_across_schools_sim, 
+       width = 7, height = 4, units = "in")
+m01_lsat_across_schools_sim
+```
+
+
+
 
 
 
