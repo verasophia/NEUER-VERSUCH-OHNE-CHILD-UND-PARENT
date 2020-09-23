@@ -505,6 +505,189 @@ ggsave("../figures/compl_pooling_lsat_across_schools_sim.pdf", m01_lsat_across_s
        width = 7, height = 4, units = "in")
 m01_lsat_across_schools_sim
 ```
+```{r}
+oneperiod <-  d %>% filter (wave==1 | wave==2) %>%
+  select(wave, student, class, treated, tXw2, school, ustudent, student.effect, school.effect, y)
+
+oneperiod %>%
+  glimpse()
+```
+```{r}
+sim1 <-brm(y ~ 0 + factor(school),
+           prior = prior(normal(0, 10), class = b),
+           cores = 4, chains = 4,
+           data = oneperiod, seed = 123,
+           file = "../results/simulation/sim1") 
+
+sim2 <- brm(y ~ 1 + (1 | school),
+            prior = c(prior(normal(0, 5), class = Intercept),
+                      (prior(cauchy(0, 1), class = sd),
+            cores = 4, chains = 4,
+            sample_prior = "yes",
+            data = oneperiod, seed = 123,
+            file = "../results/simulation/sim2")
+```
+
+```{r}
+# WAIC comparison
+
+sim1 <- add_criterion(sim1, "waic")
+sim2 <- add_criterion(sim2, "waic")
+
+w <- loo_compare(sim1, sim2, criterion = "waic")
+```
+
+
+```{r}
+cbind(waic_diff = w[, 1] * -2,
+      se        = w[, 2] *  2)
+```
+
+```{r}
+# WAIC weights
+
+model_weights(sim1, sim2, weights = "waic") %>%
+  round(digits = 2)
+```
+
+```{r}
+w[, "p_waic"]
+```
+
+```{r}
+print(sim2)
+```
+
+```{r}
+post <- posterior_samples(sim2)
+
+post_mdn <-
+  coef(sim2, robust = T)$school[, , ] %>%
+  data.frame() %>%
+  bind_cols(d) %>%
+  mutate(post_mdn = )
+```
+
+
+
+
+```{r}
+prior <- c(prior(normal(0, 5), class = Intercept),
+           prior(normal(0, 10), class = b), # prior population level/ population-level ('fixed') effects
+           prior(cauchy(0, 1), class = sd)) # prior group-level
+sim3 <- brm(y ~ treated + wave + tXw2 + (1 + treated + tXw2 | school) + (1 | ustudent),
+           prior = prior, cores = 4, chains = 4, 
+           data = oneperiod, seed = 123,
+           file = "../results/simulation/sim3")
+print(sim3)
+```
+Every population-level effect has its own regression parameter represents the name of the corresponding population-level effect. Suppose, tof instance, that `y` is predicted by `x1` and `x2` (i.e., `y ~ x1 + x2` in formula syntax). Then, `x1` and `x2` have regression parameters ``b_x1` and `b_x2` respectively. The dafault prior for population-level effects (including monotonic and category specific effects) is an improper flat prior over the reals. Other common options are normal priors or student-t priors. If we want to have a normal prior with mean `0` and standard deviation `5` for `x1`, and a unit sutdent-t prior with `10` degress of freedom for `x2`, we can specify this via `set_prior("nrmal(0,45), class = "b", coef = "x1"` and `set_prior("student_t(10,0,1), class = "b", coef = "x2"`. To put the same prior on all population-level effects at once, we may write as a shortcut `set_prior("<prior>", class = "b")`. This also leads to faster ampling, because priors can be vectorized in this case. Both ways of defining priors can be combined using for instance `set_prior("normal(0,2)", class = "b")` and `set_prior("normal(0,10)", class = "b", coef = "x1")` at the same time. This will se a `normal(0,10)`prior on the effect of `x1`and a `normal(0,2)` prior on all other population-level effects. However, this will break vectorization and may slow down the sampling procedure a bit.
+
+Each group-level effect of each grouping factor has a standard deviation named `sd_<group>_<coef>`. Consider, for instance, the formulat `y ~ x1 + x2 + (1 + x1 | g)`. We see that the intercept s well as `x1` are goup-level effects nested in the grouping factor `g`. The corresponding standard deviation parameters are named as `sd_g_Intercept`and `sd_g_x1` respectively. These parameters are restricted to be non-negative and, by default, have a half student-t prior with 3 degrees fo freedom and a scale parameter that depends on the standard deviation of the response after applying the link funtion. Minimally, the scale parameter is 10. This prior is used (a) to be only very weakly informative in order to influence results as few as possible, whil (b) providing at least some regularization to considerably improve convergence and sampling efficiency. To define a prior distribution only for standard deviations of a specific grouping factor, use `set_prior("<prior>", class = "sd", group = "<group>")`. To define a prior distribution only for a specific standard deviation of a specific grouping factor, you may write `set_prior("<prior>", class = "sd", group = "<group>", coef = "<coef>")`. Recommendations on useful priors distributions for standard deviations are given in Gelman (2006), but note that he is no longer regommending uniform priors, anymore.
+
+When defining priors on group-level parameters in non-linear models, please make sure to specify the corresponding non-linear parameter through `nlpar` argument in the same way as for population-level effects.
+
+
+# Chapter 4 McElreath
+$lsat_i \sim N(\mu, \sigma)$
+$\mu \sim N(7,2)$
+$\sigma \sim Exp(0,1)$
+```{r}
+# shape of the prior mu
+p1 <- tibble(x = seq(from = 0, to = 10, by = 0.1)) %>%
+  
+  ggplot(aes(x = x, y = dnorm(x, mean = 7, sd = 2))) +
+  geom_line() +
+  scale_x_continuous(breaks = seq(from = 0, to = 10, by = 1)) +
+  labs(title = "mu ~ dnorm(7, 2)", y = "density")
+p1
+```
+```{r}
+# shape of prior sigma
+p2 <- tibble(x = seq(from = 0, to = 1, by = 0.1)) %>%
+  
+  ggplot(aes(x = x, y = dcauchy(seq(0,1,by=0.1)))) +
+  geom_line() +
+  scale_x_continuous(breaks = c(0, 1)) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  ggtitle("sigma ~ dcauchy(0, 1)")
+p2
+```
+We can simulate from both priors at once to get a prior probability distribution of life satisfaction
+
+```{r}
+n <- 1e4
+
+set.seed(4)
+
+sim <-
+  tibble(sample_mu = rnorm(n, mean = 7, sd = 2),
+         sample_sigma = runif(n, 0, 1)) %>%
+  mutate(lsat = rnorm(n, mean = sample_mu, sd = sample_sigma))
+```
+
+```{r}
+p3 <- sim %>%
+  ggplot(aes(x = lsat)) +
+  geom_density(fill = "grey33") +
+  xlim(0, 10) +
+  scale_x_continuous(breaks = c(0, 5, 10)) +
+  ggtitle("lsat ~ dnorm(mu, sigma)")
+p3
+```
+```{r}
+# computing the mean and three sd above and below
+sim %>%
+  summarise(ll = mean(lsat) - sd(lsat)*3,
+            mean = mean(lsat),
+            ul = mean(lsat) + sd(lsat)*3) %>%
+  mutate_all(round, digits = 1)
+```
+```{r}
+set.seed(4)
+
+sim <-
+  tibble(sample_mu = rnorm(n, mean = 7, sd = 2),
+         sample_sigma =runif(n, min = 0, max = 1)) %>%
+  mutate(lsat = rnorm(n, mean = sample_mu, sd = sample_sigma))
+
+# Compute the values we'll use to break on our x axis
+breaks <-
+  c(mean(sim$lsat) - 3 * sd(sim$lsat), 0, mean (sim$lsat), mean(sim$lsat) + 3 * sd(sim$lsat)) %>%
+  round(digits = 0)
+
+# this is just for aesthetics
+text <-
+  tibble(height = 10 - 25,
+         y = 0.0013,
+         label = "max of scale",
+         angle = 90)
+
+# plot
+p4 <-
+  sim %>%
+  ggplot(aes(x = lsat)) +
+  geom_density(fill = "black", size = 0) +
+  geom_vline(xintercept = 0, color = "grey92") +
+  geom_vline(xintercept = 10, color = "grey92", linetype = 3) +
+  # geom_text(data = text,
+  #           aes(y = y, label = label, angle = angle),
+  #           color = "grey92") +
+  xlim(0, 10) +
+  scale_x_continuous(breaks = breaks) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  ggtitle("lsat ~ dnorm(mu, sigma)\nmu ~ dnorm(7,2)") +
+  theme(panel.grid = element_blank())
+
+p4
+```
+
+
+
+
+
+
+
 
 
 

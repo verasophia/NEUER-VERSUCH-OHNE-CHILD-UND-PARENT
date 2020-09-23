@@ -81,7 +81,7 @@ Music education experts are concerned about this development. According to them,
 
 The Federal Association of Music Education (Bundesverband Musikunterricht (BMU)) has set up the "Agenda 2030" to initiate an improvement in music education. Similar to Höppner [@Stoverock], they consider music education as valuable and essential for a social and cultural society. It encourages children to take responsibility and to increase their sense of self-determination [@BundesverbandMusikunterricht, p. 2].
 
-In views of this broad societal debate, empirical research has concentrated on the effect of music education on cognitive abilities (school grades and IQ in particular). Not so much effort was spent on observing the connection of music and well-being. This seems surprising because life satisfaction and happiness have become central research areas in the social sciences. My thesis addresses this research gap and investigates the effects of music education on children's overall life satisfaction and on satisfaction in specific areas, namely satisfaction with the class, satisfaction with friends, and satisfaction with the situation at school. It analyzes music education in the classroom where fifth and sixth grade students have one additional hour of music education per week. The project is called "klasse.im.puls" and it promotes the establishment of musical training in secondary schools in Bavaria. The program was implemented with the intention to give every child the opportunity to learn how to play an instrument. Additional positive outcomes were expected: an increase in self-confidence and social competence, as well as a reduction in violent behavior ^[For more information:] 
+In views of this broad societal debate, empirical research has concentrated on the effect of music education on cognitive abilities (school grades and IQ in particular). Not so much effort was spent on observing the connection of music and well-being. This seems surprising because life satisfaction and happiness have become central research areas in the social sciences. My thesis addresses this research gap and investigates the effects of music education on children's overall life satisfaction and on satisfaction in specific areas, namely satisfaction with the class, satisfaction with friends, and satisfaction with the situation at school. It analyzes music education in the classroom where fifth and sixth grade students have one additional hour of music education per week. The project is called "klasse.im.puls" and it promotes the establishment of musical training in secondary schools in Bavaria. The program was implemented with the intention to give every child the opportunity to learn how to play an instrument. Additional positive outcomes were expected: an increase in self-confidence and social competence, as well as a reduction in violent behavior ^[For more information:]. The project was supervised by the FAU Erlangen-Nuremberg Music Teaching Departement in collaboration with the Bavarian Ministry of Education.
 My analysis focuses on the change in the overall life satisfaction and in satisfaction within specific areas reported by the students over the course of the project. The term of *life satisfaction* refers to a cognitive evaluation of a person's reaction to his or her life in contrast to *affect*, an ongoing emotional reaction. Combined, LS and affect yield subjective well-being [@Diener2009, p. 71]. I will approach the problem by using a multi level model, that accounts for differences on the level of the individual student, on the level of the class and on the school level. I do this by using Bayesian inference...
 
 The interest in life satisfaction as an outcome of the music project stems from the idea that higher values of LS come with many benefits. Among other positive correlates, adolescents reporting very high levels of LS are less likely to be affected by depression, anxiety, negative affect and social stress compared to adolescents with very low life satisfaction. Also, they achieve higher SEAs and demonstrate higher mean scores of school satisfaction [@Proctor2009a, p. 928; @Gilman2006, p. 316]. These results go in line with a study by @Suldo2004 [p. 94] that shows that LS could be a moderating variable in predictions of the development of psycho-pathological behaviors. Low life satisfaction may be an indication for externalizing behavior problems in the future. When life satisfaction is on a higher level, those behavior problems are less likely to occur [@Suldo2004, p. 100] The authors conclude that life satisfaction might operate as a buffer against the development of subsequent externalizing behavior problems "in the face of stressful life events" [@Suldo2004. p. 101]. @Kim2003 add to the discussion that externalizing behavior problems in turn lead to more stressful life events. That reciprocal interrelation of stressful life events and externalizing problems (reported as delinquent behaviors) leads to unhealthy dynamics of increasing stress and behavior problems. If higher LS leads better coping mechanisms with stressful life events, these dependencies could be reduced.
@@ -117,7 +117,7 @@ This paper complements existing literature by using different music indicators a
 
 ## The project
 \label{project}
-The data come from the years 2012-2014 when KIP was conducted in six different secondary schools (Mittel- und Realschulen) in Nuremberg. Generally, there are seven types of implementations of the KIP project: Band, wind players, strings, choir, percussion, strings and plucked instruments. Here, only band classes are observed. A school was able to apply for the project if certain criteria were fulfilled. For example, the school had to make sure that there was a full-time music teacher who was qualified to carry out the  project. That person was trained to lead a band class and attended yearly meetings with other music teachers to share experiences. This way, it can be assured that the treatment in each school looked pretty much the same and there were no noteworthy differences in the way the teachers arranged the music lessons in the band classes. The three music lessons per week were split into a) Instrumental lessons in small groups, b) ensemble play, and c) general music education. Latter was similar to how music lesson instructed in the control group. In each school was a band class and a control class. The band classes received three music lessons per week, whereas the control classes only received two lessons of regular music education. Music lessons in the treatment classes differed significantly from that in the control group. In the band classes, the teachers had a more practical approach and there was less theoretical music education than in the control group. The students played concerts in regular intervals and were thus able to share what they had learned. In five different points of time, the students were asked to fill in a questionnaire:
+The data come from the years 2012-2014 when KIP was conducted in six different secondary schools (Mittel- und Realschulen) in Nuremberg. Generally, there are different types of implementations of the KIP project (e.g. choir, brass band, string orchestra) among which the rock band model was implemented in all of the schools that are subject to this study. Probably due to parents' and students' music preferences, this type has been the most popular. A school was able to apply for the project if certain criteria were fulfilled. For example, the school had to make sure that there was a full-time music teacher who was qualified to carry out the  project. That person was trained to lead a band class and attended yearly meetings with other music teachers to share experiences. This way, it can be assured that the treatment in each school looked pretty much the same and there were no noteworthy differences in the way the teachers arranged the music lessons in the band classes. Participating schools were supported in acquiring equipment and instruments to implement ensemble music class teaching. In each school was a band class and a control class. The band classes received three music lessons per week, whereas the control classes only received two lessons of regular music education. Music lessons in the treatment classes differed significantly from that in the control group. In the band classes, the teachers had a more practical approach and there was less theoretical music education than in the control group. The three music lessons per week were split into a) Instrumental instructions in small groups, b) ensemble playing, and c) general music education (music theory or history). The latter was similar to how regular music education was implemented in the control group. Thefor not only the amount of music education is higher in the treatment group but also the way that music education is delivered differs a lot from normal music lessons in a way that it is more practical and with better equipment. The students played concerts in regular intervals and were thus able to share what they had learned. In five different points of time, the students were asked to fill in a questionnaire:
 
 wave 1: Beginning of 5th grade (pre-treatment)
 wave 2: Mid of 5th grade
@@ -125,16 +125,19 @@ wave 3: end of 5th grade
 wave 4: mid of 6th grade
 wave 6: end of 6th grade
 
-In total, 394 students were observed, however not all of them occur in each wave. Some questions were only asked in wave 1 (i.e. sex) which lead to the problem that there were no information about gender for students who did not attend in the first wave. Only 309 reported their gender in wave 1 which leads to 85 students for whom the gender is "unknown". To not miss all of these observations in regressions including gender, NAs were replaced by a category "unknown". The same was done for the variable of migration background and language spoken at home. An other issue to point out is the comparably low number of observations in wave 5 in school 5. 
+In total, 394 students were observed, however not all of them occur in each wave. Some questions were only asked in wave 1 (i.e. sex) which leads to the problem that there were no information about gender for students who did not attend in the first wave. Only 309 reported their gender in wave 1 which leads to 85 students for whom the gender is "unknown". To not miss all of these observations in regressions including gender, NAs were replaced by a category "unknown". The same was done for the variable of migration background and language spoken at home. An other issue to point out is the comparably low number of observations in wave 5 in school 5. 
 
 Students had to rate their level of life satisfaction on a scale reaching from 0 ("completely unsatisfied) to 10 (completely satisfied) for the question "How satisfied are you with your life overall?"
 
 ## selection process (and pre-treatment differences)
 The decision who attended the treatment group was made before the entrance to grade 5. Parents could choose to put their child into a music class. Therefore, the experiment is not fully randomized. Children who were already into music in the first place might have been more likely to have chosen the music class. Also the decision can be a a consequence of parental and socio-economic background of the student. To have a better idea of possible differences between the treatment and the control group, I computed standardized mean differences:
 
-The standardized mean differences are not a reason of concern for the most part. For a major part of the observed variables, there are no notable differences between the treatment group and the control group. However, as already discussed, there are differences in prior musical knowledge. Among the treated, there are relatively more children who have music as a hobby. Of the 87 students who answered with "yes" to the question if music was their hobby, only 24 (SD=15.6) were assigned to the control group and the remaining 63 students attended the band classes (72%). Also, the duration of making musi is very different in the two subgroups. In the Treatment group, 56/% are parcticing at leats 30 min, while in the control group that share is only 35/%. However, the model accounts for the individual musical background of the child. Therefore the fact that the control group and the treatment group does not a big issue.
+The standardized mean differences are not a reason of concern in this setting. For most of the observed variables, there are no notable differences between the treatment group and the control group. However, as already suspected, there are differences in prior musical knowledge. Among the treated, there are relatively more children who have music as a hobby before the project has even started. Of the 87 students who answered with "yes" to the question if music was their hobby, only 24 were assigned to the control group and the remaining 63 students attended the band classes. Also, the duration of making music is very different in the two subgroups. In the Treatment group, 56% are parcticing at leats 30 min, while in the control group that share is only 35%. However, the model addresses this issue by applying a difference-in difference approach to estimate the causal effect of additional music lessons on students' well-being. accounts for the individual musical background of the child by. Therfore the fact that the model accounts for musical background of the student, differences in the control group and the treatment group are not a problem for inference.
 
 ## Measuring LS in children
+An extensive amount of research was done on adult life satisfaction and on methods how to measure it. From that we know that not only is life satisfaction a result of life circumstances but it determines outcomes in several areas like health, ... (see Firsch 1999 for a review (suldo and huebner, ß. 94))
+
+Even though, the amount of research on
 \label{measurement}
 To investigate ones quality of life, research uses both objective and subjective indicators. Typical objective indicators are the income levels, crime rates, and access to medical services -- measures that are external and quantifiable. Subjective indicators on the other hand comprise subjective evaluations of ones' individual life circumstances [@Gilman2000, 178]. Only a modest relation between both measures was found which indicates that each approach carries uniqe information that are relevant for a comprehensive understanding of overall life quality *(Veenhofen, 1996)*. Over time, measurement methods for subjective indicators have evolved leading to substantial growth in the life satisfaction research. However, for a long time, most of the measurements were designed to assess adults' life satisfaction. Only recently, investigating correlates of life satisfaction in adolescents has begun. One reason why life satisfaction research in children was put off for a long time are probably that measuring life satisfaction in children is more challenging than for adults. Instruments for assessing children's subjective life satisfaction reports have been less intensively developed which is probably due to the fact that a Likert-type ratings scale is more difficult to use for younger children than for adolescents [@Johnston2002, 28]. For example, younger children or children with poorer readings skills are less able to respond appropriately to negative items on questionnaires and this effect biases the interpretation of children's responses [@Marsh1986, 45]. It is also common for children rating their subjective life satisfaction to show elevated extreme scores. As children become older, this tendency shriks and they are more capable of providing graded ratings in between the two extremes. These results have potentially substantial implications for the interpretation of self-report ratings form children *this tendency might have an erroneous and invalid impact on the interpretation of children's self-reports*[@Johnston2002, 33-34]. When dealing with self-reported life satisfaction in children, it is crucial that the respective child fully understands the question in order to give a valid response [@Gluskie2012; @Tomyn2016]. One must make sure that a child is old enough to know how to use a satisfaction scale. This requires children to distnace themselves from the current situation, cognitively evaluate their life satisfaction (considering all relevant areas of life) and rate the degree to which certain items on the scale apply to them. This requires abstract thinking, which children develop in early adolescent years (10-14 years) [@Gluskie2012; @Piaget1955; @Piaget1969]. @Gilman2000 have reviewed five different (both unidimensional and multidimensional) measurements explicitly developed to asses adolescents' life satisfaction ^[The Students' Life Satisfaction Scale [@Huebner1991a], the Satisfaction With Life Scale [@Diener1985], the Perceived Life Satisfaction Scale [@Adelman1989], the Comprehensive Quality of Life Scale - School Version [@Cummins1997; @Gullone1999], and the Multidimensional Student's Life Satisfaction Scale [@Huebner1994]]. The authors evaluated those measures in terms of validity and reliability and found all of the scales to be appropriate for research with adolescents [181-188]. The demographic characteristics of the available samples show that all of the adolescents observed were older than 12 years. Therefor it remains unclear if children younger than that age are able to report valid satisfaction.
 An other instrument was developed more recently by [@Cummins2005] which is the Personal Well-being Index (PWI-SC). Again, studies demonstrated reliability for this instrument as well [@Casas2011; @Casas2015; @Tomyn2011a; @Tomyn2019]. But also in those studies, all of the adolescents were at least 12 years of age, mostly even older. There is only very little evidence on the psychometric properties of the PWI-SC for children below the age of 12.
@@ -152,78 +155,42 @@ In conclusion, measuring life satisfaction in children is more challenging than 
 
 # Econometrics
 \label{sec:econometrics}
+@AndrewGelman2013 consider a multilevel model to be "a regression (a linear or a generalized linear model) in which the parameters - the regression coefficients - are given a probability model" (p. 1). @Mcelreath2020 (p. 14) suggests to think of parameters as a placeholder for a missing model. That probability model itself has parameters called haperparameters which are also estimated from the data. In other words, they are parameters for parameters. Their priors are often referred to as haperpriors. Technically, there is no limit to the number of levels, however infeasible computation and ability to understand the model are in practice a resitriction. The structure of my data is a hierarchical one as discussed in the \ref{sec:data}. Ususally, in that case a simple nonhierarchical model is inappropriate. It tends to underfit when there are only few parameters and to overfit the data when too many parameters are indluded. This leads to models that fit the existing data well but lead to poor predictions for new data (@AndrewGelman2013, 101). In the following, I will explain how hierarchical models are best to navigate between underfitting and overfitting (fit to sample always - not true of multilevel models - improves as we add parameters. Though multilevel models are more complicated, it is worth using them because they reduce overfit as new parameters are added (Youtube Video MacElreath Lecture 7). Hierarchical structure reduces overfit.
 
-An extensive amount of research was done on adult life satisfaction and on methods how to measure it. From that we know that not only is life satisfaction a result of life circumstances but it determines outcomes in several areas like health, ... (see Firsch 1999 for a review (suldo and huebner, ß. 94))
+## Identification
+\label{sec:identification}
+To assess the effect of the music treatment on the student's life satisfaction, the model must be able to identify causal inference. This would be a comparison between the observed life satisfaction in each student in the treatment group and that student's outcome were he participating in the treatment. Multilevel modeling works well for drawing causal inference but also for prediction and descriptive modeling [@AndrewGelman2013, 6]. Multilevel models are especially useful for studying effects that vary by group. To study this variation among groups with classical regression, you need interactions. Using ineractions has the disadvantage that estimates can be very noisy, in particular when there are only few observations in one group. Related to this is the problem of estimateing group-level quantity with classical estimation. Again, small sample size in the group leads to useless information. On the other hand, ignoring group-level variation can also be misleading. Multilevel models can be a solution for thie issue beacause the account for similarties between groups but also see that there are differences. The way they do that is by partially pooling information across units in the data in order to produce better estimates for all units. In this case, all the data are used to perform inference fr groups with small sample size insted of just using local information. Patial pooling can be seen as a compromise between the two extresmes discussed above: Running separate regressions on each group level on one hand and completely ignoring variation between groups. This is referred to as no-pooling and complete pooling respectively. Both approaches can be useful as prelimenary estimates, leading up to the partial pooling that comes out of a multilevel analysis. Therfore I will illustrate both the complete pooling and the no-pooling approach to compare them to partial pooling. To do so, I use simulated data.
 
-Even though, the amount of research on
+* Underfitting: The model is insensitive to the details in the data. Learning too little from it.
 
-## Identification / Partial Poolin...
-\label{identification}
+* Overfitting: The model is sensitive to the details in the data. Learning too much from it.
 
-"The challenge for identifying causal differences is the fact that..."
-- Ability
-- socio-economic characteristics
-- other background characteristics
-- we need to take into account selection effects
-- Bayesian because small sample
+* We want the regular features of the sample! Chapter 7 MacElreath
++ Strategie: One way: Regularizing priors. They are skepitcal of impossible relationships. They regularize inference. Regularizing force. Better predictions. / Cross-validation compares / Information criteria. Regularizing priors. Prior predictive simulation. Choose priors that will only creaty possible outcomes. Helps to reduce overfitting.
 
-Gelman and Hill:
-Motivation for multilevel modelin: causal inference, prediction, descriptive modeling
+* Complete pooling: This means the population of schools is assumed to be invariant. If clusters are ignored, which means to assign the same intercept to each of them, then there is the risk of ignoring important variation in how schools correspond to the treatment. This variation could mask association with other variables [@Mcelreath2020, 416]
 
-Learning about treatment effects that vary
-  Multilevel models allow us to study effects that vary by group (school!) is the intervention more effective in some schools than others? why? Only few observtions per school, multilevel modeling allows us to estimat these interactions to the extent supported by the data
-  
-Using all the data to perform inference for groups with small sample size
-  classical estimation just using the local information can be essentially useless if the samle size is small in the group - a classical regression ignoring group indicators can be misleading in ignoring group-level variation (no pooling, complete pooling)
-  
-Prediction
-  predicting outcomes of new cases. but what if the data vary by group? Then we can make predictions for new units in existing groups or in new groups
-  
-  inference should include the factors used in the design of data collection. without being overwhelmed with the problems of overfittin that arise form applying least squares or maximum likelihood
-  
-  Traditional alernatives to multilevel modeling are *complete pooling* in which differences between groups are ignored and *no pooling* in which data grom different sources are analyzed separately
-Elreath: *"If we igore the clusters, assigning the same intercept to each of them, then we risk ignoring important variation in baseline survival. This variation could mask association with other variables. If we instead estimate a unique intercept for each cluster, using a dummy variable for each tank, we instead practice anterograde amnesia." p416*
-  Both these approaches have problems: no pooling ignores information and can give unacceptably variable inference, and complete pooling suppresses variation that can be important or even te main foal of a study. The extreme alternatives can in fact be usefl as preliminary estimates, but ultimately wer prefer the parial pooling tha comes out of a multilevel analyses.
-
-Multilevel models re extensions of regression in which data are structured in groups and coefficients can vary by group
-
-varying intercept and varying slope
-indicators for groups: verying-intercept model p237 
-varying slopes are interactions between the continuous predictor x and the group indicators
-First step: set up a regression with varying coefficients
-second step: set up a regression model for the coefficients themselves
-
-McElreath
-Multilevel models remember featuresof each cluster in the data as tehy learn about all of the clusters
-Depending among clusters, which is learned from the data as well, the model pools information across clusters. This pooling tends to improve estimates about each cluster. This improved estimation leads to several, more pragmatic sounding, benefits of the multilevel approach:
+* No-pooling: This means that each school can tell nothing about any other school as if variation among schools were assumed to be infinite. 
+* Partial pooling: This means using an adaptive regularizing prior that prevents the model from "getting too excited by the training sample" [@Mcelreath2020, 218]. A regularizing prior is a prior that slows down the rate of learning from a sample and thus reduces overfitting while still allowing the model to learn the regular features of a sample. Resulting from regularization is a phenomenon sometimes called shrinkage ... (@Macelreath2020, p. 419) Estimates for each cluster are less underfit than the grand mean and less overfit than the no-pooling estimates. The partial pooling produces noticeably better estimates when there are only a few observations in one group. In that case, the no pooling estimate well be especially overfit. Otherwise, the varying effect estimates are not that different from the no pooling estimates. The partial pooling tends to improve estimates about each cluster. This improved estimation leads to several, more pragmatic sounding, benefits of the multilevel approach:
 1. Improved estimates for repeat sampling
 2. Improved estimates for imbalance in sampling
 3. Estimates of variation
 4. Avoid averaging, retain variation
 
-p416 after all, tanks are different but each tank does help us estimate survival in the other tanks. So it doesn't make sense to forget entirely, moving from one tank to another.
-A multilevel model, in which we simultaneously estimate both an intercept for each tank and the variation among tanks, is what we want. ... This adaptive learning is the absense of amnesia discussed at the start of the chapter. When what we learn about each cluster infroms all the other clusters, we learn the prior simultaneous to earning the intercepts.
-regularizing priors
-
-p422
-Complete pooling: This means we ssume that the population of ponds is invariant, the same as estimating a common intercept for all ponds
-No pooling: This means we assume that each pond tells us nothing about any other pond. This is the model with amnesia.
-Partial pooling: This means using an adaptive regularizing prior, as in the previous section
-(more details on subsequent pages)
-
-p50 (34)
-In future chaoters, there will be more parameters in your models. In statistical modeling, many of the most common questions we ask about data are answered directly by parameters:
-* What is the average difference between treatment groups?
-* How strong is the association between a treatment and an outcome?
-* Does the effect of the treatment depend upon a covariate?
-* How much variation is there among groups?
-
-You'll see how these questions become extra parameters inside the distribution function we assign to the data.
-For every parameter you intend your Bayesiona machine to consider, you must provide a distribution of prior plausibility, its *PRIOR*.
+### Prior distribution
+The analyses require that the six schools I am observing, be considered a random sample from a common distribution. $\theta_j$ is seend as an independent sample from a prior (or population) distribution governed by some unknown paramter vector $\phi$. In general, $\phi$ is unknown, so our distribution of $\theta$ must average over our uncertainty in $\phi$. In order to create a joint probability distribution for $(\phi,\theta)$, we must assign a prior distribution to $\phi$. If little is known about $\phi$, we can assign a diffuse prior distribution, but we must be careful when using an improper prior density to check that the resulting posterior distribution is proper, and we should asses whether our conclusions are sensitive to this simplifying assumption. In most real problems, one should have enough substantive knowledge about the parameters in $\phi$ at least to constrain the hyperparameters inwo a finite region, if not to assign a substantive hyperprior distribution. For the setting of my thesis, this means that the hyperparameters should be constrained to the values between 0 and 10 as the life satisfaction scales can only take on any value within that range.
 
 ## Estimation
+\label{estimation}
+(Gelman p13)
+In a first step, I will set up a full probability mode - a joint probability distribution for all observabe and unobservable quantities in a probelm. The model should be consistent with knowledge about the underlyng scientific problem and the data collection process.
+After that I will calculate and interpret the appropriate posterior distibution - the conditional probabiliy distribution of the unobserved quantities of ultimate interest, given the observed data.
+Finally, in a third step the fit of the model will be evaluated and the models' implications of the resulting posterior distribution is presented (how sensitive are the results to the modeling assumptions in step 1?)
 
-I simulataneously investigate the treatment in sic differenct schools. Te analysis is restricted to wave 1 (pre treatment) and wave 2 (post treatment). The regression equation is:
+We have repeat measures and heterogeneity across clusters (McElreath). After all, schools are different but each school does help estimating the treatment effect in other schools.
+The study of effectiveness of the music project, with the students in school $j$ having a certain unknown parameter vector $\theta_j$, it might be reasonable to expect that estimates $\theta_j$, which represent a sample of schools, shoud be related to each other. This is achieved in a natural way by using a prior distribution in which life satisfaction is viewed as a sample from a common *population distribution*. A key feature of such applications is that the observed data, $y_{ij}$, with student index $i$ within group indexed by $j$, can be used to estimate aspects of the population distribution of the $theta_j$'s even though the values of $\theta_j$ are not themselves observed. In contrast, hierarchical models can have enough parameters to fit the model well, while using a population distribution to structure some dependence into the parameters, therby avoiding problems of overfitting.
+
+I simulataneously investigate the treatment in six differenct schools. Te analysis is restricted to wave 1 (pre treatment) and wave 2 (post treatment). The regression equation is:
 $$
 y_{ijt} = \beta_0 + \beta_{1j[i]} T_i + \sum\limits_{l=2}^5\delta_{lj[i]} (T_{i} \times \text{Period}_{t}) + \lambda_t + \mu_{j[i]} + \alpha_{i} + \epsilon_{ijt},
 $$
@@ -244,6 +211,43 @@ For doing *blah* I use *blub* [ref]
 For each outcome variable...
  First I do no pooling, then I do pooling
  Then I do Bayesian 
+
+### Assessing model adequacy (Chapter 6 Gelman and Hill 2020)
+"The challenge for identifying causal differences is the fact that..."
+- Ability
+- socio-economic characteristics
+- other background characteristics
+- we need to take into account selection effects
+- Bayesian because small sample
+
+Learning about treatment effects that vary
+  Multilevel models allow us to study effects that vary by group (school!) is the intervention more effective in some schools than others? why? Only few observtions per school, multilevel modeling allows us to estimat these interactions to the extent supported by the data
+
+Prediction
+  predicting outcomes of new cases. but what if the data vary by group? Then we can make predictions for new units in existing groups or in new groups
+  
+  inference should include the factors used in the design of data collection. without being overwhelmed with the problems of overfittin that arise form applying least squares or maximum likelihood
+
+Multilevel models re extensions of regression in which data are structured in groups and coefficients can vary by group
+
+varying intercept and varying slope
+indicators for groups: verying-intercept model p237 
+varying slopes are interactions between the continuous predictor x and the group indicators
+First step: set up a regression with varying coefficients
+second step: set up a regression model for the coefficients themselves
+
+p416 after all, tanks are different but each tank does help us estimate survival in the other tanks. So it doesn't make sense to forget entirely, moving from one tank to another.
+A multilevel model, in which we simultaneously estimate both an intercept for each tank and the variation among tanks, is what we want. ... This adaptive learning is the absense of amnesia discussed at the start of the chapter. When what we learn about each cluster infroms all the other clusters, we learn the prior simultaneous to earning the intercepts.
+
+p50 (34)
+In future chaoters, there will be more parameters in your models. In statistical modeling, many of the most common questions we ask about data are answered directly by parameters:
+* What is the average difference between treatment groups?
+* How strong is the association between a treatment and an outcome?
+* Does the effect of the treatment depend upon a covariate?
+* How much variation is there among groups?
+
+You'll see how these questions become extra parameters inside the distribution function we assign to the data.
+For every parameter you intend your Bayesiona machine to consider, you must provide a distribution of prior plausibility, its *PRIOR*.
 
 \clearpage
 
