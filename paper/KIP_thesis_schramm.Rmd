@@ -180,6 +180,8 @@ To assess the effect of the music treatment on the student's life satisfaction, 
 ### Prior distribution
 The analyses require that the six schools I am observing, be considered a random sample from a common distribution. $\theta_j$ is seend as an independent sample from a prior (or population) distribution governed by some unknown paramter vector $\phi$. In general, $\phi$ is unknown, so our distribution of $\theta$ must average over our uncertainty in $\phi$. In order to create a joint probability distribution for $(\phi,\theta)$, we must assign a prior distribution to $\phi$. If little is known about $\phi$, we can assign a diffuse prior distribution, but we must be careful when using an improper prior density to check that the resulting posterior distribution is proper, and we should asses whether our conclusions are sensitive to this simplifying assumption. In most real problems, one should have enough substantive knowledge about the parameters in $\phi$ at least to constrain the hyperparameters inwo a finite region, if not to assign a substantive hyperprior distribution. For the setting of my thesis, this means that the hyperparameters should be constrained to the values between 0 and 10 as the life satisfaction scales can only take on any value within that range.
 
+Simpson's paradox (that a trend can reverse when data are grouped)
+
 ## Estimation
 \label{estimation}
 (Gelman p13)

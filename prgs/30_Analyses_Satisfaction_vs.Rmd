@@ -336,6 +336,29 @@ m1 <- brm( lsat ~ 0 + welle ? +
 
 ```
 ```{r}
+# plotting the priors
+p_intercept_sim <-
+  tibble(x = seq(from = 0, to = 10, by = 0.1)) %>%
+  
+  ggplot(aes(x = x, y = dnorm(x, mean = 0, sd = 5))) +
+  geom_line() +
+  scale_x_continuous(breaks = seq(from = 0, to = 10, by = 1)) +
+  labs(title = "mu ~ dnorm(0, 5)", y = "density")
+p_intercept_sim
+ggsave("../figures/p_intercept_sim.pdf", p_intercept_sim, width = 7, height = 4, units = "in")
+
+p_b_sim <-
+  tibble(x = seq(from = 0, to = 10, by = 0.1)) %>%
+  
+  ggplot(aes(x = x, y = dnorm(x, mean = 0, sd = 10))) +
+  geom_line() +
+  scale_x_continuous(breaks = seq(from = 0, to = 10, by = 1)) +
+  labs(title = "b ~ dnorm(0, 10)", y = "density")
+p_b_sim
+ggsave("../figures/p_b_sim.pdf", p_b_sim, width = 7, height = 4, units = "in")
+```
+
+```{r}
 m2 <- brm( lsat ~ welle +
              female + migback + hob.mus.making +
              (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
