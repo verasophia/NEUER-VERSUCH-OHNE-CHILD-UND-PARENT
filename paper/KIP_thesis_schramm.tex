@@ -293,7 +293,7 @@ In conclusion, measuring life satisfaction in children is more challenging than 
 \section{Econometrics}\label{econometrics}}
 
 \label{sec:econometrics}
-Andrew Gelman (2013) consider a multilevel model to be ``a regression (a linear or a generalized linear model) in which the parameters - the regression coefficients - are given a probability model'' (p.~1). Mcelreath (2020) (p.~14) suggests to think of parameters as a placeholder for a missing model. That probability model itself has parameters called haperparameters which are also estimated from the data. In other words, they are parameters for parameters. Their priors are often referred to as haperpriors. Technically, there is no limit to the number of levels, however infeasible computation and ability to understand the model are in practice a resitriction. The structure of my data is a hierarchical one as discussed in the \ref{sec:data}. Ususally, in that case a simple nonhierarchical model is inappropriate. It tends to underfit when there are only few parameters and to overfit the data when too many parameters are indluded. This leads to models that fit the existing data well but lead to poor predictions for new data (Andrew Gelman (2013), 101). In the following, I will explain how hierarchical models avoid the problem of overfitting.
+Andrew Gelman (2013) consider a multilevel model to be ``a regression (a linear or a generalized linear model) in which the parameters - the regression coefficients - are given a probability model'' (p.~1). Mcelreath (2020) (p.~14) suggests to think of parameters as a placeholder for a missing model. That probability model itself has parameters called haperparameters which are also estimated from the data. In other words, they are parameters for parameters. Their priors are often referred to as haperpriors. Technically, there is no limit to the number of levels, however infeasible computation and ability to understand the model are in practice a resitriction. The structure of my data is a hierarchical one as discussed in the \ref{sec:data}. Ususally, in that case a simple nonhierarchical model is inappropriate. It tends to underfit when there are only few parameters and to overfit the data when too many parameters are indluded. This leads to models that fit the existing data well but lead to poor predictions for new data (Andrew Gelman (2013), 101). In the following, I will explain how hierarchical models are best to navigate between underfitting and overfitting (fit to sample always - not true of multilevel models - improves as we add parameters. Though multilevel models are more complicated, it is worth using them because they reduce overfit as new parameters are added (Youtube Video MacElreath Lecture 7). Hierarchical structure reduces overfit.
 
 \hypertarget{identification}{%
 \subsection{Identification}\label{identification}}
@@ -303,11 +303,19 @@ To assess the effect of the music treatment on the student's life satisfaction, 
 
 \begin{itemize}
 \item
+  Underfitting: The model is insensitive to the details in the data. Learning too little from it.
+\item
+  Overfitting: The model is sensitive to the details in the data. Learning too much from it.
+\item
+  We want the regular features of the sample! Chapter 7 MacElreath
+\item
+  Strategie: One way: Regularizing priors. They are skepitcal of impossible relationships. They regularize inference. Regularizing force. Better predictions. / Cross-validation compares / Information criteria. Regularizing priors. Prior predictive simulation. Choose priors that will only creaty possible outcomes. Helps to reduce overfitting.
+\item
   Complete pooling: This means the population of schools is assumed to be invariant. If clusters are ignored, which means to assign the same intercept to each of them, then there is the risk of ignoring important variation in how schools correspond to the treatment. This variation could mask association with other variables (Mcelreath, 2020, p. 416)
 \item
   No-pooling: This means that each school can tell nothing about any other school as if variation among schools were assumed to be infinite.
 \item
-  Partial pooling: This means using an adaptive regularizing prior that prevents the model from ``getting too excited by the training sample'' (Mcelreath, 2020, p. 218). A regularizing prior is a prior that slows down the rate of learning from a sample and thus reduces overfitting while still allowing the model to learn the regular features of a sample. Resulting from regularization is a phenomenon sometimes called chrinkage \ldots{} (({\textbf{???}}), p.~419) Estimates for each cluster are less underfit than the grand mean and less overfit than the no-pooling estimates. The partial pooling produces noticeably better estimates when there are only a few observations in one group. In that case, the no pooling estimate well be especially overfit. Otherwise, the varying effect estimates are not that different from the no pooling estimates. The partial pooling tends to improve estimates about each cluster. This improved estimation leads to several, more pragmatic sounding, benefits of the multilevel approach:
+  Partial pooling: This means using an adaptive regularizing prior that prevents the model from ``getting too excited by the training sample'' (Mcelreath, 2020, p. 218). A regularizing prior is a prior that slows down the rate of learning from a sample and thus reduces overfitting while still allowing the model to learn the regular features of a sample. Resulting from regularization is a phenomenon sometimes called shrinkage \ldots{} (({\textbf{???}}), p.~419) Estimates for each cluster are less underfit than the grand mean and less overfit than the no-pooling estimates. The partial pooling produces noticeably better estimates when there are only a few observations in one group. In that case, the no pooling estimate well be especially overfit. Otherwise, the varying effect estimates are not that different from the no pooling estimates. The partial pooling tends to improve estimates about each cluster. This improved estimation leads to several, more pragmatic sounding, benefits of the multilevel approach:
 \end{itemize}
 
 \begin{enumerate}
@@ -425,141 +433,6 @@ Three challenges should determine the agenda of future research on this agenda.
 1. separate the influence of parental and individual background from that of music (identify a variable that increases the likelihood to learn a musical instrument without affecting the development of skills.)
 2. answer the question of the extent to which extracurricular activities are substitutable (substitutes vs.~compliments).
 3. long-term effects of music training on outcomes such a s labor market success or life satisfaction
-
-\hypertarget{complete-pooling}{%
-\subsection{Complete pooling}\label{complete-pooling}}
-
-\begin{table}[H]
-
-\caption{(\#tab:complete pooling)Estimates complete pooling}
-\centering
-\begin{tabu} to \linewidth {>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X}
-\toprule
-wave & complete & lower & upper\\
-\midrule
-1 & -0.0171144 & -0.3985530 & 0.3643241\\
-2 & -0.1543548 & -0.5153323 & 0.2066226\\
-3 & 0.3483488 & -0.0247137 & 0.7214114\\
-4 & -0.3285619 & -0.7027461 & 0.0456223\\
-\bottomrule
-\end{tabu}
-\end{table}
-
-\hypertarget{no-pooling}{%
-\subsection{No-pooling}\label{no-pooling}}
-
-\begin{table}[H]
-
-\caption{\label{tab:no-pooling}Estimates no-pooling}
-\centering
-\begin{tabu} to \linewidth {>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X}
-\toprule
-school & wave & estimate & lower & upper\\
-\midrule
-1 & 1 & -0.2126153 & -0.5037749 & 0.0785443\\
-1 & 2 & -0.2338833 & -0.5205275 & 0.0527609\\
-1 & 3 & -0.1318997 & -0.4227986 & 0.1589992\\
-1 & 4 & -0.1845208 & -0.4722545 & 0.1032128\\
-2 & 1 & -0.1625532 & -0.6963053 & 0.3711989\\
-\addlinespace
-2 & 2 & -0.1838212 & -0.7130579 & 0.3454154\\
-2 & 3 & -0.0818376 & -0.6153290 & 0.4516537\\
-2 & 4 & -0.1344587 & -0.6647848 & 0.3958674\\
-3 & 1 & 0.4478898 & -0.0819770 & 0.9777565\\
-3 & 2 & 0.4266218 & -0.0987296 & 0.9519731\\
-\addlinespace
-3 & 3 & 0.5286054 & -0.0010007 & 1.0582114\\
-3 & 4 & 0.4759843 & -0.0504565 & 1.0024250\\
-4 & 1 & -0.7582930 & -1.2949003 & -0.2216857\\
-4 & 2 & -0.7795610 & -1.3116529 & -0.2474691\\
-4 & 3 & -0.6775774 & -1.2139240 & -0.1412308\\
-\addlinespace
-4 & 4 & -0.7301985 & -1.2633798 & -0.1970171\\
-5 & 1 & -0.5744479 & -1.1097624 & -0.0391334\\
-5 & 2 & -0.5957159 & -1.1265150 & -0.0649168\\
-5 & 3 & -0.4937323 & -1.0287861 & 0.0413215\\
-5 & 4 & -0.5463534 & -1.0782419 & -0.0144648\\
-\addlinespace
-6 & 1 & -0.7582930 & -1.2907278 & -0.2258581\\
-6 & 2 & -0.7795610 & -1.3074804 & -0.2516415\\
-6 & 3 & -0.6775774 & -1.2097515 & -0.1454033\\
-6 & 4 & -0.7301985 & -1.2592074 & -0.2011896\\
-\bottomrule
-\end{tabu}
-\end{table}
-
-\hypertarget{partial-pooling}{%
-\subsection{Partial pooling}\label{partial-pooling}}
-
-\begin{table}[H]
-
-\caption{(\#tab:partial pooling)Estimates partial pooling}
-\centering
-\begin{tabu} to \linewidth {>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X}
-\toprule
-school & wave & mean & Q10 & Q90\\
-\midrule
-7 & 1 & 0.1806651 & -0.3164921 & 0.6909753\\
-7 & 2 & -0.2062209 & -0.6898667 & 0.2894317\\
-7 & 3 & 0.3448464 & -0.1488093 & 0.8530004\\
-7 & 4 & -0.3541457 & -0.9917535 & 0.2854370\\
-\bottomrule
-\end{tabu}
-\end{table}
-
-\includegraphics[width=1\linewidth]{../figures/lsat_teff_across_schools}
-
-\includegraphics[width=1\linewidth]{../figures/compare_estimates_lsat}
-
-\begin{table}[H]
-
-\caption{(\#tab:compare methods)Estimates generated by different methods}
-\centering
-\begin{tabu} to \linewidth {>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedright}X}
-\toprule
-school & wave & estimate & lower & upper & Q10 & Q90 & method\\
-\midrule
-1 & 1 & -0.2126153 & -0.5037749 & 0.0785443 & NA & NA & nopool\\
-1 & 2 & -0.2338833 & -0.5205275 & 0.0527609 & NA & NA & nopool\\
-1 & 3 & -0.1318997 & -0.4227986 & 0.1589992 & NA & NA & nopool\\
-1 & 4 & -0.1845208 & -0.4722545 & 0.1032128 & NA & NA & nopool\\
-2 & 1 & -0.1625532 & -0.6963053 & 0.3711989 & NA & NA & nopool\\
-\addlinespace
-2 & 2 & -0.1838212 & -0.7130579 & 0.3454154 & NA & NA & nopool\\
-2 & 3 & -0.0818376 & -0.6153290 & 0.4516537 & NA & NA & nopool\\
-2 & 4 & -0.1344587 & -0.6647848 & 0.3958674 & NA & NA & nopool\\
-3 & 1 & 0.4478898 & -0.0819770 & 0.9777565 & NA & NA & nopool\\
-3 & 2 & 0.4266218 & -0.0987296 & 0.9519731 & NA & NA & nopool\\
-\addlinespace
-3 & 3 & 0.5286054 & -0.0010007 & 1.0582114 & NA & NA & nopool\\
-3 & 4 & 0.4759843 & -0.0504565 & 1.0024250 & NA & NA & nopool\\
-4 & 1 & -0.7582930 & -1.2949003 & -0.2216857 & NA & NA & nopool\\
-4 & 2 & -0.7795610 & -1.3116529 & -0.2474691 & NA & NA & nopool\\
-4 & 3 & -0.6775774 & -1.2139240 & -0.1412308 & NA & NA & nopool\\
-\addlinespace
-4 & 4 & -0.7301985 & -1.2633798 & -0.1970171 & NA & NA & nopool\\
-5 & 1 & -0.5744479 & -1.1097624 & -0.0391334 & NA & NA & nopool\\
-5 & 2 & -0.5957159 & -1.1265150 & -0.0649168 & NA & NA & nopool\\
-5 & 3 & -0.4937323 & -1.0287861 & 0.0413215 & NA & NA & nopool\\
-5 & 4 & -0.5463534 & -1.0782419 & -0.0144648 & NA & NA & nopool\\
-\addlinespace
-6 & 1 & -0.7582930 & -1.2907278 & -0.2258581 & NA & NA & nopool\\
-6 & 2 & -0.7795610 & -1.3074804 & -0.2516415 & NA & NA & nopool\\
-6 & 3 & -0.6775774 & -1.2097515 & -0.1454033 & NA & NA & nopool\\
-6 & 4 & -0.7301985 & -1.2592074 & -0.2011896 & NA & NA & nopool\\
-7 & 1 & -0.0171144 & -0.3985530 & 0.3643241 & NA & NA & comppool\\
-\addlinespace
-7 & 2 & -0.1543548 & -0.5153323 & 0.2066226 & NA & NA & comppool\\
-7 & 3 & 0.3483488 & -0.0247137 & 0.7214114 & NA & NA & comppool\\
-7 & 4 & -0.3285619 & -0.7027461 & 0.0456223 & NA & NA & comppool\\
-8 & 1 & 0.1806651 & NA & NA & -0.3164921 & 0.6909753 & partpool\\
-8 & 2 & -0.2062209 & NA & NA & -0.6898667 & 0.2894317 & partpool\\
-\addlinespace
-8 & 3 & 0.3448464 & NA & NA & -0.1488093 & 0.8530004 & partpool\\
-8 & 4 & -0.3541457 & NA & NA & -0.9917535 & 0.2854370 & partpool\\
-\bottomrule
-\end{tabu}
-\end{table}
 
 \clearpage
 
@@ -739,46 +612,5 @@ Example of nice appendix in Hille (2014)
 
 \hypertarget{tables}{%
 \section{Tables}\label{tables}}
-
-\begin{table}[H]
-
-\caption{\label{tab:smdtab}Standardized mean differences}
-\centering
-\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X}
-\toprule
-  & control group & treatment group & SMD\\
-\midrule
-N & 154 & 163 & \\
-Life satisfaction & 7.50 (2.39) & 7.11 (2.70) & 0.155\\
-Sex &  &  & 0.159\\
-male & 82 (53.2) & 88 (54.0) & \\
-female & 70 (45.5) & 69 (42.3) & \\
-\addlinespace
-unknown & 2 ( 1.3) & 6 ( 3.7) & \\
-Satisfaction with friends & 8.70 (1.82) & 8.99 (1.82) & 0.157\\
-Satisfaction with class & 7.74 (2.06) & 7.42 (2.00) & 0.156\\
-Grade german & 2.53 (0.62) & 2.59 (0.61) & 0.097\\
-Grade maths & 2.46 (0.74) & 2.56 (0.73) & 0.128\\
-\addlinespace
-Grade music & 1.91 (0.92) & 1.75 (0.77) & 0.192\\
-Hobby music 'yes' (\%) & 24 (15.6) & 63 (38.7) & 0.537\\
-Duration music listening & 2.61 (1.02) & 2.51 (1.04) & 0.097\\
-Duration music making &  &  & 0.450\\
-not at all & 94 (64.8) & 70 (44.0) & \\
-\addlinespace
-ca 30 min & 34 (23.4) & 54 (34.0) & \\
-ca 1-2 hours & 13 ( 9.0) & 29 (18.2) & \\
-ca 3-4 hours & 3 ( 2.1) & 3 ( 1.9) & \\
-more than 4 hours & 1 ( 0.7) & 3 ( 1.9) & \\
-Playing instrument 'yes' (\%) & 41 (30.1) & 53 (34.6) & 0.096\\
-\addlinespace
-Musically active & 0.33 (0.47) & 0.41 (0.49) & 0.165\\
-Migration background &  &  & 0.151\\
-native & 102 (67.1) & 98 (60.1) & \\
-immigrant & 49 (32.2) & 63 (38.7) & \\
-unknown & 1 ( 0.7) & 2 ( 1.2) & \\
-\bottomrule
-\end{tabu}
-\end{table}
 \end{document}
 
