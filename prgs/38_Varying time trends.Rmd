@@ -1,0 +1,67 @@
+---
+title: Klasse im Puls
+author: 
+  - Christoph Wunder
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_document:
+    fig_caption: yes
+    theme: spacelab 
+    highlight: pygments
+    toc: TRUE
+    toc_depth: 2
+    number_sections: TRUE
+    toc_float:
+      smooth_scroll: FALSE
+bibliography: literature.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment=NA)
+rm(list=ls())
+```
+```{r, include=TRUE, message = FALSE}
+library(tidyverse)
+library(Hmisc)
+library(mosaic)
+library(foreign)
+library(lme4)
+library(rstanarm)
+library(brms)
+library(tableone)
+library(RColorBrewer)
+library(xtable)
+library(knitr)
+library(kableExtra)
+library(ggdist)
+library(plm)
+```
+# Alternative model: varying intercepts for time trend across schools 
+
+## Model statement
+
+We allow for different time trends across schools. This preserves the common trend assumption within schools. The regression equation is:
+$$
+\begin{align}
+y_{ijt} = \beta_0 + \beta_{1j[i]} T_i + \sum\limits_{l=2}^5\delta_{lj[i]} (T_{i} \times \text{Period}_{t}) + \lambda_{tj[i]} + \mu_{j[i]} + \alpha_{i} + \epsilon_{ijt},
+\end{align}
+$$
+
+# Individual fixed effects
+
+## Model statement
+
+$$
+\begin{align}
+y_{ijt} = \beta_0 + \beta_{1j[i]} T_i + \sum\limits_{l=2}^5\delta_{lj[i]} (T_{i} \times \text{Period}_{t}) + \lambda_{t}[i] + \mu_{j[i]} + \alpha_{i} + \epsilon_{ijt},
+\end{align}
+$$
+
+* $\alpha_{i}$ models individual-specific unobserved factors. Individual heterogeneity is model because we have repeated observations for the same pupils over time. We do not specify a model the individual-specific term $\alpha_i$ here. This is equivalent to using dummy variables for all pupils (and omitting the overall intercept).
+
+# Original computing environment
+
+```{r, results='hide'}
+devtools::session_info()
+```
+

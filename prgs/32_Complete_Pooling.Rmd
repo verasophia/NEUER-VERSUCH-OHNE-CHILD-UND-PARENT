@@ -1,0 +1,89 @@
+---
+title: no pooling
+author: 
+  - Christoph Wunder
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_document:
+    fig_caption: yes
+    theme: spacelab 
+    highlight: pygments
+    toc: TRUE
+    toc_depth: 2
+    number_sections: TRUE
+    toc_float:
+      smooth_scroll: FALSE
+bibliography: literature.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment=NA)
+rm(list=ls())
+```
+```{r, include=TRUE, message = FALSE}
+library(tidyverse)
+library(Hmisc)
+library(mosaic)
+library(foreign)
+library(lme4)
+library(rstanarm)
+library(brms)
+library(tableone)
+library(RColorBrewer)
+library(xtable)
+library(knitr)
+library(kableExtra)
+library(ggdist)
+library(plm)
+```
+
+```{r}
+d <- readRDS("../data/d_satisfaction.RDS")
+describe(d)
+```
+
+```{r}
+d.p <- pdata.frame(d, index = c("pid", "welle"))
+m0 <- plm(lsat ~  tXw2 + tXw3 + tXw4 + tXw5 + 
+             female + migback + hob.mus.making, data=d.p, model = "between")
+summary(m0)
+```
+```{r}
+wave2.m0 <- summary(m0)$coefficient["tXw21",1]
+wave3.m0 <- summary(m0)$coefficient["tXw31",1]
+wave4.m0 <- summary(m0)$coefficient["tXw41",1]
+wave5.m0 <- summary(m0)$coefficient["tXw51",1]
+wave2.m0.se <- summary(m0)$coefficient["tXw21",2]
+wave3.m0.se <- summary(m0)$coefficient["tXw31",2]
+wave4.m0.se <- summary(m0)$coefficient["tXw41",2]
+wave5.m0.se <- summary(m0)$coefficient["tXw51",2]
+m0.df <- data.frame(school = c(1, 1, 1, 1),
+                         wave = seq(2:5),
+                         estimate = c(wave2.m0, wave3.m0, wave4.m0, wave5.m0),
+                         lower = c(wave2.m0 - wave2.m0.se,
+                                   wave3.m0 - wave3.m0.se,
+                                   wave4.m0 - wave4.m0.se,
+                                   wave5.m0 - wave5.m0.se),
+                         upper = c(wave2.m0 + wave2.m0.se,
+                                   wave3.m0 + wave3.m0.se,
+                                   wave4.m0 + wave4.m0.se,
+                                   wave5.m0 + wave5.m0.se))
+m0.df
+```
+
+```{r}
+ggplot(data = m0.df, aes(x = wave, y = estimate)) +
+  geom_pointrange(aes(ymin = lower, 
+                      ymax = upper),
+                  position=position_dodge(width=0.40)) +
+  scale_x_discrete("Wave", limits=seq(2:6) )  +
+  geom_hline(yintercept=0) + 
+  theme(legend.position="bottom")
+```
+
+
+
+```{r, results='hide'}
+devtools::session_info()
+```
+

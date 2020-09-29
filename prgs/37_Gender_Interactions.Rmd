@@ -1,0 +1,155 @@
+---
+title: Klasse im Puls
+author: 
+  - Christoph Wunder
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_document:
+    fig_caption: yes
+    theme: spacelab 
+    highlight: pygments
+    toc: TRUE
+    toc_depth: 2
+    number_sections: TRUE
+    toc_float:
+      smooth_scroll: FALSE
+bibliography: literature.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment=NA)
+rm(list=ls())
+```
+```{r, include=TRUE, message = FALSE}
+library(tidyverse)
+library(Hmisc)
+library(mosaic)
+library(foreign)
+library(lme4)
+library(rstanarm)
+library(brms)
+library(tableone)
+library(RColorBrewer)
+library(xtable)
+library(knitr)
+library(kableExtra)
+library(ggdist)
+library(plm)
+```
+
+```{r}
+table(d2$female, d2$school, useNA = "ifany")
+```
+
+
+```{r, message=FALSE, cache=TRUE}
+bayes4 <- stan_lmer( lsat ~ treated + welle + tXw2 + female + female:tXw2 +
+                       (1 + treated + tXw2 + female + female:tXw2 | school) + (1 | pid), 
+                data=d2, chains = 4, cores = 4, seed=123 )
+summary(bayes4, 
+        pars = c("(Intercept)", "treated1", "welle2", "tXw21", "female1", "tXw21:female1",
+                 "b[tXw21 school:1]", "b[tXw21 school:2]", "b[tXw21 school:3]",
+                 "b[tXw21 school:4]", "b[tXw21 school:5]", "b[tXw21 school:6]",
+                 "b[tXw21:female1 school:1]", "b[tXw21:female1 school:2]", "b[tXw21:female1 school:3]",
+                 "b[tXw21:female1 school:4]", "b[tXw21:female1 school:5]", "b[tXw21:female1 school:6]"),
+        probs = c(0.1, 0.5, 0.9),
+        digits = 4)
+```
+
+```{r}
+teff2_gender <- as.matrix(bayes4, 
+                   pars = c("tXw21", "tXw21:female1",
+                            "b[tXw21 school:1]", "b[tXw21:female1 school:1]",
+                            "b[tXw21 school:2]", "b[tXw21:female1 school:2]",
+                            "b[tXw21 school:3]", "b[tXw21:female1 school:3]",
+                            "b[tXw21 school:4]", "b[tXw21:female1 school:4]",
+                            "b[tXw21 school:5]", "b[tXw21:female1 school:5]",
+                            "b[tXw21 school:6]", "b[tXw21:female1 school:6]")) 
+
+school1_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:1]"]
+school2_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:2]"]
+school3_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:3]"]
+school4_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:4]"]
+school5_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:5]"]
+school6_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:6]"]
+school1_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:1]"] + teff2_gender[,"b[tXw21:female1 school:1]"]
+school2_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:2]"] + teff2_gender[,"b[tXw21:female1 school:2]"]
+school3_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:3]"] + teff2_gender[,"b[tXw21:female1 school:3]"]
+school4_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:4]"] + teff2_gender[,"b[tXw21:female1 school:4]"]
+school5_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:5]"] + teff2_gender[,"b[tXw21:female1 school:5]"]
+school6_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:6]"] + teff2_gender[,"b[tXw21:female1 school:6]"]
+
+teff2_boys <- data.frame( 
+                     school1 = school1_boys,
+                     school2 = school2_boys,
+                     school3 = school3_boys,
+                     school4 = school4_boys,
+                     school5 = school5_boys,
+                     school6 = school6_boys)
+
+teff2_girls <- data.frame( 
+                     school1 = school1_girls,
+                     school2 = school2_girls,
+                     school3 = school3_girls,
+                     school4 = school4_girls,
+                     school5 = school5_girls,
+                     school6 = school6_girls)
+
+```
+
+```{r}
+r2_mean_boys <- apply( X = teff2_boys, MARGIN = 2, FUN = mean )
+r2_mean_girls <- apply( X = teff2_girls, MARGIN = 2, FUN = mean )
+r2_quant_boys <- apply( X = teff2_boys, MARGIN = 2, FUN = quantile, probs = c(0.1, 0.9))
+r2_quant_girls <- apply( X = teff2_girls, MARGIN = 2, FUN = quantile, probs = c(0.1, 0.9))
+r2_quant_boys <- data.frame(t(r2_quant_boys))
+r2_quant_girls <- data.frame(t(r2_quant_girls))
+names(r2_quant_boys) <- c("Q10", "Q90")
+names(r2_quant_girls) <- c("Q10", "Q90")
+r2_boys <- data.frame( school = seq(1:6), mean = r2_mean_boys, r2_quant_boys, wave = 2, female = as.factor(0) )
+r2_girls <- data.frame( school = seq(1:6), mean = r2_mean_girls, r2_quant_girls, wave = 2, female = as.factor(1) )
+r2_gender <- rbind.data.frame(r2_boys, r2_girls)
+r2_gender
+```
+
+```{r}
+ggplot(data = r2_gender, 
+       aes(x = wave, 
+           y = mean)) +
+  geom_pointrange(aes(ymin = Q10, 
+                      ymax = Q90, group = school, color = school),
+                  position=position_dodge(width=0.20)) +
+  scale_x_discrete("Wave", limits = c(2)) +
+  geom_hline(yintercept=0) + facet_grid(~ female)
+```
+
+
+# Alternative model: varying intercepts for time trend across schools 
+
+## Model statement
+
+We allow for different time trends across schools. This preserves the common trend assumption within schools. The regression equation is:
+$$
+\begin{align}
+y_{ijt} = \beta_0 + \beta_{1j[i]} T_i + \sum\limits_{l=2}^5\delta_{lj[i]} (T_{i} \times \text{Period}_{t}) + \lambda_{tj[i]} + \mu_{j[i]} + \alpha_{i} + \epsilon_{ijt},
+\end{align}
+$$
+
+# Individual fixed effects
+
+## Model statement
+
+$$
+\begin{align}
+y_{ijt} = \beta_0 + \beta_{1j[i]} T_i + \sum\limits_{l=2}^5\delta_{lj[i]} (T_{i} \times \text{Period}_{t}) + \lambda_{t}[i] + \mu_{j[i]} + \alpha_{i} + \epsilon_{ijt},
+\end{align}
+$$
+
+* $\alpha_{i}$ models individual-specific unobserved factors. Individual heterogeneity is model because we have repeated observations for the same pupils over time. We do not specify a model the individual-specific term $\alpha_i$ here. This is equivalent to using dummy variables for all pupils (and omitting the overall intercept).
+
+# Original computing environment
+
+```{r, results='hide'}
+devtools::session_info()
+```
+

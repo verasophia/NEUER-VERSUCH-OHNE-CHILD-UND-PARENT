@@ -1,0 +1,399 @@
+---
+title: "Prior predictive distribution"
+author: "VS"
+date: "24 9 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(brms)
+library(sjlabelled)
+library(parallel)
+library(gridExtra)
+library(cowplot) # cowplot helps align multiple ggplots in a grid for comparison
+# options(mc.cores = detectCores()) #detect number of cores for Rstan
+# library(extrafont)
+# windowsFonts(CMU = windowsFont("CMU Serif")) # Define CMU font as the computer modern serif font that is used in my latex template
+# theme_set(theme_bw(base_family = "CMU")) # Set the gg-theme to use the latex font
+# Sys.setenv(LANG="en")
+library(extrafont)
+library(patchwork)
+windowsFonts(CMU = windowsFont("CMU Serif")) # Define CMU font as the computer modern serif font that is used in my latex template
+theme_set(theme_bw(base_family = "CMU")) # Set the gg-theme to use the latex font
+```
+
+```{r}
+d <- readRDS("../data/d_satisfaction.RDS")
+```
+
+```{r}
+test <-
+  tibble(lsat = seq(from = 0, to = 10, length.out = 1000)) %>% 
+  expand(lsat, row = c("flat", "peaked")) %>% 
+  arrange(row, lsat) %>% 
+  mutate(prior = ifelse(row == "flat", dnorm(lsat, 5, 200), dnorm(lsat, 7, 1)),
+         likelihood = dnorm(lsat, 7, 2))  %>% 
+  group_by(row) %>% 
+  mutate(posterior = prior * likelihood / sum(prior * likelihood)) %>% 
+  pivot_longer(prior:posterior) %>% 
+  ungroup() %>% 
+  mutate(name = factor(name, levels = c("prior", "likelihood", "posterior")),
+         row  = factor(row, levels = c("flat", "peaked")))
+
+flat <-
+  test %>%
+  filter(row == "flat") %>% 
+  ggplot(aes(x = lsat, y = value)) +
+  geom_line() +
+  scale_x_continuous(NULL, breaks = NULL) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  theme(panel.grid = element_blank()) +
+  facet_wrap(~name, scales = "free_y")
+flat
+
+peaked <-
+  test %>%
+  filter(row == "peaked") %>% 
+  ggplot(aes(x = lsat, y = value)) +
+  geom_line() +
+  scale_x_continuous(NULL, breaks = NULL) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  theme(panel.grid = element_blank()) +
+  facet_wrap(~name, scales = "free_y")
+flat_peaked <- flat / peaked
+ggsave("../figures/flat_peaked.png", flat_peaked, width = 7, height = 4, units = "in")
+flat_peaked
+```
+
+```{r}
+# plotting the priors
+p_intercept_sim <-
+  tibble(x = seq(from = 0, to = 10, by = 0.1)) %>%
+  
+  ggplot(aes(x = x, y = dnorm(x, mean = 0, sd = 5))) +
+  geom_line() +
+  scale_x_continuous(breaks = seq(from = 0, to = 10, by = 1)) +
+  labs(title = "mu ~ dnorm(0, 5)", y = "density")
+p_intercept_sim
+ggsave("../figures/p_intercept_sim.pdf", p_intercept_sim, width = 7, height = 4, units = "in")
+
+p_b_sim <-
+  tibble(x = seq(from = 0, to = 10, by = 0.1)) %>%
+  
+  ggplot(aes(x = x, y = dnorm(x, mean = 0, sd = 10))) +
+  geom_line() +
+  scale_x_continuous(breaks = seq(from = 0, to = 10, by = 1)) +
+  labs(title = "b ~ dnorm(0, 10)", y = "density")
+p_b_sim
+```
+
+```{r}
+m1.1 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
+           sample_prior = "only", data = d,
+           prior = c(prior(normal(0, 5), class = Intercept),
+                     prior(normal(0, 0.75), class = b),
+                     prior(cauchy(0, 1), class = sd)),
+           file = "../results/prior_m11")
+
+m1.2 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
+           sample_prior = "only", data = d,
+           prior = c(prior(normal(0, 5), class = Intercept),
+                     prior(normal(0, 1), class = b),
+                     prior(cauchy(0, 1), class = sd)),
+           file = "../results/prior_m12")
+
+m1.3 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
+           sample_prior = "only", data = d, # If sample_prior is set to "only", samples are drawn solely from the priors ignoring the likelihood, which allows among others to generate samples from the prior predictive distribution. In this case, all parameters must have proper priors.
+           prior = c(prior(normal(0, 5), class = Intercept),
+                     prior(normal(0, 10), class = b),
+                     prior(cauchy(0, 1), class = sd),
+                     prior(exponential(0.5), class = sigma)),
+           file = "../results/prior_m13")
+
+m2.1 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
+           sample_prior = "only", data = d,
+           prior = c(prior(normal(7, 2), class = Intercept),
+                     prior(normal(0, 0.8), class = b),
+                     prior(cauchy(0, 1), class = sd),
+                     prior(exponential(0.5), class = sigma)),
+                     file = "../results/prior_m21")
+
+m2.2 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
+           sample_prior = "only", data = d,
+           prior = c(prior(normal(7, 2), class = Intercept),
+                     prior(normal(0, 1), class = b),
+                     prior(cauchy(0, 1), class = sd),
+                     prior(exponential(0.5), class = sigma)),
+           file = "../results/prior_m22")
+
+m2.3 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
+           sample_prior = "only", data = d,
+           prior = c(prior(normal(7, 2), class = Intercept),
+                     prior(normal(0, 10), class = b),
+                     prior(cauchy(0, 1), class = sd),
+                     prior(exponential(0.5), class = sigma)),
+           file = "../results/prior_m23")
+
+m2.4 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
+           sample_prior = "only", data = d,
+           prior = c(prior(normal(7, 2), class = Intercept),
+                     prior(normal(0, 100), class = b),
+                     prior(cauchy(0, 1), class = sd),
+                     prior(exponential(0.5), class = sigma)),
+           file = "../results/prior_m24")
+```
+
+```{r}
+readRDS("../resuls/prior_m11.rds")
+readRDS("../resuls/prior_m12.rds")
+readRDS("../resuls/prior_m13.rds")
+readRDS("../resuls/prior_m21.rds")
+readRDS("../resuls/prior_m22.rds")
+readRDS("../resuls/prior_m23.rds")
+readRDS("../resuls/prior_m23.rds")
+```
+
+```{r}
+m1.1_predict <- posterior_epred(object = m1.1, nsamples = 100)
+m1.1_long <- gather(data.frame(m1.1_predict))
+m1.1_long
+prior11 <- ggplot(m1.1_long, aes(x=value, group=key)) +
+  geom_histogram(alpha=.2, bins = 200, fill = "#011f4b") +
+  xlim(-50,50) +
+  xlab("Predicted life satisfaction") + 
+  ylab("Density") +
+  labs(title = "prior(normal(0, 5), class = Intercept),
+                prior(normal(0, 1), class = b") +
+  theme(axis.text.y = element_blank())
+```
+```{r}
+m1.2_predict <- posterior_epred(object = m1.2, nsamples = 100)
+m1.2_long <- gather(data.frame(m1.2_predict))
+m1.2_long
+prior12 <- ggplot(m1.2_long, aes(x=value, group=key)) +
+  geom_histogram(alpha=.2, bins = 200, fill = "#011f4b") +
+  xlim(-50,50) +
+  xlab("Predicted life satisfaction") + 
+  ylab("Density") +
+  labs(title = "prior(normal(0, 5), class = Intercept),
+                prior(normal(0, 10), class = b") +
+  theme(axis.text.y = element_blank())
+```
+```{r}
+m1.3_predict <- posterior_epred(object = m1.3, nsamples = 100)
+m1.3_long <- gather(data.frame(m1.3_predict))
+m1.3_long
+prior13 <- ggplot(m1.3_long, aes(x=value, group=key)) +
+  geom_histogram(alpha=.2, bins = 200, fill = "#011f4b") +
+  xlim(-50,50) +
+  xlab("Predicted life satisfaction") + 
+  ylab("Density") +
+  labs(title = "prior(normal(0, 5), class = Intercept),
+                prior(normal(0, 10), class = b") +
+  theme(axis.text.y = element_blank())
+```
+```{r}
+m2.1_predict <- posterior_epred(object = m2.1, nsamples = 100)
+m2.1_long <- gather(data.frame(m2.1_predict))
+m2.1_long
+prior21 <- ggplot(m2.1_long, aes(x=value, group=key)) +
+  geom_histogram(alpha=.2, bins = 200, fill = "#011f4b") +
+  xlim(-50,50) +
+  xlab("Predicted life satisfaction") + 
+  ylab("Density") +
+  labs(title = "prior(normal(0, 0.8), class = b") +
+  theme(axis.text.y = element_blank())
+prior21
+```
+```{r}
+m2.2_predict <- posterior_epred(object = m2.2, nsamples = 100)
+m2.2_long <- gather(data.frame(m2.2_predict))
+m2.2_long
+prior22 <- ggplot(m2.2_long, aes(x=value, group=key)) +
+  geom_histogram(alpha=.2, bins = 200, fill = "#011f4b") +
+  xlim(-50,50) +
+  xlab("Predicted life satisfaction") + 
+  ylab("Density") +
+  labs(title = "prior(normal(0, 1), class = b") +
+  theme(axis.text.y = element_blank())
+```
+```{r}
+m2.3_predict <- posterior_epred(object = m2.3, nsamples = 100)
+m2.3_long <- gather(data.frame(m2.3_predict))
+m2.3_long
+prior23 <- ggplot(m2.3_long, aes(x=value, group=key)) +
+  geom_histogram(alpha=.2, bins = 200, fill = "#011f4b") +
+  xlim(-50,50) +
+  xlab("Predicted life satisfaction") + 
+  ylab("Density") +
+  labs(title = "prior(normal(0, 10), class = b") +
+  theme(axis.text.y = element_blank())
+```
+```{r}
+m2.4_predict <- posterior_epred(object = m2.4, nsamples = 100)
+m2.4_long <- gather(data.frame(m2.4_predict))
+m2.4_long
+prior24 <- ggplot(m2.4_long, aes(x=value, group=key)) +
+  geom_histogram(alpha=.2, bins = 200, fill = "#011f4b") +
+  xlim(-50,50) +
+  xlab("Predicted life satisfaction") + 
+  ylab("Density") +
+  labs(title = "prior(normal(0, 100), class = b") +
+  theme(axis.text.y = element_blank())
+```
+```{r}
+lsat_predicted <- grid.arrange(prior21, prior22, prior23, prior24, ncol = 2)
+ggsave("../figures/lsat_predicted.png", lsat_predicted, width = 7, height = 4, units = "in")
+```
+```{r}
+get_prior(lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid), data = d)
+```
+```{r}
+m3.1 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
+           sample_prior = "only", data = d,
+           prior = c(prior(normal(7, 2), class = Intercept),
+                     prior(normal(0, 0.8), class = b),
+                     prior(cauchy(0, 1), class = sd),
+                     prior(exponential(0.5), class = sigma)),
+                     file = "../results/prior_m31")
+
+m3.2 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
+           sample_prior = "only", data = d,
+           prior = c(prior(normal(7, 2), class = Intercept),
+                     prior(normal(0, 0.8), class = b),
+                     prior(cauchy(0, 5), class = sd),
+                     prior(exponential(0.5), class = sigma)),
+           file = "../results/prior_m32")
+
+m3.3 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
+           sample_prior = "only", data = d,
+           prior = c(prior(normal(7, 2), class = Intercept),
+                     prior(normal(0, 0.8), class = b),
+                     prior(cauchy(0, 10), class = sd),
+                     prior(exponential(0.5), class = sigma)),
+           file = "../results/prior_m33")
+
+m3.4 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
+           sample_prior = "only", data = d,
+           prior = c(prior(normal(7, 2), class = Intercept),
+                     prior(normal(0, 0.8), class = b),
+                     prior(cauchy(0, 50), class = sd),
+                     prior(exponential(0.5), class = sigma)),
+           file = "../results/prior_m34")
+```
+
+```{r}
+m3.1_predict <- posterior_epred(object = m3.1, nsamples = 100)
+m3.1_long <- gather(data.frame(m3.1_predict))
+m3.1_long
+prior31 <- ggplot(m3.1_long, aes(x=value, group=key)) +
+  geom_histogram(alpha=.2, bins = 200, fill = "#011f4b") +
+  xlim(-50,50) +
+  xlab("Predicted life satisfaction") + 
+  ylab("Density") +
+  labs(title = "prior(cauchy(0,1), class = sd") +
+  theme(axis.text.y = element_blank())
+```
+```{r}
+m3.2_predict <- posterior_epred(object = m3.2, nsamples = 100)
+m3.2_long <- gather(data.frame(m3.2_predict))
+m3.2_long
+prior32 <- ggplot(m3.2_long, aes(x=value, group=key)) +
+  geom_histogram(alpha=.2, bins = 200, fill = "#011f4b") +
+  xlim(-50,50) +
+  xlab("Predicted life satisfaction") + 
+  ylab("Density") +
+  labs(title = "prior(cauchy(0,5), class = sd") +
+  theme(axis.text.y = element_blank())
+```
+```{r}
+m3.3_predict <- posterior_epred(object = m3.3, nsamples = 100)
+m3.3_long <- gather(data.frame(m3.3_predict))
+m3.3_long
+prior33 <- ggplot(m3.3_long, aes(x=value, group=key)) +
+  geom_histogram(alpha=.2, bins = 200, fill = "#011f4b") +
+  xlim(-50,50) +
+  xlab("Predicted life satisfaction") + 
+  ylab("Density") +
+  labs(title = "prior(cauchy(0,10), class = sd") +
+  theme(axis.text.y = element_blank())
+```
+```{r}
+m3.4_predict <- posterior_epred(object = m3.3, nsamples = 100)
+m3.4_long <- gather(data.frame(m3.3_predict))
+m3.4_long
+prior34 <- ggplot(m3.4_long, aes(x=value, group=key)) +
+  geom_histogram(alpha=.2, bins = 200, fill = "#011f4b") +
+  xlim(-50,50) +
+  xlab("Predicted life satisfaction") + 
+  ylab("Density") +
+  labs(title = "prior(cauchy(0,50), class = sd") +
+  theme(axis.text.y = element_blank())
+```
+
+```{r}
+grid.arrange(prior31, prior32, prior33, prior34, ncol = 2)
+```
+
+
+```{r}
+# Let's take prior21
+# The likelihood for the model is h ~ N(\mu,\sigma)
+# Our \mu prior will be \mu ~ MODEL
+# Our prior for \sigma will be \sigma ~ Cauchy(0,1)
+
+# Here is the shape for the prior \mu 
+
+                           
+intercept <- ggplot(data = tibble(x = seq(from = 0, to = 15, by = .1)),
+       aes(x=x, y = dnorm(x, mean = 8, sd = 2))) +
+  geom_line() +
+  ylab("density")
+
+b <- ggplot(data = tibble(x = seq(from = -5, to = 5, by = .1)),
+       aes(x=x, y = dnorm(x, mean = 0, sd = 0.75))) +
+  geom_line() +
+  ylab("density")
+
+sd <- ggplot(data = tibble(x = seq(from = -5, to = 5, by = .1)),
+       aes(x=x, y = dcauchy(x, location = 0, scale = 1))) +
+  geom_line() +
+  ylab("density")
+
+sigma <- ggplot(data = tibble(x = seq(from = -5, to = 5, by = .1)),
+       aes(x=x, y = dexp(x, rate = 1))) +
+  geom_line() +
+  ylab("density")
+
+chosen_priors <- plot_grid(intercept, b, sd, sigma, labels = c("Intercept", "b", "sd", "sigma"))
+ggsave("../figures/chosen_priors.png", chosen_priors, width = 7, height = 4, units = "in")
+```
+
+```{r}
+m2.1test <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
+           sample_prior = "only", data = d,
+           prior = c(prior(rnorm(1e4, 7, 2), class = Intercept),
+                     prior(rnorm(1e4, 0, 0.75), class = b),
+                     prior(rcauchy(1e4, 0, 1), class = sd),
+                     prior(rexp(1e4, 0.5), class = sigma)))
+
+m2.1test <- brm(lsat ~ treated + welle  + tXw2 + female +
+                   (1 + treated + tXw2 | school) +
+                   (1 | pid),
+           sample_prior = "only", data = subset(d, welle == 1 | welle == 2),
+           prior = c(prior(normal(7, 2), class = Intercept),
+                     prior(normal(0, 0.75), class = b),
+                     prior(cauchy(0, 1), class = sd),
+                     prior(exponential(0.5), class = sigma)))
+lsat 
+
+sample_intercept <- rnorm(1e4, 7, 2)
+prior_intercept <- mean(sample_intercept)
+sample_intercept
+prior_intercept
+```
+
+
+

@@ -26,7 +26,12 @@ library(effects)
 library(ggplot2)
 library(brms)
 library(ggdist)
-# set.seed(132435)
+library(Hmisc)
+library(mosaic)
+library(foreign)
+library(lme4)
+library(rstanarm)
+set.seed(132435)
 ```
 
 
@@ -41,425 +46,75 @@ Our aim is to estimate the effect of a classroom experiment. We consider one tre
 
 ```{r}
 class.size <- 30 # number of students in each class
-student.id <- seq(1:class.size)
-class.id <- seq(1:12)
+student <- seq(1:class.size)
+class <- seq(1:12)
 
-wave <- seq(1:5) - 1
+wave <- seq(1:5)
 
-d <- expand.grid(wave = wave, student.id = student.id, class.id = class.id)
+d <- expand.grid(wave = wave, student = student, class = class)
 
-rm(wave, class.id, student.id)
+rm(wave, class, student)
 ```
 
-First, we define the data structure for `r max(d$class.id)` groups (classrooms), `r class.size` students per class, and `r max(d$wave)+1` measurement occasions.
+First, we define the data structure for `r max(d$class)` groups (classrooms), `r class.size` students per class, and `r max(d$wave)+1` measurement occasions.
 
 ```{r}
 
 
 
-d$treated <- ifelse(d$class.id %% 2 == 1, 1, 0)
+d$treated <- ifelse(d$class %% 2 == 1, 1, 0)
 
+# create treated-wave interactions: "tXw"
+d$tXw2 <- ifelse( (d$treated==1 & d$wave==2), 1, 0)
+d$tXw3 <- ifelse( (d$treated==1 & d$wave==3), 1, 0)
+d$tXw4 <- ifelse( (d$treated==1 & d$wave==4), 1, 0)
+d$tXw5 <- ifelse( (d$treated==1 & d$wave==5), 1, 0)
   
-  # ifelse(d$class.id==1 | d$class.id==3 | d$class.id==5 | d$class.id==7 | d$class.id==9 | d$class.id==11, 1, 0)
+  # ifelse(d$class==1 | d$class==3 | d$class==5 | d$class==7 | d$class==9 | d$class==11, 1, 0)
 
 
-d$school.id <- ceiling(d$class.id / 2)
+d$school <- ceiling(d$class / 2)
 
 
-# d$school.id <- ifelse(d$class.id==1 | d$class.id==2, 1, ifelse(d$class.id==3 | d$class.id==4, 2, ifelse(d$class.id==5 | d$class.id==6, 3, ifelse(d$class.id==7 | d$class.id==8, 4, ifelse(d$class.id==9 | d$class.id==10, 5, ifelse(d$class.id==11 | d$class.id==12, 6,0))))))
+# d$school <- ifelse(d$class==1 | d$class==2, 1, ifelse(d$class==3 | d$class==4, 2, ifelse(d$class==5 | d$class==6, 3, ifelse(d$class==7 | d$class==8, 4, ifelse(d$class==9 | d$class==10, 5, ifelse(d$class==11 | d$class==12, 6,0))))))
 
-df <- unique(d[c("student.id", "class.id")]) # creates new data sheet with those two variables from first data sheet
-df <- df %>% mutate(ustudent.id = 1:nrow(df)) %>%
+df <- unique(d[c("student", "class")]) # creates new data sheet with those two variables from first data sheet
+df <- df %>% mutate(ustudent = 1:nrow(df)) %>%
 #mutate() adds new variables and preserves existing ones
-    select(ustudent.id, everything()) #student ID für jeden einzelnen Schüler unabhängig von der Klasse
+    select(ustudent, everything()) #student ID für jeden einzelnen Schüler unabhängig von der Klasse
 df$student.effect <- rnorm(nrow(df), mean=0, sd=1)
-d <- left_join(d, df, by=c("class.id", "student.id"))
-df <- unique(df <- unique(d[c("school.id")]))
+d <- left_join(d, df, by=c("class", "student"))
+df <- unique(df <- unique(d[c("school")]))
 df$school.effect <- rnorm(nrow(df), mean=0, sd=1.5)
-d <- left_join(d, df, by="school.id")
+d <- left_join(d, df, by="school")
 tail(d)
+
 ```
 
 The outcomes are determined by the following data generating process.
 
 ```{r}
-teffect <- 1 # treatment effect
-wave.effects <- -1 # wave effects
+teffect2 <- 0.6 # treatment effect wave 2
+teffect3 <- 0.8 # treatment effect wave 3
+teffect4 <- 1 # treatment effect wave 4
+teffect5 <- 1.2 # treatment effect wave 5
+wave.effect <- -1 # wave effects
 class.effect <- 2
 cons <- 0
 d$y <- cons + class.effect*d$treated + 
-              wave.effects*d$wave + 
-              teffect*(d$treated*d$wave) +
+              wave.effect*d$wave +
+              teffect2*d$tXw2 +
+              teffect3*d$tXw3 +
+              teffect4*d$tXw4 +
+              teffect5*d$tXw5 +
               d$student.effect +
               d$school.effect +
               rnorm(nrow(d), mean=0, sd=1)
-```
+saveRDS(d, file = "../data/simulation.RDS")
 
-# Difference in differences (DD)
-
-```{r}
-y00 <- mean( d$y[(d$treated==0 & d$wave==0)] )
-y10 <- mean( d$y[(d$treated==1 & d$wave==0)] )
-y01 <- mean( d$y[(d$treated==0 & d$wave==1)] )
-y11 <- mean( d$y[(d$treated==1 & d$wave==1)] )
-y02 <- mean( d$y[(d$treated==0 & d$wave==2)] )
-y12 <- mean( d$y[(d$treated==1 & d$wave==2)] )
-y03 <- mean( d$y[(d$treated==0 & d$wave==3)] )
-y13 <- mean( d$y[(d$treated==1 & d$wave==3)] )
-y04 <- mean( d$y[(d$treated==0 & d$wave==4)] )
-y14 <- mean( d$y[(d$treated==1 & d$wave==4)] )
-
-(y11 - y10) - (y01- y00) # (Veränderung in der Musikklasse) - (Veränderung in der Nicht-Musikklasse)
-(y12 - y10) - (y02- y00)
-(y13 - y10) - (y03- y00)
-(y14 - y10) - (y04- y00)
-```
-
-# DD regression 
-
-```{r}
-d.p <- pdata.frame(d, index = c("ustudent.id", "wave"))
-```
-
-## OLS
-
-```{r}
-# olsall <- lm(y ~ treated + wave + treated*wave, data = d)
-# efols <- effect("treated:wave", olsall)
-# summary(efols)
-# x <- as.data.frame(efols)
-# ggplot(x, aes(treated, olsall, color=wave)) +
-#   geom_point() + geom_errorbar(aes(ymin=olsall-se,
-                                   # ymax=olsall+se), width=0.4) + theme_bw(base_size=12)
-
-ols <- sapply(X=1:6, FUN=function(X){lm( y ~ treated + wave + treated*wave, data = d, subset = school.id==X)}, simplify = FALSE)
-
-summary(ols[[1]])
-summary(ols[[2]])
-summary(ols[[3]])
-summary(ols[[4]])
-summary(ols[[5]])
-summary(ols[[6]])
-```
-
-## Student fixed effects DD regression (within transformation)
-
-```{r}
-feWall <- plm(y ~ wave + treated*wave, data = d.p, model = "within")
-summary(feWall)
-```
-
-
-```{r}
-feW <- sapply(X=1:6, FUN=function(X){plm( y ~  wave + treated + treated*wave, data = d.p, model = "within", subset = school.id==X)}, simplify = FALSE)
-
-summary(feW[[1]])
-summary(feW[[2]])
-summary(feW[[3]])
-summary(feW[[4]])
-summary(feW[[5]])
-summary(feW[[6]])
-```
-
-## Student fixed effects DD regression (between transformation)
-
-```{r}
-feBall <- plm(y ~ wave + treated*wave, data = d.p)
-
-feB <- sapply(X=1:6, FUN=function(X){plm( y ~  wave + treated + treated*wave, data = d.p, model = "between", subset = school.id==X)}, simplify = FALSE)
-
-summary(feB[[1]])
-summary(feB[[2]])
-summary(feB[[3]])
-summary(feB[[4]])
-summary(feB[[5]])
-summary(feB[[6]])
-```
-
-## Random effects DD regression
-
-```{r}
-re <- sapply(X=1:6, FUN=function(X){plm( y ~  treated + wave + treated*wave, data = d.p, model = "random", subset = school.id==X)}, simplify = FALSE)
-
-summary(re[[1]])
-summary(re[[2]])
-summary(re[[3]])
-summary(re[[4]])
-summary(re[[5]])
-summary(re[[6]])
-```
-
-
-
-New Analysis
-
-```{r}
-library(tidyverse)
-library(Hmisc)
-library(mosaic)
-library(foreign)
-library(lme4)
-library(rstanarm)
-```
-
-
-# Model for six schools (treatments), two waves
-
-## Model statment
-We simultaneously investigate the treatments in six different schools. We restrict the analyses to wave 1 (pre treatment) and wave 2(post treatment).
-
-```{r}
-d$tXw1 <- as.factor( ifelse( (d$treated==1 & d$wave==1), 1, 0) )
-d$tXw2 <- as.factor( ifelse( (d$treated==1 & d$wave==2), 1, 0) )
-d$tXw3 <- as.factor( ifelse( (d$treated==1 & d$wave==3), 1, 0) )
-d$tXw4 <- as.factor( ifelse( (d$treated==1 & d$wave==4), 1, 0) )
-d2 <- d %>% filter( (wave==0 | wave==1)) %>% 
-  select(school.id, ustudent.id, wave, treated, y, tXw1,)
-table(d2$school.id, d2$treated)
-```
-
-## Fit with `lmer()`
-
-```{r}
-fit2 <- lmer( y ~ treated + wave + tXw1 + (1 + tXw1 | school.id) + (1 | ustudent.id), data = d2 )
-summary(fit2)
-```
-
-## Fit with `rstanarm`
-
-```{r}
-bayes2 <- stan_lmer( y ~ treated + wave + tXw1 + (1 + treated + tXw1 | school.id) + (1 | ustudent.id), 
-                data=d2, chains = 4, cores = 4, seed=123 )
-summary(bayes2, 
-        pars = c("(Intercept)", "treated1", "wave1", "tXw11",
-                 "b[tXw11 school.id:1]", "b[tXw11 school.id:2]", "b[tXw11 school.id:3]",
-                 "b[tXw11 school.id:4]", "b[tXw11 school.id:5]", "b[tXw11 school.id:6]"),
-        probs = c(0.1, 0.5, 0.9),
-        digits = 4)
-```
-
-## Posterior means
-
-We extract the posterior draws to summarize the effect of the treatment.
-
-```{r}
-teff2 <- as.matrix(bayes2, 
-                   pars = c("tXw11",
-                            "b[tXw11 school.id:1]",
-                            "b[tXw11 school.id:2]",
-                            "b[tXw11 school.id:3]",
-                            "b[tXw11 school.id:4]",
-                            "b[tXw11 school.id:5]",
-                            "b[tXw11 school.id:6]")) 
-school.id1 <- teff2[,1] + teff2[,2]
-school.id2 <- teff2[,1] + teff2[,3]
-school.id3 <- teff2[,1] + teff2[,4] 
-school.id4 <- teff2[,1] + teff2[,5] 
-school.id5 <- teff2[,1] + teff2[,6] 
-school.id6 <- teff2[,1] + teff2[,7] 
-teff2 <- data.frame( school.id1 = school.id1,
-                     school.id2 = school.id2,
-                     school.id3 = school.id3,
-                     school.id4 = school.id4,
-                     school.id5 = school.id5,
-                     school.id6 = school.id6)
-head(teff2)
-```
-
-```{r}
-r2_mean <- apply( X = teff2, MARGIN = 2, FUN = mean )
-r2_quant <- apply( X = teff2, MARGIN = 2, 
-                   FUN = quantile, probs = c(0.1, 0.9))
-r2_quant <- data.frame(t(r2_quant))
-names(r2_quant) <- c("Q10", "Q90")
-r2 <- data.frame( school.id = seq(1:6), mean = r2_mean, r2_quant, wave = 1 )
-r2 
-```
-
-Graphical representation of results.
-
-```{r}
-ggplot(data = r2, 
-       aes(x = wave, 
-           y = mean)) +
-  geom_pointrange(aes(ymin = Q10, 
-                      ymax = Q90, group = school.id, color = school.id),
-                  position=position_dodge(width=0.20)) +
-  scale_x_discrete("Wave", limits = c(2)) +
-  geom_hline(yintercept=0)
-```
-
-# Full model for six schools and five waves
-
-## Model statement
-
-We simultaneously investigate the treatments in six different schools. We restrict the analysis to wave 0 (pre treatment) and wave 1 (post treatment).
-
-```{r}
-d3 <- d %>% select(school.id, ustudent.id, wave, treated, y, tXw1, tXw2, tXw3, tXw4)
-table(d3$school.id, d3$treated)
-```
-
-## Fit with `lmer()`
-
-```{r}
-fit3 <- lmer( y ~ treated + wave +  tXw1 + tXw2 + tXw3 + tXw4 + 
-                (1 + treated + tXw1 + tXw2 + tXw3 + tXw4 | school.id) +
-                       (1 | ustudent.id), data=d3)
-coef(fit3)$school.id
-```
-
-## Fit with `rstanarm`
-
-```{r, message=FALSE, cache=TRUE}
-bayes3 <- stan_lmer( y ~ treated + wave + tXw1 +tXw2 + tXw3 + tXw4 +
-                       (1 + treated + tXw1 + tXw2 + tXw3 + tXw4 | school.id) +
-                       (1 | ustudent.id), 
-                data=d3, chains = 4, cores = 4, seed=123)
-summary(bayes3, 
-        pars = c("(Intercept)", "treated1", "welle1", "welle2", "welle3", "welle4",
-                 "tXw51", "tXw21", "tXw31", "tXw41"),
-        probs = c(0.1, 0.5, 0.9), digits = 4)
-```
-
-## Posterior means
-
-We extract the posterior draws to summarize the effect of the treatment.
-
-```{r}
-summary(bayes3, 
-        pars = c("tXw31", 
-                 "b[tXw31 school:1]", "b[tXw31 school:2]", "b[tXw31 school:3]", 
-                 "b[tXw31 school:4]", "b[tXw31 school:5]", "b[tXw31 school:6]"),
-        probs = c(0.1, 0.5, 0.9), digits = 4)
-```
-
-```{r}
-teff5 <- as.matrix(bayes3, 
-                   pars = c("tXw11",
-                            "b[tXw11 school.id:1]",
-                            "b[tXw11 school.id:2]",
-                            "b[tXw11 school.id:3]",
-                            "b[tXw11 school.id:4]",
-                            "b[tXw11 school.id:5]",
-                            "b[tXw11 school.id:6]",
-                            "tXw21",
-                            "b[tXw21 school.id:1]",
-                            "b[tXw21 school.id:2]",
-                            "b[tXw21 school.id:3]",
-                            "b[tXw21 school.id:4]",
-                            "b[tXw21 school.id:5]",
-                            "b[tXw21 school.id:6]",
-                            "tXw31",
-                            "b[tXw31 school.id:1]",
-                            "b[tXw31 school.id:2]",
-                            "b[tXw31 school.id:3]",
-                            "b[tXw31 school.id:4]",
-                            "b[tXw31 school.id:5]",
-                            "b[tXw31 school.id:6]",
-                            "tXw41",
-                            "b[tXw41 school.id:1]",
-                            "b[tXw41 school.id:2]",
-                            "b[tXw41 school.id:3]",
-                            "b[tXw41 school.id:4]",
-                            "b[tXw41 school.id:5]",
-                            "b[tXw41 school.id:6]")) 
-
-wave1.school.id1 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:1]"]
-wave1.school.id2 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:2]"]
-wave1.school.id3 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:3]"]
-wave1.school.id4 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:4]"]
-wave1.school.id5 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:5]"]
-wave1.school.id6 <- teff5[,"tXw11"] + teff5[,"b[tXw11 school.id:6]"]
-wave2.school.id1 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:1]"]
-wave2.school.id2 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:2]"]
-wave2.school.id3 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:3]"]
-wave2.school.id4 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:4]"]
-wave2.school.id5 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:5]"]
-wave2.school.id6 <- teff5[,"tXw21"] + teff5[,"b[tXw21 school.id:6]"]
-wave3.school.id1 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:1]"]
-wave3.school.id2 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:2]"]
-wave3.school.id3 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:3]"]
-wave3.school.id4 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:4]"]
-wave3.school.id5 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:5]"]
-wave3.school.id6 <- teff5[,"tXw31"] + teff5[,"b[tXw31 school.id:6]"]
-wave4.school.id1 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:1]"]
-wave4.school.id2 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:2]"]
-wave4.school.id3 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:3]"]
-wave4.school.id4 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:4]"]
-wave4.school.id5 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:5]"]
-wave4.school.id6 <- teff5[,"tXw41"] + teff5[,"b[tXw41 school.id:6]"]
-
-wave1 <- data.frame( school.id1 = wave1.school.id1,
-                     school.id2 = wave1.school.id2,
-                     school.id3 = wave1.school.id3,
-                     school.id4 = wave1.school.id4,
-                     school.id5 = wave1.school.id5,
-                     school.id6 = wave1.school.id6)
-wave2 <- data.frame( school.id1 = wave2.school.id1,
-                     school.id2 = wave2.school.id2,
-                     school.id3 = wave2.school.id3,
-                     school.id4 = wave2.school.id4,
-                     school.id5 = wave2.school.id5,
-                     school.id6 = wave2.school.id6)
-wave3 <- data.frame( school.id1 = wave3.school.id1,
-                     school.id2 = wave3.school.id2,
-                     school.id3 = wave3.school.id3,
-                     school.id4 = wave3.school.id4,
-                     school.id5 = wave3.school.id5,
-                     school.id6 = wave3.school.id6)
-wave4 <- data.frame( school.id1 = wave4.school.id1,
-                     school.id2 = wave4.school.id2,
-                     school.id3 = wave4.school.id3,
-                     school.id4 = wave4.school.id4,
-                     school.id5 = wave4.school.id5,
-                     school.id6 = wave4.school.id6)
-
-```
-
-```{r}
-wave1_mean <- apply( X = wave1, MARGIN = 2, FUN = mean )
-wave2_mean <- apply( X = wave2, MARGIN = 2, FUN = mean )
-wave3_mean <- apply( X = wave3, MARGIN = 2, FUN = mean )
-wave4_mean <- apply( X = wave4, MARGIN = 2, FUN = mean )
-
-wave1_quant <- apply( X = wave1, MARGIN = 2, 
-                   FUN = quantile, probs = c(0.25, 0.75))
-wave2_quant <- apply( X = wave2, MARGIN = 2, 
-                   FUN = quantile, probs = c(0.25, 0.75))
-wave3_quant <- apply( X = wave3, MARGIN = 2, 
-                   FUN = quantile, probs = c(0.25, 0.75))
-wave4_quant <- apply( X = wave4, MARGIN = 2, 
-                   FUN = quantile, probs = c(0.25, 0.75))
-
-wave1_quant <- data.frame(t(wave1_quant))
-wave2_quant <- data.frame(t(wave2_quant))
-wave3_quant <- data.frame(t(wave3_quant))
-wave4_quant <- data.frame(t(wave4_quant))
-
-names(wave1_quant) <- c("Q10", "Q90")
-names(wave2_quant) <- c("Q10", "Q90")
-names(wave3_quant) <- c("Q10", "Q90")
-names(wave4_quant) <- c("Q10", "Q90")
-
-r.wave1 <- data.frame( school.id = seq(1:6), mean = wave1_mean, wave1_quant, wave = 5 )
-r.wave2 <- data.frame( school.id = seq(1:6), mean = wave2_mean, wave2_quant, wave = 2 )
-r.wave3 <- data.frame( school.id = seq(1:6), mean = wave3_mean, wave3_quant, wave = 3 )
-r.wave4 <- data.frame( school.id = seq(1:6), mean = wave4_mean, wave4_quant, wave = 4 )
-r.full <- rbind.data.frame(r.wave1, r.wave2, r.wave3, r.wave4)
-```
-
-Graphical representation of results.
-
-```{r}
-ggplot(data = r.full, 
-       aes(x = wave, 
-           y = mean)) +
-  geom_pointrange(aes(ymin = Q10, 
-                      ymax = Q90, group = school.id, color = school.id),
-                  position=position_dodge(width=0.50)) +
-  scale_x_discrete("Wave", limits = c(2,3,4,5) ) +
-  geom_hline(yintercept=0)
+head(d)
+schule2 <- d %>% filter(school==2) %>% 
+  select(wave, student, class, treated, tXw2, tXw3, tXw4, tXw5, school, ustudent, student.effect, school.effect, y)
 ```
 
 # BRMS
@@ -635,60 +290,441 @@ I originally learned about the multilevel in order to work with longitudinal dat
 
 When McElreath lectured on this topic in 2015, he traced partial pooling to statistician Charles M. Stein. Efron and Morris (1977) wrote the now classic paper, *Stein's paradaox* in statistics, whcih does a nice job breaking down why partial pooling can be so powerful. One of the primary examples they used in the paper was of 1970 batting average data. If you'd like more practice seeing how partial pooling works -- or if you just like baseball --, check ou my blog post, *Stein's paradox and what partial pooling can do for you*.
 
+# With my data:
+
 
 ```{r}
-ggplot(data = d, mapping = aes(x = school.id, y = y)) +
-  stat_dotsinterval(fill = "orange2", slab_size = 0, .width = .5) +
-  ggtitle("Log-odds varying by # tadpoles per pond") +
-  theme(plot.title = element_text(size = 14))
-
-ggplot(data = d, mapping = aes(x = school.id, y = treated)) +
-  stat_dotsinterval(quantiles = 100) +
-  ggtitle("Log-odds varying by # tadpoles per pond") +
-  theme(plot.title = element_text(size = 14))
+d.p <- pdata.frame(d, index = c("ustudent", "wave"))
 ```
 ```{r}
-set.seed(5005)
+m0 <- plm(y ~ wave + treated + tXw2 + tXw3 + tXw4 + tXw5 + student.effect + factor(school), data=d.p, model = "random")
+saveRDS(m0, file = "../results/simulation/no_pooling_sim.RDS")
+m0 <- readRDS("../results/simulation/no_pooling_sim.RDS")
+summary(m0)
+```
 
-  dsim <-
-    dsim %>%
-    mutate(si = rbinom(n =n(), prob = inv_logit_scaled(school.effect), size = ))
 
+```{r}
+# school 1
+wave2m0.sch1 <- summary(m0)$coefficient["tXw2",1]
+wave3m0.sch1 <- summary(m0)$coefficient["tXw3",1]
+wave4m0.sch1 <- summary(m0)$coefficient["tXw4",1]
+wave5m0.sch1 <- summary(m0)$coefficient["tXw5",1]
+wave2m0.sch1.se <- summary(m0)$coefficient["tXw2",2]
+wave3m0.sch1.se <- summary(m0)$coefficient["tXw3",2]
+wave4m0.sch1.se <- summary(m0)$coefficient["tXw4",2]
+wave5m0.sch1.se <- summary(m0)$coefficient["tXw5",2]
+m0.sch1.df <- data.frame(school = c(1, 1, 1, 1),
+                         wave = seq(2:5),
+                         estimate = c(wave2m0.sch1, wave3m0.sch1, wave4m0.sch1, wave5m0.sch1),
+                         lower = c(wave2m0.sch1 - wave2m0.sch1.se,
+                                   wave3m0.sch1 - wave3m0.sch1.se,
+                                   wave4m0.sch1 - wave4m0.sch1.se,
+                                   wave5m0.sch1 - wave5m0.sch1.se),
+                         upper = c(wave2m0.sch1 + wave2m0.sch1.se,
+                                   wave3m0.sch1 + wave3m0.sch1.se,
+                                   wave4m0.sch1 + wave4m0.sch1.se,
+                                   wave5m0.sch1 + wave5m0.sch1.se))
+m0.sch1.df
+
+names(d)[names(d) == 'school'] <- 'school'
+
+# school 2
+wave2m0.sch2 <- summary(m0)$coefficient["tXw2",1] + summary(m0)$coefficient["factor(school)2",1]
+wave3m0.sch2 <- summary(m0)$coefficient["tXw3",1] + summary(m0)$coefficient["factor(school)2",1]
+wave4m0.sch2 <- summary(m0)$coefficient["tXw4",1] + summary(m0)$coefficient["factor(school)2",1]
+wave5m0.sch2 <- summary(m0)$coefficient["tXw5",1] + summary(m0)$coefficient["factor(school)2",1]
+wave2m0.sch2.se <- summary(m0)$coefficient["tXw2",2] + summary(m0)$coefficient["factor(school)2",2]
+wave3m0.sch2.se <- summary(m0)$coefficient["tXw3",2] + summary(m0)$coefficient["factor(school)2",2]
+wave4m0.sch2.se <- summary(m0)$coefficient["tXw4",2] + summary(m0)$coefficient["factor(school)2",2]
+wave5m0.sch2.se <- summary(m0)$coefficient["tXw5",2] + summary(m0)$coefficient["factor(school)2",2]
+m0.sch2.df <- data.frame(school = c(2, 2, 2, 2),
+                         wave = seq(2:5),
+                         estimate = c(wave2m0.sch2, wave3m0.sch2, wave4m0.sch2, wave5m0.sch2),
+                         lower = c(wave2m0.sch2 - wave2m0.sch2.se,
+                                   wave3m0.sch2 - wave3m0.sch2.se,
+                                   wave4m0.sch2 - wave4m0.sch2.se,
+                                   wave5m0.sch2 - wave5m0.sch2.se),
+                         upper = c(wave2m0.sch2 + wave2m0.sch2.se,
+                                   wave3m0.sch2 + wave3m0.sch2.se,
+                                   wave4m0.sch2 + wave4m0.sch2.se,
+                                   wave5m0.sch2 + wave5m0.sch2.se))
+m0.sch2.df
+
+# school 3
+wave2m0.sch3 <- summary(m0)$coefficient["tXw2",1] + summary(m0)$coefficient["factor(school)3",1]
+wave3m0.sch3 <- summary(m0)$coefficient["tXw3",1] + summary(m0)$coefficient["factor(school)3",1]
+wave4m0.sch3 <- summary(m0)$coefficient["tXw4",1] + summary(m0)$coefficient["factor(school)3",1]
+wave5m0.sch3 <- summary(m0)$coefficient["tXw5",1] + summary(m0)$coefficient["factor(school)3",1]
+wave2m0.sch3.se <- summary(m0)$coefficient["tXw2",2] + summary(m0)$coefficient["factor(school)3",2]
+wave3m0.sch3.se <- summary(m0)$coefficient["tXw3",2] + summary(m0)$coefficient["factor(school)3",2]
+wave4m0.sch3.se <- summary(m0)$coefficient["tXw4",2] + summary(m0)$coefficient["factor(school)3",2]
+wave5m0.sch3.se <- summary(m0)$coefficient["tXw5",2] + summary(m0)$coefficient["factor(school)3",2]
+m0.sch3.df <- data.frame(school = c(3, 3, 3, 3),
+                         wave = seq(2:5),
+                         estimate = c(wave2m0.sch3, wave3m0.sch3, wave4m0.sch3, wave5m0.sch3),
+                         lower = c(wave2m0.sch3 - wave2m0.sch3.se,
+                                   wave3m0.sch3 - wave3m0.sch3.se,
+                                   wave4m0.sch3 - wave4m0.sch3.se,
+                                   wave5m0.sch3 - wave5m0.sch3.se),
+                         upper = c(wave2m0.sch3 + wave2m0.sch3.se,
+                                   wave3m0.sch3 + wave3m0.sch3.se,
+                                   wave4m0.sch3 + wave4m0.sch3.se,
+                                   wave5m0.sch3 + wave5m0.sch3.se))
+m0.sch3.df
+
+# school 4
+wave2m0.sch4 <- summary(m0)$coefficient["tXw2",1] + summary(m0)$coefficient["factor(school)4",1]
+wave3m0.sch4 <- summary(m0)$coefficient["tXw3",1] + summary(m0)$coefficient["factor(school)4",1]
+wave4m0.sch4 <- summary(m0)$coefficient["tXw4",1] + summary(m0)$coefficient["factor(school)4",1]
+wave5m0.sch4 <- summary(m0)$coefficient["tXw5",1] + summary(m0)$coefficient["factor(school)4",1]
+wave2m0.sch4.se <- summary(m0)$coefficient["tXw2",2] + summary(m0)$coefficient["factor(school)4",2]
+wave3m0.sch4.se <- summary(m0)$coefficient["tXw3",2] + summary(m0)$coefficient["factor(school)4",2]
+wave4m0.sch4.se <- summary(m0)$coefficient["tXw4",2] + summary(m0)$coefficient["factor(school)4",2]
+wave5m0.sch4.se <- summary(m0)$coefficient["tXw5",2] + summary(m0)$coefficient["factor(school)4",2]
+m0.sch4.df <- data.frame(school = c(4, 4, 4, 4),
+                         wave = seq(2:5),
+                         estimate = c(wave2m0.sch4, wave3m0.sch4, wave4m0.sch4, wave5m0.sch4),
+                         lower = c(wave2m0.sch4 - wave2m0.sch4.se,
+                                   wave3m0.sch4 - wave3m0.sch4.se,
+                                   wave4m0.sch4 - wave4m0.sch4.se,
+                                   wave5m0.sch4 - wave5m0.sch4.se),
+                         upper = c(wave2m0.sch4 + wave2m0.sch4.se,
+                                   wave3m0.sch4 + wave3m0.sch4.se,
+                                   wave4m0.sch4 + wave4m0.sch4.se,
+                                   wave5m0.sch4 + wave5m0.sch4.se))
+m0.sch4.df
+
+# school 5
+wave2m0.sch5 <- summary(m0)$coefficient["tXw2",1] + summary(m0)$coefficient["factor(school)5",1]
+wave3m0.sch5 <- summary(m0)$coefficient["tXw3",1] + summary(m0)$coefficient["factor(school)5",1]
+wave4m0.sch5 <- summary(m0)$coefficient["tXw4",1] + summary(m0)$coefficient["factor(school)5",1]
+wave5m0.sch5 <- summary(m0)$coefficient["tXw5",1] + summary(m0)$coefficient["factor(school)5",1]
+wave2m0.sch5.se <- summary(m0)$coefficient["tXw2",2] + summary(m0)$coefficient["factor(school)5",2]
+wave3m0.sch5.se <- summary(m0)$coefficient["tXw3",2] + summary(m0)$coefficient["factor(school)5",2]
+wave4m0.sch5.se <- summary(m0)$coefficient["tXw4",2] + summary(m0)$coefficient["factor(school)5",2]
+wave5m0.sch5.se <- summary(m0)$coefficient["tXw5",2] + summary(m0)$coefficient["factor(school)5",2]
+m0.sch5.df <- data.frame(school = c(5, 5, 5, 5),
+                         wave = seq(2:5),
+                         estimate = c(wave2m0.sch5, wave3m0.sch5, wave4m0.sch5, wave5m0.sch5),
+                         lower = c(wave2m0.sch5 - wave2m0.sch5.se,
+                                   wave3m0.sch5 - wave3m0.sch5.se,
+                                   wave4m0.sch5 - wave4m0.sch5.se,
+                                   wave5m0.sch5 - wave5m0.sch5.se),
+                         upper = c(wave2m0.sch5 + wave2m0.sch5.se,
+                                   wave3m0.sch5 + wave3m0.sch5.se,
+                                   wave4m0.sch5 + wave4m0.sch5.se,
+                                   wave5m0.sch5 + wave5m0.sch5.se))
+m0.sch5.df
+
+# school 6
+wave2m0.sch6 <- summary(m0)$coefficient["tXw2",1] + summary(m0)$coefficient["factor(school)4",1]
+wave3m0.sch6 <- summary(m0)$coefficient["tXw3",1] + summary(m0)$coefficient["factor(school)4",1]
+wave4m0.sch6 <- summary(m0)$coefficient["tXw4",1] + summary(m0)$coefficient["factor(school)4",1]
+wave5m0.sch6 <- summary(m0)$coefficient["tXw5",1] + summary(m0)$coefficient["factor(school)4",1]
+wave2m0.sch6.se <- summary(m0)$coefficient["tXw2",2] + summary(m0)$coefficient["factor(school)6",2]
+wave3m0.sch6.se <- summary(m0)$coefficient["tXw3",2] + summary(m0)$coefficient["factor(school)6",2]
+wave4m0.sch6.se <- summary(m0)$coefficient["tXw4",2] + summary(m0)$coefficient["factor(school)6",2]
+wave5m0.sch6.se <- summary(m0)$coefficient["tXw5",2] + summary(m0)$coefficient["factor(school)6",2]
+m0.sch6.df <- data.frame(school = c(6, 6, 6, 6),
+                         wave = seq(2:5),
+                         estimate = c(wave2m0.sch6, wave3m0.sch6, wave4m0.sch6, wave5m0.sch6),
+                         lower = c(wave2m0.sch6 - wave2m0.sch6.se,
+                                   wave3m0.sch6 - wave3m0.sch6.se,
+                                   wave4m0.sch6 - wave4m0.sch6.se,
+                                   wave5m0.sch6 - wave5m0.sch6.se),
+                         upper = c(wave2m0.sch6 + wave2m0.sch6.se,
+                                   wave3m0.sch6 + wave3m0.sch6.se,
+                                   wave4m0.sch6 + wave4m0.sch6.se,
+                                   wave5m0.sch6 + wave5m0.sch6.se))
+m0.sch6.df
+```
+
+```{r}
+all.schools <- rbind(m0.sch1.df, m0.sch2.df, m0.sch3.df, m0.sch4.df, m0.sch5.df, m0.sch6.df)
+saveRDS(all.schools, file = "../results/simulation/no_pooling_sim.RDS")
+all.schools <- readRDS("../results/simulation/no_pooling_sim.RDS")
 ```
 ```{r}
-try <- 
-  brm(data = d,
-      y ~ 1 + (1 | school.id),
-      prior = c(prior(normal(0, 1.5), class = Intercept),
-                prior(exponential(1), class = sd)),
-      iter = 200, warmup = 100, chains = 4, cores = 4,
-      seed = 13,
-      # file = "fits/b13.03"
-  )
+m0_lsat_across_schools <-
+  ggplot(data = all.schools, aes(x = wave, y = estimate)) +
+  geom_pointrange(aes(ymin = lower, 
+                      ymax = upper, group = school, color = school),
+                  position=position_dodge(width=0.40)) +
+  scale_x_discrete("Wave", limits=seq(2:6) )  +
+  geom_hline(yintercept=0) + 
+  theme(legend.position="bottom")
+ggsave("../figures/no_pooling_lsat_across_schools.pdf", m0_lsat_across_schools, 
+       width = 7, height = 4, units = "in")
+m0_lsat_across_schools
 ```
 ```{r}
-print(try)
+m01 <- plm(y ~ wave + treated + tXw2 + tXw3 + tXw4 + tXw5, data=d.p)
+summary(m01)
+wave2m01 <- summary(m01)$coefficient["tXw2",1]
+wave3m01 <- summary(m01)$coefficient["tXw3",1]
+wave4m01 <- summary(m01)$coefficient["tXw4",1]
+wave5m01 <- summary(m01)$coefficient["tXw5",1]
+wave2m01.se <- summary(m01)$coefficient["tXw2",2]
+wave3m01.se <- summary(m01)$coefficient["tXw3",2]
+wave4m01.se <- summary(m01)$coefficient["tXw4",2]
+wave5m01.se <- summary(m01)$coefficient["tXw5",2]
+m01.df <- data.frame(wave = seq(2:5),
+                     complete = c(wave2m01, wave3m01, wave4m01, wave5m01),
+                     lower = c(wave2m01 - wave2m01.se,
+                               wave3m01 - wave3m01.se,
+                               wave4m01 - wave4m01.se,
+                               wave5m01 - wave5m01.se),
+                     upper = c(wave2m01 + wave2m01.se,
+                               wave3m01 + wave3m01.se,
+                               wave4m01 + wave4m01.se,
+                               wave5m01 + wave5m01.se))
+saveRDS(m01.df, file = "../results/simulation/compl_pooling_sim.RDS")
+m01.df <- readRDS("../results/simulation/compl_pooling_sim.RDS")
+# complete.tibble <- tibble(school = c(7,7,7,7),
+#                           wave = seq(2:5),
+#                           estimate = m01.df$complete,
+#                           lower = m01.df$lower,
+#                           upper = m01.df$upper,
+#                           Q10 = NA,
+#                           Q90 = NA,
+#                           method = "comppool")
 ```
-```{r}
-try$fit
-```
-```{r}
-# we could have included this step in the clock of code below, if we wanted
-p_partpool <- 
-  coef(try)$school.id[, , ] %>% 
-  data.frame() %>%
-  transmute(p_partpool = inv_logit_scaled(Estimate))
 
-d <- 
-  d %>%
-  bind_cols(p_partpool) %>% 
-  mutate(p_true = inv_logit_scaled(student.effect)) %>%
-  mutate(nopool_error   = abs(y   - student.effect),
-         partpool_error = abs(p_partpool - student.effect))
+```{r}
+m01_lsat_across_schools_sim <- 
+  ggplot(data = m01.df,
+       aes(x = wave,
+           y = complete)) +
+  geom_pointrange(aes(ymin = lower,
+                      ymax = upper),
+                      position=position_dodge(width=0.50)) +
+                    scale_x_discrete("Wave", limits = c(2,3,4,5)) +
+                                       geom_hline(yintercept=0)
+ggsave("../figures/compl_pooling_lsat_across_schools_sim.pdf", m01_lsat_across_schools_sim, 
+       width = 7, height = 4, units = "in")
+m01_lsat_across_schools_sim
+```
+```{r}
+oneperiod <-  d %>% filter (wave==1 | wave==2) %>%
+  select(wave, student, class, treated, tXw2, school, ustudent, student.effect, school.effect, y)
 
-dsim %>% 
+oneperiod %>%
   glimpse()
 ```
+```{r}
+sim1 <-brm(y ~ 0 + factor(school),
+           prior = prior(normal(0, 10), class = b),
+           cores = 4, chains = 4,
+           data = oneperiod, seed = 123,
+           file = "../results/simulation/sim1") 
+
+sim2 <- brm(y ~ 1 + (1 | school),
+            prior = c(prior(normal(0, 5), class = Intercept),
+                      (prior(cauchy(0, 1), class = sd),
+            cores = 4, chains = 4,
+            sample_prior = "yes",
+            data = oneperiod, seed = 123,
+            file = "../results/simulation/sim2")
+```
+
+```{r}
+# WAIC comparison
+
+sim1 <- add_criterion(sim1, "waic")
+sim2 <- add_criterion(sim2, "waic")
+
+w <- loo_compare(sim1, sim2, criterion = "waic")
+```
+
+
+```{r}
+cbind(waic_diff = w[, 1] * -2,
+      se        = w[, 2] *  2)
+```
+
+```{r}
+# WAIC weights
+
+model_weights(sim1, sim2, weights = "waic") %>%
+  round(digits = 2)
+```
+
+```{r}
+w[, "p_waic"]
+```
+
+```{r}
+print(sim2)
+```
+
+```{r}
+post <- posterior_samples(sim2)
+
+post_mdn <-
+  coef(sim2, robust = T)$school[, , ] %>%
+  data.frame() %>%
+  bind_cols(d) %>%
+  mutate(post_mdn = )
+```
+
+
+
+
+```{r}
+prior <- c(prior(normal(0, 5), class = Intercept),
+           prior(normal(0, 10), class = b), # prior population level/ population-level ('fixed') effects
+           prior(cauchy(0, 1), class = sd)) # prior group-level
+sim3 <- brm(y ~ treated + wave + tXw2 + (1 + treated + tXw2 | school) + (1 | ustudent),
+           prior = prior, cores = 4, chains = 4, 
+           data = oneperiod, seed = 123,
+           file = "../results/simulation/sim3")
+print(sim3)
+```
+Every population-level effect has its own regression parameter represents the name of the corresponding population-level effect. Suppose, tof instance, that `y` is predicted by `x1` and `x2` (i.e., `y ~ x1 + x2` in formula syntax). Then, `x1` and `x2` have regression parameters ``b_x1` and `b_x2` respectively. The dafault prior for population-level effects (including monotonic and category specific effects) is an improper flat prior over the reals. Other common options are normal priors or student-t priors. If we want to have a normal prior with mean `0` and standard deviation `5` for `x1`, and a unit sutdent-t prior with `10` degress of freedom for `x2`, we can specify this via `set_prior("nrmal(0,45), class = "b", coef = "x1"` and `set_prior("student_t(10,0,1), class = "b", coef = "x2"`. To put the same prior on all population-level effects at once, we may write as a shortcut `set_prior("<prior>", class = "b")`. This also leads to faster ampling, because priors can be vectorized in this case. Both ways of defining priors can be combined using for instance `set_prior("normal(0,2)", class = "b")` and `set_prior("normal(0,10)", class = "b", coef = "x1")` at the same time. This will se a `normal(0,10)`prior on the effect of `x1`and a `normal(0,2)` prior on all other population-level effects. However, this will break vectorization and may slow down the sampling procedure a bit.
+
+Each group-level effect of each grouping factor has a standard deviation named `sd_<group>_<coef>`. Consider, for instance, the formulat `y ~ x1 + x2 + (1 + x1 | g)`. We see that the intercept s well as `x1` are goup-level effects nested in the grouping factor `g`. The corresponding standard deviation parameters are named as `sd_g_Intercept`and `sd_g_x1` respectively. These parameters are restricted to be non-negative and, by default, have a half student-t prior with 3 degrees fo freedom and a scale parameter that depends on the standard deviation of the response after applying the link funtion. Minimally, the scale parameter is 10. This prior is used (a) to be only very weakly informative in order to influence results as few as possible, whil (b) providing at least some regularization to considerably improve convergence and sampling efficiency. To define a prior distribution only for standard deviations of a specific grouping factor, use `set_prior("<prior>", class = "sd", group = "<group>")`. To define a prior distribution only for a specific standard deviation of a specific grouping factor, you may write `set_prior("<prior>", class = "sd", group = "<group>", coef = "<coef>")`. Recommendations on useful priors distributions for standard deviations are given in Gelman (2006), but note that he is no longer regommending uniform priors, anymore.
+
+When defining priors on group-level parameters in non-linear models, please make sure to specify the corresponding non-linear parameter through `nlpar` argument in the same way as for population-level effects.
+
+
+# Chapter 4 McElreath
+$lsat_i \sim N(\mu, \sigma)$
+$\mu \sim N(7,2)$
+$\sigma \sim Exp(0,1)$
+```{r}
+# shape of the prior mu
+p1 <- tibble(x = seq(from = 0, to = 10, by = 0.1)) %>%
+  
+  ggplot(aes(x = x, y = dnorm(x, mean = 7, sd = 2))) +
+  geom_line() +
+  scale_x_continuous(breaks = seq(from = 0, to = 10, by = 1)) +
+  labs(title = "mu ~ dnorm(7, 2)", y = "density")
+p1
+```
+```{r}
+# shape of prior sigma
+p2 <- tibble(x = seq(from = 0, to = 1, by = 0.1)) %>%
+  
+  ggplot(aes(x = x, y = dcauchy(seq(0,1,by=0.1)))) +
+  geom_line() +
+  scale_x_continuous(breaks = c(0, 1)) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  ggtitle("sigma ~ dcauchy(0, 1)")
+p2
+```
+We can simulate from both priors at once to get a prior probability distribution of life satisfaction
+
+```{r}
+n <- 1e4
+
+set.seed(4)
+
+sim <-
+  tibble(sample_mu = rnorm(n, mean = 7, sd = 2),
+         sample_sigma = runif(n, 0, 1)) %>%
+  mutate(lsat = rnorm(n, mean = sample_mu, sd = sample_sigma))
+```
+
+```{r}
+p3 <- sim %>%
+  ggplot(aes(x = lsat)) +
+  geom_density(fill = "grey33") +
+  xlim(0, 10) +
+  scale_x_continuous(breaks = c(0, 5, 10)) +
+  ggtitle("lsat ~ dnorm(mu, sigma)")
+p3
+```
+```{r}
+# computing the mean and three sd above and below
+sim %>%
+  summarise(ll = mean(lsat) - sd(lsat)*3,
+            mean = mean(lsat),
+            ul = mean(lsat) + sd(lsat)*3) %>%
+  mutate_all(round, digits = 1)
+```
+```{r}
+set.seed(4)
+
+sim <-
+  tibble(sample_mu = rnorm(n, mean = 7, sd = 2),
+         sample_sigma =runif(n, min = 0, max = 1)) %>%
+  mutate(lsat = rnorm(n, mean = sample_mu, sd = sample_sigma))
+
+# Compute the values we'll use to break on our x axis
+breaks <-
+  c(mean(sim$lsat) - 3 * sd(sim$lsat), 0, mean (sim$lsat), mean(sim$lsat) + 3 * sd(sim$lsat)) %>%
+  round(digits = 0)
+
+# this is just for aesthetics
+text <-
+  tibble(height = 10 - 25,
+         y = 0.0013,
+         label = "max of scale",
+         angle = 90)
+
+# plot
+p4 <-
+  sim %>%
+  ggplot(aes(x = lsat)) +
+  geom_density(fill = "black", size = 0) +
+  geom_vline(xintercept = 0, color = "grey92") +
+  geom_vline(xintercept = 10, color = "grey92", linetype = 3) +
+  # geom_text(data = text,
+  #           aes(y = y, label = label, angle = angle),
+  #           color = "grey92") +
+  xlim(0, 10) +
+  scale_x_continuous(breaks = breaks) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  ggtitle("lsat ~ dnorm(mu, sigma)\nmu ~ dnorm(7,2)") +
+  theme(panel.grid = element_blank())
+
+p4
+```
+
+```{r}
+sim %>%
+  count(lsat < 0 | lsat > 10) %>%
+mutate(percent = 100 * n/ sum(n))
+```
+Grid approcimation of the posterior distribution
+
+```{r}
+n <- 200
+
+d_grid <-
+  crossing(mu = seq(from = 0, to = 10, length.out = n),
+           sigma = seq(from = 4, to = 9, length.out = n))
+
+glimpse(d_grid)
+
+grid_function <- function(mu, sigma) {
+  
+  dnorm(d$lsat, mean = mu, sd = sigma) %>%
+    sum()
+}
+
+d_grid <-
+  d_grid %>%
+  mutate(likelihood = map2(mu, sigma, grid_function)) %>%
+  unnest(likelihood) %>%
+  mutate(prior_mu = dnorm(mu, mean = 7, sd = 2),
+         prior_sigma = dunif(sigma, min= 0, max = 1)) %>%
+  mutate(product = likelihood * prior_mu * prior_sigma) %>%
+  mutate(probability = exp(product - max(product)))
+
+head(d_grid)
+```
+
+
+
+
+
+
+
+
+
+
 
 
 

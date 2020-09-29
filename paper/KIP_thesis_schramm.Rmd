@@ -155,7 +155,7 @@ In conclusion, measuring life satisfaction in children is more challenging than 
 
 # Econometrics
 \label{sec:econometrics}
-@AndrewGelman2013 consider a multilevel model to be "a regression (a linear or a generalized linear model) in which the parameters - the regression coefficients - are given a probability model" (p. 1). @Mcelreath2020 (p. 14) suggests to think of parameters as a placeholder for a missing model. That probability model itself has parameters called haperparameters which are also estimated from the data. In other words, they are parameters for parameters. Their priors are often referred to as haperpriors. Technically, there is no limit to the number of levels, however infeasible computation and ability to understand the model are in practice a resitriction. The structure of my data is a hierarchical one as discussed in the \ref{sec:data}. Ususally, in that case a simple nonhierarchical model is inappropriate. It tends to underfit when there are only few parameters and to overfit the data when too many parameters are indluded. This leads to models that fit the existing data well but lead to poor predictions for new data (@AndrewGelman2013, 101). In the following, I will explain how hierarchical models are best to navigate between underfitting and overfitting (fit to sample always - not true of multilevel models - improves as we add parameters. Though multilevel models are more complicated, it is worth using them because they reduce overfit as new parameters are added (Youtube Video MacElreath Lecture 7). Hierarchical structure reduces overfit.
+@AndrewGelman2013 consider a multilevel model to be "a regression (a linear or a generalized linear model) in which the parameters - the regression coefficients - are given a probability model" (p. 1). @Mcelreath2020 (p. 14) suggests to think of parameters as a placeholder for a missing model. That probability model itself has parameters called hyperparameters which are also estimated from the data. In other words, they are parameters for parameters. Their priors are often referred to as hyperpriors. Technically, there is no limit to the number of levels, however infeasable computation and ability to understand the model are in practice a restriction. The structure of my data is a hierarchical one as discussed in the \ref{sec:data}. Usually, in that case a simple nonhierarchical model is inappropriate. It tends to underfit when there are only few parameters and to overfit the data when too many parameters are included. This leads to models that fit the existing data well but lead to poor predictions for new data (@AndrewGelman2013, 101). In the following, I will explain how hierarchical models are best to navigate between underfitting and overfitting (fit to sample always - not true of multilevel models - improves as we add parameters. Though multilevel models are more complicated, it is worth using them because they reduce overfit as new parameters are added (Youtube Video MacElreath Lecture 7). Hierarchical structure reduces overfit.
 
 ## Identification
 \label{sec:identification}
@@ -165,37 +165,54 @@ To assess the effect of the music treatment on the student's life satisfaction, 
 
 * Overfitting: The model is sensitive to the details in the data. Learning too much from it.
 
+* Multilevel models, also sometimes referred to as hierarchical models, involve predictors at different levels of variation. For example, in studying the treatment outcome of the KIP project, I have information about individual students (Age, sex, grades etc.), school-level information and time trends. Though the school level information are unobserved, as well as the time trends, it is important to account for effects on these levels. A multilevel model in this contexts allows to include effects that very by group (school) and time. It is very well possible that the intervention is more effective in some schools than others. This outcome would help to identify why this afterwards. An other helpful feature of multilevel modeling is that it allows one to estimate to the extend supported by the data and not being limited to the number of observation per school (which is the case for the no-pooling method.)
+After all, schools are different but they are also similar in the way that each school helps to estimate the treatment effect in other schools. I aim for a multilevel model, which simultaneously estimatesan intercept for each school and the variation among schools (macelreath p 416).
+
 * We want the regular features of the sample! Chapter 7 MacElreath
 + Strategie: One way: Regularizing priors. They are skepitcal of impossible relationships. They regularize inference. Regularizing force. Better predictions. / Cross-validation compares / Information criteria. Regularizing priors. Prior predictive simulation. Choose priors that will only creaty possible outcomes. Helps to reduce overfitting.
 
 * Complete pooling: This means the population of schools is assumed to be invariant. If clusters are ignored, which means to assign the same intercept to each of them, then there is the risk of ignoring important variation in how schools correspond to the treatment. This variation could mask association with other variables [@Mcelreath2020, 416]
 
 * No-pooling: This means that each school can tell nothing about any other school as if variation among schools were assumed to be infinite. 
-* Partial pooling: This means using an adaptive regularizing prior that prevents the model from "getting too excited by the training sample" [@Mcelreath2020, 218]. A regularizing prior is a prior that slows down the rate of learning from a sample and thus reduces overfitting while still allowing the model to learn the regular features of a sample. Resulting from regularization is a phenomenon sometimes called shrinkage ... (@Macelreath2020, p. 419) Estimates for each cluster are less underfit than the grand mean and less overfit than the no-pooling estimates. The partial pooling produces noticeably better estimates when there are only a few observations in one group. In that case, the no pooling estimate well be especially overfit. Otherwise, the varying effect estimates are not that different from the no pooling estimates. The partial pooling tends to improve estimates about each cluster. This improved estimation leads to several, more pragmatic sounding, benefits of the multilevel approach:
+* Partial pooling: This means using an adaptive regularizing prior that prevents the model from "getting too excited by the training sample" [@Mcelreath2020, 218]. A regularizing prior is a prior that slows down the rate of learning from a sample and thus reduces overfitting while still allowing the model to learn the regular features of a sample. Resulting from regularization is a phenomenon sometimes called shrinkage ... (@Mcelreath2020, p. 419) Estimates for each cluster are less underfit than the grand mean and less overfit than the no-pooling estimates. The partial pooling produces noticeably better estimates when there are only a few observations in one group. In that case, the no pooling estimate well be especially overfit. Otherwise, the varying effect estimates are not that different from the no pooling estimates. The partial pooling tends to improve estimates about each cluster. This improved estimation leads to several, more pragmatic sounding, benefits of the multilevel approach:
 1. Improved estimates for repeat sampling
 2. Improved estimates for imbalance in sampling
 3. Estimates of variation
 4. Avoid averaging, retain variation
 
-### Prior distribution
-The analyses require that the six schools I am observing, be considered a random sample from a common distribution. $\theta_j$ is seend as an independent sample from a prior (or population) distribution governed by some unknown paramter vector $\phi$. In general, $\phi$ is unknown, so our distribution of $\theta$ must average over our uncertainty in $\phi$. In order to create a joint probability distribution for $(\phi,\theta)$, we must assign a prior distribution to $\phi$. If little is known about $\phi$, we can assign a diffuse prior distribution, but we must be careful when using an improper prior density to check that the resulting posterior distribution is proper, and we should asses whether our conclusions are sensitive to this simplifying assumption. In most real problems, one should have enough substantive knowledge about the parameters in $\phi$ at least to constrain the hyperparameters inwo a finite region, if not to assign a substantive hyperprior distribution. For the setting of my thesis, this means that the hyperparameters should be constrained to the values between 0 and 10 as the life satisfaction scales can only take on any value within that range.
-
-Simpson's paradox (that a trend can reverse when data are grouped)
+## Complete pooling
+```{r complete pooling, echo=FALSE}
+m01.df <- readRDS("../results/compl_pooling.Rds")
+knitr::kable(x = m01.df, booktabs = T, caption = "Estimates complete pooling") %>%
+  kableExtra::kable_styling(full_width = T, latex_options = "HOLD_position")
+```
+## No-pooling
+```{r no-pooling, echo=FALSE}
+all.schools <- readRDS("../results/no_pooling.Rds")
+knitr::kable(x = all.schools, booktabs = T, caption = "Estimates no-pooling") %>%
+  kableExtra::kable_styling(full_width = T, latex_options = "HOLD_position")
+```
 
 ## Estimation
+### The model
 \label{estimation}
 (Gelman p13)
-In a first step, I will set up a full probability mode - a joint probability distribution for all observabe and unobservable quantities in a probelm. The model should be consistent with knowledge about the underlyng scientific problem and the data collection process.
-After that I will calculate and interpret the appropriate posterior distibution - the conditional probabiliy distribution of the unobserved quantities of ultimate interest, given the observed data.
+In a first step, I will set up a full probability mode - a joint probability distribution for all observable and unobservable quantities in a problem. The model should be consistent with knowledge about the underlying scientific problem and the data collection process.
+After that I will calculate and interpret the appropriate posterior distribution - the conditional probability distribution of the unobserved quantities of ultimate interest, given the observed data.
 Finally, in a third step the fit of the model will be evaluated and the models' implications of the resulting posterior distribution is presented (how sensitive are the results to the modeling assumptions in step 1?)
 
 We have repeat measures and heterogeneity across clusters (McElreath). After all, schools are different but each school does help estimating the treatment effect in other schools.
-The study of effectiveness of the music project, with the students in school $j$ having a certain unknown parameter vector $\theta_j$, it might be reasonable to expect that estimates $\theta_j$, which represent a sample of schools, shoud be related to each other. This is achieved in a natural way by using a prior distribution in which life satisfaction is viewed as a sample from a common *population distribution*. A key feature of such applications is that the observed data, $y_{ij}$, with student index $i$ within group indexed by $j$, can be used to estimate aspects of the population distribution of the $theta_j$'s even though the values of $\theta_j$ are not themselves observed. In contrast, hierarchical models can have enough parameters to fit the model well, while using a population distribution to structure some dependence into the parameters, therby avoiding problems of overfitting.
+The study of effectiveness of the music project, with the students in school $j$ having a certain unknown parameter vector $\theta_j$, it might be reasonable to expect that estimates $\theta_j$, which represent a sample of schools, should be related to each other. This is achieved in a natural way by using a prior distribution in which life satisfaction is viewed as a sample from a common *population distribution*. A key feature of such applications is that the observed data, $y_{ij}$, with student index $i$ within group indexed by $j$, can be used to estimate aspects of the population distribution of the $theta_j$'s even though the values of $\theta_j$ are not themselves observed. In contrast, hierarchical models can have enough parameters to fit the model well, while using a population distribution to structure some dependence into the parameters, thereby avoiding problems of overfitting.
 
-I simulataneously investigate the treatment in six differenct schools. Te analysis is restricted to wave 1 (pre treatment) and wave 2 (post treatment). The regression equation is:
-$$
-y_{ijt} = \beta_0 + \beta_{1j[i]} T_i + \sum\limits_{l=2}^5\delta_{lj[i]} (T_{i} \times \text{Period}_{t}) + \lambda_t + \mu_{j[i]} + \alpha_{i} + \epsilon_{ijt},
-$$
+I simultaneously investigate the treatment in six different schools. The analysis is restricted to wave 1 (pre treatment) and wave 2 (post treatment). The regression equation is:
+
+The hierarchical structure in my model looks as follows:
+$$lsat \sim {\sf Normal} (\mu_{ijt}, \sigma),$$
+$$\mu_{ijt} = \beta_0 + \beta_{1j[i]} T_i + \sum\limits_{l=2}^5\delta_{lj[i]} (T_{i} \times \text{Period}_{t}) + \lambda_t + \mu_{j[i]} + \alpha_{i} + \epsilon_{ijt},$$
+$$\beta_0 \sim  {\sf Normal}(7,2),$$
+$$Population-level effects \sim {\sf Normal}(0,5),$$
+$$Group-level effects \sim {\sf Cauchy}(0,1),$$
+$$\sigma \sim {\sf Exponential}(0,5)$$
 
 where
 
@@ -210,46 +227,21 @@ where
 
 For doing *blah* I use *blub* [ref]
 
-For each outcome variable...
- First I do no pooling, then I do pooling
- Then I do Bayesian 
 
-### Assessing model adequacy (Chapter 6 Gelman and Hill 2020)
-"The challenge for identifying causal differences is the fact that..."
-- Ability
-- socio-economic characteristics
-- other background characteristics
-- we need to take into account selection effects
-- Bayesian because small sample
+### Prior distribution
 
-Learning about treatment effects that vary
-  Multilevel models allow us to study effects that vary by group (school!) is the intervention more effective in some schools than others? why? Only few observtions per school, multilevel modeling allows us to estimat these interactions to the extent supported by the data
+As stated above in \ref(section... parameters are not point estimates but they have distributions in a Bayesian framework. The specification for these parameters are called prior distribution because they must be specified before the model is fit to data and it assigns them a probability to every possible value of each parameter to be estimated. The prior distributions and data interact to finally produce the posterior distribution. The posterior can be seen as a compromise between the prior distribution and the likelihood function. Therefore, the choice of the prior should be done carefully since it can determine the outcome severely. After identifying the type of data being described, creating a descriptive model with meaningful parameters, and defining a likelihood function, the next step is to establish a prior distribution over the parameter values (kruschke 110). The prior distribution indicates what I believe about distribution of life satisfaction measures among the population without knowing the specific data. Depending on the choice of prior and the respective data set, the "compromise" favors one them over the other. A flat prior and a large data set leads to a posterior distribution that is mainly influenced by the data. However if the prior has strong believes about the distribution of the parameters, meaning the prior distribution is sharply peaked, and there are only relatively few data, the posterior distribution is more influenced by the prior. This relation is illustrated in figure \ref{}. The upper row shows the posterior that appears when having a prior distribution $lsat \sim {\sf Normal}(5, 200)$. The standard deviation in this prior is huge an gives barely any useful information about the distribution of life satisfaction among the population. The shape of the posterior is almost identical to the onw of the likelihood. The opposite is the case when the prior is highly informative. A normal distribution with parameters of $\mu = 5$ and $\sigma = 1$ suggests that life satisfaction is very narrow around the mean of 5. The prior is so sharp that the posterior distribution is noticeably influenced by the prior.
+```{r flat_peaked, echo=FALSE, out.width = "100%"}
+knitr::include_graphics("../figures/flat_peaked.png")
+```
+To decide on proper priors, I made some prior predictive simulations as suggested by MacElreath. This method is useful for understanding the implication of a prior. It simulates predictions from a model, using only the prior distribution instead of the posterior distribution. Once priors are chosen, they imply a joint prior distribution of individual life satisfaction (elreath p85). This procedure is based on choosing priors conditional on pre-data knowledge of the data, on general facts so to say (elreath, p100). Only when this step is done, the model is applied to the data.
 
-Prediction
-  predicting outcomes of new cases. but what if the data vary by group? Then we can make predictions for new units in existing groups or in new groups
-  
-  inference should include the factors used in the design of data collection. without being overwhelmed with the problems of overfittin that arise form applying least squares or maximum likelihood
-
-Multilevel models re extensions of regression in which data are structured in groups and coefficients can vary by group
-
-varying intercept and varying slope
-indicators for groups: verying-intercept model p237 
-varying slopes are interactions between the continuous predictor x and the group indicators
-First step: set up a regression with varying coefficients
-second step: set up a regression model for the coefficients themselves
-
-p416 after all, tanks are different but each tank does help us estimate survival in the other tanks. So it doesn't make sense to forget entirely, moving from one tank to another.
-A multilevel model, in which we simultaneously estimate both an intercept for each tank and the variation among tanks, is what we want. ... This adaptive learning is the absense of amnesia discussed at the start of the chapter. When what we learn about each cluster infroms all the other clusters, we learn the prior simultaneous to earning the intercepts.
-
-p50 (34)
-In future chaoters, there will be more parameters in your models. In statistical modeling, many of the most common questions we ask about data are answered directly by parameters:
-* What is the average difference between treatment groups?
-* How strong is the association between a treatment and an outcome?
-* Does the effect of the treatment depend upon a covariate?
-* How much variation is there among groups?
-
-You'll see how these questions become extra parameters inside the distribution function we assign to the data.
-For every parameter you intend your Bayesiona machine to consider, you must provide a distribution of prior plausibility, its *PRIOR*.
+```{r lsat_predicted, echo=FALSE, out.width = "100%"}
+knitr::include_graphics("../figures/lsat_predicted.png")
+```
+```{r chosen_priors, echo=FALSE, out.width = "100%"}
+knitr::include_graphics("../figures/chosen_priors.png")
+```
 
 \clearpage
 
@@ -265,38 +257,26 @@ Three challenges should determine the agenda of future research on this agenda.
 2. answer the question of the extent to which extracurricular activities are substitutable (substitutes vs. compliments).
 3. long-term effects of music training on outcomes such a s labor market success or life satisfaction
 
-<!-- ## Complete pooling -->
-<!-- ```{r complete pooling, echo=FALSE} -->
-<!-- m01.df <- readRDS("C:/Users/vera/Documents/NEUER-VERSUCH-OHNE-CHILD-UND-PARENT/results/compl_pooling.Rds") -->
-<!-- knitr::kable(x = m01.df, booktabs = T, caption = "Estimates complete pooling") %>%  -->
-<!--   kableExtra::kable_styling(full_width = T, latex_options = "HOLD_position") -->
-<!-- ``` -->
-<!-- ## No-pooling -->
-<!-- ```{r no-pooling, echo=FALSE} -->
-<!-- all.schools <- readRDS("C:/Users/vera/Documents/NEUER-VERSUCH-OHNE-CHILD-UND-PARENT/results/no_pooling.Rds") -->
-<!-- knitr::kable(x = all.schools, booktabs = T, caption = "Estimates no-pooling") %>%  -->
-<!--   kableExtra::kable_styling(full_width = T, latex_options = "HOLD_position") -->
-<!-- ``` -->
-<!-- ## Partial pooling -->
-<!-- ```{r partial pooling, echo=FALSE} -->
-<!-- su_teff <- readRDS("C:/Users/vera/Documents/NEUER-VERSUCH-OHNE-CHILD-UND-PARENT/results/partial_pooling.Rds") -->
-<!-- knitr::kable(x = su_teff, booktabs = T, caption = "Estimates partial pooling") %>%  -->
-<!--   kableExtra::kable_styling(full_width = T, latex_options = "HOLD_position") -->
-<!-- ``` -->
+## Partial pooling
+```{r partial pooling, echo=FALSE}
+su_teff <- readRDS("../results/partial_pooling.Rds")
+knitr::kable(x = su_teff, booktabs = T, caption = "Estimates partial pooling") %>%
+  kableExtra::kable_styling(full_width = T, latex_options = "HOLD_position")
+```
 
-<!-- ```{r lsat_teff_across_schools, echo=FALSE, out.width = "100%"} -->
-<!-- knitr::include_graphics("../figures/lsat_teff_across_schools.png") -->
-<!-- ``` -->
+```{r lsat_teff_across_schools, echo=FALSE, out.width = "100%"}
+knitr::include_graphics("../figures/lsat_teff_across_schools.png")
+```
 
-<!-- ```{r compare_estimates_lsat, echo=FALSE, out.width = "100%"} -->
-<!-- knitr::include_graphics("../figures/compare_estimates_lsat.png") -->
-<!-- ``` -->
-<!-- ```{r compare methods, echo=FALSE} -->
-<!-- compare <- readRDS("C:/Users/vera/Documents/NEUER-VERSUCH-OHNE-CHILD-UND-PARENT/results/compare.Rds") -->
-<!-- knitr::kable(x = compare, booktabs = T, caption = "Estimates generated by different methods") %>%  -->
-<!--   kableExtra::kable_styling(full_width = T, latex_options = "HOLD_position") -->
-<!-- ``` -->
-<!-- CONLCUSION -->
+```{r compare_estimates_lsat, echo=FALSE, out.width = "100%"}
+knitr::include_graphics("../figures/compare_estimates_lsat.png")
+```
+```{r compare methods, echo=FALSE}
+compare <- readRDS("../results/compare.Rds")
+knitr::kable(x = compare, booktabs = T, caption = "Estimates generated by different methods") %>%
+  kableExtra::kable_styling(full_width = T, latex_options = "HOLD_position")
+```
+CONLCUSION
 \clearpage
 
 # Conclusion
@@ -331,9 +311,9 @@ Example of nice appendix in @Hille2014
 
 # Tables
 
-<!-- ```{r smdtab, echo=FALSE} -->
-<!-- smdtab <- readRDS("C:/Users/vera/Documents/NEUER-VERSUCH-OHNE-CHILD-UND-PARENT/results/smdtab.Rds") -->
-<!-- knitr::kable(x = smdtab, booktabs = T, caption = "Standardized mean differences") %>%  -->
-<!--   kableExtra::kable_styling(full_width = T, latex_options = "HOLD_position") -->
-<!-- ``` -->
+```{r smdtab, echo=FALSE}
+smdtab <- readRDS("../results/smdtab.Rds")
+knitr::kable(x = smdtab, booktabs = T, caption = "Standardized mean differences") %>%
+  kableExtra::kable_styling(full_width = T, latex_options = "HOLD_position")
+```
 
