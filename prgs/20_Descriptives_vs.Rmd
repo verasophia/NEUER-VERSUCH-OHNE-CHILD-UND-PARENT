@@ -39,7 +39,7 @@ library(kableExtra)
 # Data
 
 ```{r}
-welle1 <- readRDS("../data/d_welle1.RDS")
+welle1 <- readRDS("data/d_welle1s.RDS")
 ```
 
 
@@ -142,11 +142,17 @@ smd <- CreateTableOne(vars = vars, strata = "treated", data = welle1, test = FAL
 
 smdtab <- print(smd, smd = TRUE)
 
+
+
 rownames(smdtab) <- c("N", "Life satisfaction", "Sex", "male", "female", "unknown", "Satisfaction with friends", "Satisfaction with class", "Grade german", "Grade maths", "Grade music", "Hobby music 'yes' (%)", "Duration music listening", "Duration music making", "not at all", "ca 30 min", "ca 1-2 hours", "ca 3-4 hours", "more than 4 hours", "Playing instrument 'yes' (%)", "Musically active", "Migration background", "  native", "  immigrant", "  unknown" )
 colnames(smdtab) <- c("control group", "treatment group", "SMD")
 
 ExtractSmd(smd)
 SMD <- ExtractSmd(smd)
+
+test <- data.frame(SMD)
+ggplot(data = test, aes)
+
 kable(SMD)
 saveRDS(object = SMD, file = "C:/Users/vera/Documents/NEUER-VERSUCH-OHNE-CHILD-UND-PARENT/results/smd.Rds")
 saveRDS(object = smdtab, file = "C:/Users/vera/Documents/NEUER-VERSUCH-OHNE-CHILD-UND-PARENT/results/smdtab.Rds")
@@ -158,6 +164,34 @@ saveRDS(object = smdtab, file = "C:/Users/vera/Documents/NEUER-VERSUCH-OHNE-CHIL
 #ptd <- print(smd, printToggle = FALSE, noSpaces = TRUE)
 #xtable(ptd)
 ```
+
+```{r}
+
+su_d <- d %>% group_by(school, welle) %>%
+                      summarise( mean.lsat = mean(lsat, na.rm = TRUE))
+
+lsat_vs_time_by_school <- ggplot(su_d, aes(y = mean.lsat, x = welle, group = school)) +
+  geom_point(
+    aes(color = school), 
+    alpha = 0.4,
+    size = rel(0.8)
+  ) + 
+  scale_color_manual(
+    values =
+      c("1" = "#00C094",
+        "2" = "#FB61D7",
+        "3" = "#53B400",
+        "4" = "#A58AFF",
+        "5" = "#00B6EB",
+        "6" = "#C49A00")
+  ) +
+  geom_line(aes(color = school))
+
+ggsave("../figures/lsat_vs_time_by_school.png", lsat_vs_time_by_school, width = 7, height = 5, units = "in")
+  
+
+```
+
 
 # Original computing environment
 
