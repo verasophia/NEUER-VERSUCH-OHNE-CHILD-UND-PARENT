@@ -722,6 +722,76 @@ head(d_grid)
 
 
 
+```{r}
+a_bar <- 7
+sigma <- 1.5
+n_waves <- 5
+
+dsim <-
+  tibble(wave = rep(c(1:n_waves), times = 6),
+         school = rep(c(1:6), each = 5),
+         true_a = rnorm(n = 30, mean = a_bar, sd = sigma))
+```
+
+```{r}
+dsim %>%
+  mutate(school = factor(school)) %>%
+  
+  ggplot(aes(x = true_a, y = school)) +
+  stat_dotsinterval(fill = "orange2", slab_size = 0, .width = 0.5) +
+  ggtitle("Life satisfaction varying by school") +
+  theme(plot.title = element_text(size = 14))
+```
+
+```{r}
+set.seed(5005)
+
+
+(
+  dsim <-
+    dsim %>%
+    group_by(school) %>%
+    mutate(p_nopool = rnorm(n = n(), true_a, sd(true_a)))
+)
+```
+
+```{r}
+bayes <-
+  brm(data = dsim,
+      lsati ~ 1 + (1 | school),
+      prior = c(prior(normal(0,1.5), class = Intercept),
+                prior(exponential(1), class = sd)))
+```
+```{r}
+print(bayes)
+```
+
+
+```{r}
+bayes$fit
+```
+
+```{r}
+p_partpool <-
+  coef(bayes)$school[, , ] %>%
+  data.frame() %>%
+  transmute(p_partpool = Estimate)
+```
+
+```{r}
+dsim <-
+  dsim %>%
+  bind_cols(p_partpool) %>%
+  mutate(p_true = true_a) %>%
+  mutate(nopool_error = abs(p_nopool - p_true),
+         partpool_error = abs(p_partpool - p_true))
+```
+
+
+
+
+
+
 
 
 

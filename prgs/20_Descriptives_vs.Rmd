@@ -189,7 +189,27 @@ lsat_vs_time_by_school <- ggplot(su_d, aes(y = mean.lsat, x = welle, group = sch
 
 ggsave("../figures/lsat_vs_time_by_school.png", lsat_vs_time_by_school, width = 7, height = 5, units = "in")
   
+su_d <- d %>% group_by(school, welle, treated) %>%
+                      summarise( mean.lsat = mean(lsat, na.rm = TRUE))
 
+lsat_vs_time_by_school_treated <- ggplot(data = subset(su_d, treated == 1), aes(y = mean.lsat, x = welle, group = school)) +
+  geom_point(
+    aes(color = school), 
+    alpha = 0.4,
+    size = rel(0.8)
+  ) + 
+  scale_color_manual(
+    values =
+      c("1" = "#00C094",
+        "2" = "#FB61D7",
+        "3" = "#53B400",
+        "4" = "#A58AFF",
+        "5" = "#00B6EB",
+        "6" = "#C49A00")
+  ) +
+  geom_line(aes(color = school))
+
+ggsave("../figures/lsat_vs_time_by_school_treated.png", lsat_vs_time_by_school_treated, width = 7, height = 5, units = "in")
 ```
 
 

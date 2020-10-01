@@ -72,13 +72,15 @@ m0.df
 ```
 
 ```{r}
-ggplot(data = m0.df, aes(x = wave, y = estimate)) +
+complete_pool <-
+  ggplot(data = m0.df, aes(x = wave, y = estimate)) +
   geom_pointrange(aes(ymin = lower, 
                       ymax = upper),
                   position=position_dodge(width=0.40)) +
   scale_x_discrete("Wave", limits=seq(2:6) )  +
   geom_hline(yintercept=0) + 
   theme(legend.position="bottom")
+ggsave("../figures/complete_pool.png", complete_pool, width = 7, height = 4, units = "in")
 ```
 
 
