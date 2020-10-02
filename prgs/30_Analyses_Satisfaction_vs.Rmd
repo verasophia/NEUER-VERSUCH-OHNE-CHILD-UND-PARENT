@@ -97,21 +97,10 @@ m1 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 +
              (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
            prior = prior, cores = 4, chains = 4, 
            data = d, seed=123,
-           file = "../results/lsat")
+           # file = "../results/lsat"
+           )
 print(m1)
-m1 <- readRDS("../results/lsat.RDS")
-
-
-
-
-
-m1 <- brm( lsat ~ 0 + welle ? + 
-             female + migback + hob.mus.making +
-             (1 + 0 | school) + (1 | pid))
-
-
-
-
+# m1 <- readRDS("../results/lsat.RDS")
 
 ```
 ```{r}
