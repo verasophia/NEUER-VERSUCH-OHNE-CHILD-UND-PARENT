@@ -223,8 +223,8 @@ The structure of my thesis is as follows: At first there will be an overview of 
 
 \emph{Gute Einleitung bei Southgate \& Roscigno (2009)}
 
-\hypertarget{the-role-of-music-in-chidlrens-lives}{%
-\section{The role of music in chidlrens' lives}\label{the-role-of-music-in-chidlrens-lives}}
+\hypertarget{the-role-of-music-in-childrens-lives}{%
+\section{The role of music in childrens' lives}\label{the-role-of-music-in-childrens-lives}}
 
 \clearpage
 
@@ -243,13 +243,13 @@ This paper complements existing literature by using different music indicators a
 \section{Data}\label{data}}
 
 \label{ch:data}
-\#\# Pre-treatment differences
+In this section, I will first give more background information on the KIP project, before describing the data themselves. After general summary statistics, there is a section about handling potential issues arising with differences in the treatment and control group.
 
 \hypertarget{the-project}{%
 \subsection{The project}\label{the-project}}
 
 \label{sec:project}
-The data come from the years 2012-2014 when KIP was conducted in six different secondary schools (Mittel- und Realschulen) in Nuremberg. Generally, there are different types of implementations of the KIP project (e.g.~choir, brass band, string orchestra) among which the rock band model was implemented in all of the schools that are subject to this study. Probably due to parents' and students' music preferences, this type has been the most popular. A school was able to apply for the project if certain criteria were fulfilled. For example, the school had to make sure that there was a full-time music teacher who was qualified to carry out the project. That person was trained to lead a band class and attended yearly meetings with other music teachers to share experiences. This way, it can be assured that the treatment in each school looked pretty much the same and there were no noteworthy differences in the way the teachers arranged the music lessons in the band classes. Participating schools were supported in acquiring equipment and instruments to implement ensemble music class teaching. In each school was a band class and a control class. The band classes received three music lessons per week, whereas the control classes only received two lessons of regular music education. Music lessons in the treatment classes differed significantly from that in the control group. In the band classes, the teachers had a more practical approach and there was less theoretical music education than in the control group. The three music lessons per week were split into a) Instrumental instructions in small groups, b) ensemble playing, and c) general music education (music theory or history). The latter was similar to how regular music education was implemented in the control group. Thefor not only the amount of music education is higher in the treatment group but also the way that music education is delivered differs a lot from normal music lessons in a way that it is more practical and with better equipment. The students played concerts in regular intervals and were thus able to share what they had learned. In five different points of time, the students were asked to fill in a questionnaire:
+The data come from the years 2012-2014 when KIP was conducted in six different secondary schools (Mittel- und Realschulen) in Nuremberg. Generally, there are different types of implementations of the KIP project (e.g.~choir, brass band, string orchestra) among which the rock band model was implemented in all of the schools that are subject to this study. Probably due to parents' and students' music preferences, this type has been the most popular. A school had to fulfill certain criteria in order to get support for the project. For example, the school had to make sure that there was a full-time music teacher who was qualified to carry out the project. That person was trained to lead a band class and attended yearly meetings with other music teachers to share experiences. This way, it can be assured that the treatment in each school looked pretty much the same and there were no noteworthy differences in the way the teachers arranged the music lessons in the band classes. Participating schools were supported in acquiring equipment and instruments to implement ensemble music class teaching. In each school was a band class and a control class. The band classes received three music lessons per week, whereas the control classes only received two lessons of regular music education. Music lessons in the treatment classes differed significantly from that in the control group. In the band classes, the teachers had a more practical approach and there was less theoretical music education than in the control group. The three music lessons per week were split into a) Instrumental instructions in small groups, b) ensemble playing, and c) general music education (music theory or history). The latter was similar to how regular music education was implemented in the control group. Therefor not only the amount of music education is higher in the treatment group but also the way that music education is delivered differs a lot from normal music lessons in a way that it is more practical and with better equipment. The students played concerts in regular intervals and were thus able to share what they had learned. In five different points of time, the students were asked to fill in a questionnaire:
 
 wave 1: Beginning of 5th grade (pre-treatment)
 wave 2: Mid of 5th grade
@@ -257,16 +257,114 @@ wave 3: end of 5th grade
 wave 4: mid of 6th grade
 wave 6: end of 6th grade
 
-In total, 394 students were observed, however not all of them occur in each wave. Some questions were only asked in wave 1 (i.e.~sex) which leads to the problem that there were no information about gender for students who did not attend in the first wave. Only 309 reported their gender in wave 1 which leads to 85 students for whom the gender is ``unknown''. To not miss all of these observations in regressions including gender, NAs were replaced by a category ``unknown''. The same was done for the variable of migration background and language spoken at home. An other issue to point out is the comparably low number of observations in wave 5 in school 5.
+\hypertarget{variables}{%
+\subsection{Variables}\label{variables}}
 
-Students had to rate their level of life satisfaction on a scale reaching from 0 (``completely unsatisfied) to 10 (completely satisfied) for the question''How satisfied are you with your life overall?"
+\label{sec:variables}
 
-\hypertarget{selection-process-and-pre-treatment-differences}{%
-\subsection{selection process (and pre-treatment differences)}\label{selection-process-and-pre-treatment-differences}}
+\hypertarget{satisfaction}{%
+\subsubsection{Satisfaction}\label{satisfaction}}
+
+To measure life satisfaction and any area of satisfaction, I use a 11-point scale, with responds on a scale from 0 to 10. Life satisfaction is the variable of interest in my thesis, alongside with \emph{Satisfaction with friends}, \emph{Satisfaction with class}, and \emph{Satisfaction with school}. An extract of the questionnaire can be found in the index. Measuring life satisfaction on a 0-10-scale is quite common in that field of literature {[}Mellor, Stokes, Firth, Hayashi, \& Cummins (2008) Cheung \& Lucas (2014)\} but also 7-point scales are found a lot (Diener, Emmons, Larsen, \& Griffin, 1985). For the model, the satisfaction measures are assumed to be cardinal comparable both across and within individuals across time. There is broad consensus in the literature to interpret satisfaction responds as cardinally scaled (Ferrer-i-Carbonell \& Frijters, 2004). Summary statistics about the different areas of satisfaction are presented in Table \ref{tab:mean}.
+
+\begin{table}
+
+\caption{(\#tab:mean LS)Mean satisfaction}
+\centering
+\begin{tabular}[t]{lrr}
+\toprule
+Variable & Mean & SD\\
+\midrule
+Life satisfaction & 7.30 & 2.56\\
+Satisfaction friends & 8.85 & 2.56\\
+Satisfaction class & 7.58 & 2.56\\
+Satisfaction school & 7.72 & 2.56\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+As already cited above in Chambers \& Johnston (2002), children tend to give values at the extreme ends of a scale. This is also what happened in the KIP sample: The histogram in Figure \ref{fig:hist lsat} shows a striking portion of the students indicating to have a life satisfaction of 10. Also, 50\% of the students respond with a 5 on the scale. This might indicate the issue that children how did not understand what the question asked them to do or that were not able to make the transfer from their individual assessment of their life satisfaction to pair it with a number just chose 5 randomly, hoping that it was neither ``right or wrong''.
+
+\includegraphics[width=1\linewidth]{../figures/lsat_bar}
+\#\#\# Treatment
+The treatment is represented by a binary variable, indicating whether a student participated in the treatment (``1'') or not (``0''). The treatment is conducted on the class level. All students in the same class are assigned the same indicator of whether or not they attend the treatment. Students did not change the class.
+
+\hypertarget{individual-characterisitc-background}{%
+\subsubsection{Individual characterisitc background}\label{individual-characterisitc-background}}
+
+In the first wave, students were asked to state their gender (Tick either \emph{``Bist du ein Junge/ein Mädchen?''}). This question did not appear in subsequent waves which leads to the issue that children who were not in school on the day the first questionnaire was handed to them, appear as NAs in the sample. The same happened for migration background. To avoid drop out of too many observations in the estimation process, gender and migration background were manipulated as category variables and NAs were replaced by the category \emph{unknown} This leads to the following distribution of time-invariant individual characteristics: Both the gender and the migration background is not known for around 20\% of the total of 394 students.
+
+The fact that it is an unbalanced panel that is studied should be considered more thoroughly. In Table \ref{tab:N Obs per wave and school} shows that the number of students in each class is varying over time, most severely in class five. The number of participants of the questionnaire drops by more than a third in wave 5 compared to the first period. The overall effect of this decline on the whole sample is shown in table \ref{tab:n_Obs_treat}. In the treatment group, their number of students decreases from 163 to 146 and in the treatment group from 154 to 141. This could be a reason to exclude school five from the observation completely as the attrition rate in the remaining schools is not that alarming.
+
+\begin{table}
+
+\caption{(\#tab:N Obs per wave and school)Number of observations}
+\centering
+\begin{tabular}[t]{lrrrrrr}
+\toprule
+School & Wave 1 & Wave 2 & Wave 3 & Wave 4 & Wave 5 & Sum\\
+\midrule
+1 & 49 & 43 & 47 & 50 & 53 & 242\\
+2 & 54 & 52 & 52 & 49 & 49 & 256\\
+3 & 52 & 49 & 51 & 55 & 53 & 260\\
+4 & 51 & 47 & 51 & 52 & 51 & 252\\
+5 & 63 & 60 & 61 & 46 & 40 & 270\\
+\addlinespace
+6 & 48 & 43 & 46 & 42 & 41 & 220\\
+Sum & 317 & 294 & 308 & 294 & 287 & 1500\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}
+
+\caption{(\#tab:N Obs)Number of observations}
+\centering
+\begin{tabular}[t]{lrrrrr}
+\toprule
+  & Wave 1 & Wave 2 & Wave 3 & Wave 4 & Wave 5\\
+\midrule
+Treatment group & 163 & 149 & 153 & 143 & 146\\
+Control group & 154 & 145 & 155 & 151 & 141\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\hypertarget{pre-treatment-differences}{%
+\subsection{Pre-treatment differences}\label{pre-treatment-differences}}
 
 The decision who attended the treatment group was made before the entrance to grade 5. Parents could choose to put their child into a music class. Therefore, the experiment is not fully randomized. Children who were already into music in the first place might have been more likely to have chosen the music class. Also the decision can be a a consequence of parental and socio-economic background of the student. To have a better idea of possible differences between the treatment and the control group, I computed standardized mean differences:
 
-The standardized mean differences are not a reason of concern in this setting. For most of the observed variables, there are no notable differences between the treatment group and the control group. However, as already suspected, there are differences in prior musical knowledge. Among the treated, there are relatively more children who have music as a hobby before the project has even started. Of the 87 students who answered with ``yes'' to the question if music was their hobby, only 24 were assigned to the control group and the remaining 63 students attended the band classes. Also, the duration of making music is very different in the two subgroups. In the Treatment group, 56\% are parcticing at leats 30 min, while in the control group that share is only 35\%. However, the model addresses this issue by applying a difference-in difference approach to estimate the causal effect of additional music lessons on students' well-being. accounts for the individual musical background of the child by. Therfore the fact that the model accounts for musical background of the student, differences in the control group and the treatment group are not a problem for inference.
+The standardized mean differences are not a reason of concern in this setting. For most of the observed variables, there are no notable differences between the treatment group and the control group. However, as already suspected, there are differences in prior musical knowledge. Among the treated, there are relatively more children who have music as a hobby before the project has even started. Of the 87 students who answered with ``yes'' to the question if music was their hobby, only 24 were assigned to the control group and the remaining 63 students attended the band classes. Also, the duration of making music is very different in the two subgroups. In the Treatment group, 56\% are practicing at least 30 min, while in the control group that share is only 35\%. However, the model addresses this issue by applying a difference-in-difference approach to estimate the causal effect of additional music lessons on students' well-being. Possible differences in the control group and the treatment group are not a problem for inference.
+
+\begin{table}
+
+\caption{(\#tab:std mean diff)Standardized mean differences}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & 1 vs 2\\
+\midrule
+lsat & 0.1547095\\
+female & 0.1589880\\
+sat\_friends & 0.1567294\\
+sat\_class & 0.1557517\\
+class.prob & 0.0449783\\
+\addlinespace
+class.excl & 0.1219881\\
+note.deu & 0.0970701\\
+note.mat & 0.1283257\\
+note.mus & 0.1918611\\
+hob.mus.making & 0.5372337\\
+\addlinespace
+dauer.mus.lis & 0.0966792\\
+dauer.mus.making & 0.4497456\\
+play.instr & 0.0961298\\
+mus.active & 0.1646539\\
+migback & 0.1511146\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \hypertarget{measuring-ls-in-children}{%
 \subsection{Measuring LS in children}\label{measuring-ls-in-children}}
@@ -276,17 +374,12 @@ An extensive amount of research was done on adult life satisfaction and on metho
 
 Even though, the amount of research on
 
-To investigate ones quality of life, research uses both objective and subjective indicators. Typical objective indicators are the income levels, crime rates, and access to medical services -- measures that are external and quantifiable. Subjective indicators on the other hand comprise subjective evaluations of ones' individual life circumstances (Gilman \& Huebner, 2000, p. 178). Only a modest relation between both measures was found which indicates that each approach carries unique information that are relevant for a comprehensive understanding of overall life quality \emph{(Veenhofen, 1996)}. Over time, measurement methods for subjective indicators have evolved leading to substantial growth in the life satisfaction research. However, for a long time, most of the measurements were designed to assess adults' life satisfaction. Only recently, investigating correlates of life satisfaction in adolescents has begun. One reason why life satisfaction research in children was put off for a long time are probably that measuring life satisfaction in children is more challenging than for adults. Instruments for assessing children's subjective life satisfaction reports have been less intensively developed which is probably due to the fact that a Likert-type ratings scale is more difficult to use for younger children than for adolescents (Chambers \& Johnston, 2002, p. 28). For example, younger children or children with poorer readings skills are less able to respond appropriately to negative items on questionnaires and this effect biases the interpretation of children's responses (Marsh, 1986, p. 45). It is also common for children rating their subjective life satisfaction to show elevated extreme scores. As children become older, this tendency shrinks and they are more capable of providing graded ratings in between the two extremes. These results have potentially substantial implications for the interpretation of self-report ratings form children \emph{this tendency might have an erroneous and invalid impact on the interpretation of children's self-reports}(Chambers \& Johnston, 2002, pp. 33--34). When dealing with self-reported life satisfaction in children, it is crucial that the respective child fully understands the question in order to give a valid response (Gluskie, 2012; Tomyn, Fuller-Tyszkiewicz, Cummins, \& Norrish, 2016). One must make sure that a child is old enough to know how to use a satisfaction scale. This requires children to distance themselves from the current situation, cognitively evaluate their life satisfaction (considering all relevant areas of life) and rate the degree to which certain items on the scale apply to them. This requires abstract thinking, which children develop in early adolescent years (10-14 years) (Gluskie, 2012; Piaget, 1955, 1969). Gilman \& Huebner (2000) have reviewed five different (both unidimensional and multidimensional) measurements explicitly developed to asses adolescents' life satisfaction.\footnote{The Students' Life Satisfaction Scale (Huebner, 1991b), the Satisfaction With Life Scale (Diener, Emmons, Larsen, \& Griffin, 1985), the Perceived Life Satisfaction Scale (Adelman, Taylor, \& Nelson, 1989), the Comprehensive Quality of Life Scale - School Version (Cummins, 1997; Gullone \& Cummins, 1999), and the Multidimensional Student's Life Satisfaction Scale (Huebner, 1994)} The authors evaluated those measures in terms of validity and reliability and found all of the scales to be appropriate for research with adolescents {[}181-188{]}. The demographic characteristics of the available samples show that all of the adolescents observed were older than 12 years. Therefor it remains unclear if children younger than that age are able to report valid satisfaction.
+To investigate ones quality of life, research uses both objective and subjective indicators. Typical objective indicators are the income levels, crime rates, and access to medical services -- measures that are external and quantifiable. Subjective indicators on the other hand comprise subjective evaluations of ones' individual life circumstances (Gilman \& Huebner, 2000, p. 178). Only a modest relation between both measures was found which indicates that each approach carries unique information that are relevant for a comprehensive understanding of overall life quality \emph{(Veenhofen, 1996)}. Over time, measurement methods for subjective indicators have evolved leading to substantial growth in the life satisfaction research. However, for a long time, most of the measurements were designed to assess adults' life satisfaction. Only recently, investigating correlates of life satisfaction in adolescents has begun. One reason why life satisfaction research in children was put off for a long time are probably that measuring life satisfaction in children is more challenging than for adults. Instruments for assessing children's subjective life satisfaction reports have been less intensively developed which is probably due to the fact that a Likert-type ratings scale is more difficult to use for younger children than for adolescents (Chambers \& Johnston, 2002, p. 28). For example, younger children or children with poorer readings skills are less able to respond appropriately to negative items on questionnaires and this effect biases the interpretation of children's responses (Marsh, 1986, p. 45). It is also common for children rating their subjective life satisfaction to show elevated extreme scores. As children become older, this tendency shrinks and they are more capable of providing graded ratings in between the two extremes. These results have potentially substantial implications for the interpretation of self-report ratings form children \emph{this tendency might have an erroneous and invalid impact on the interpretation of children's self-reports}(Chambers \& Johnston, 2002, pp. 33--34). When dealing with self-reported life satisfaction in children, it is crucial that the respective child fully understands the question in order to give a valid response (Gluskie, 2012; Tomyn, Fuller-Tyszkiewicz, Cummins, \& Norrish, 2016). One must make sure that a child is old enough to know how to use a satisfaction scale. This requires children to distance themselves from the current situation, cognitively evaluate their life satisfaction (considering all relevant areas of life) and rate the degree to which certain items on the scale apply to them. This requires abstract thinking, which children develop in early adolescent years (10-14 years) (Gluskie, 2012; Piaget, 1955, 1969). Gilman \& Huebner (2000) have reviewed five different (both unidimensional and multidimensional) measurements explicitly developed to asses adolescents' life satisfaction.\footnote{The Students' Life Satisfaction Scale (Huebner, 1991b), the Satisfaction With Life Scale (Diener et al., 1985), the Perceived Life Satisfaction Scale (Adelman, Taylor, \& Nelson, 1989), the Comprehensive Quality of Life Scale - School Version (Cummins, 1997; Gullone \& Cummins, 1999), and the Multidimensional Student's Life Satisfaction Scale (Huebner, 1994)} The authors evaluated those measures in terms of validity and reliability and found all of the scales to be appropriate for research with adolescents {[}181-188{]}. The demographic characteristics of the available samples show that all of the adolescents observed were older than 12 years. Therefor it remains unclear if children younger than that age are able to report valid satisfaction.
 An other instrument was developed more recently by (Cummins \& Lau, 2005) which is the Personal Well-being Index (PWI-SC). Again, studies demonstrated reliability for this instrument as well (Casas \& Rees, 2015; Casas et al., 2011; Tomyn \& Cummins, 2011; Tomyn, Stokes, Cummins, \& Dias, 2019). But also in those studies, all of the adolescents were at least 12 years of age, mostly even older. There is only very little evidence on the psychometric properties of the PWI-SC for children below the age of 12.
 One of them is González-Carrasco, Casas, Malo, Viñas, \& Dinisman (2016, p. 70) who applied the instrument for children as young as only 9 years and also found adequate fit of the data.
 On the other hand, Tomyn et al. (2016) conducted a study with children aged 10-12 and concluded that subjective well-being data of children must be interpreted with caution. They also show that response bias towards the extreme positive end of a scale is higher with decreasing age. The authors do not recommend using the PWI-SC for children younger than 12 years. As for the specific sample, the PWI-SC did not serve as a valid instrument for measuring the SWB.
 
 In conclusion, measuring life satisfaction in children is more challenging than for adults and is still in progress. It is advisable to check the validity and reliability of their data when testing children. Considering, the majority of the children from the KIP project are 10 year sold in wave 1 (72\% of those participating in wave 1), they might be just too young to give valid responses when asked about their life satisfaction. This must be kept in mind when evaluating the significance of the results.
-
-\hypertarget{descriptive-statistics}{%
-\subsection{Descriptive statistics}\label{descriptive-statistics}}
-
-\label{sec:descriptives}
 
 \hypertarget{identification-strategy}{%
 \section{Identification strategy}\label{identification-strategy}}
@@ -341,7 +434,7 @@ To make predictive inferences, a similar logic is applied:
 The distribution of the unknown but observable \(y\) is
 \[p(y)=\int p(y,\theta)d\theta=\int p(\theta)p(y|\theta)d\theta\], which is referred to as the prior predictive distribution. It is not conditional on previous observations of the process, and it is a distribution of some observable quantity.
 From the same process, \(\tilde{y}\) can be predicted after observing the data \(y\).
-The distribution of \(\tilde{y}\) for example of future measurements, is called the posterior predictive distribution. It describes a prediction for an observable \(\tilde{y}\) condistional on the observed \(y\):
+The distribution of \(\tilde{y}\) for example of future measurements, is called the posterior predictive distribution. It describes a prediction for an observable \(\tilde{y}\) conditional on the observed \(y\):
 \[p(\tilde{y}|y)=\int p(\tilde{y},\theta|y)d\theta \\
 = \int p(\tilde{y}|\theta,y)p(\theta|y)d\theta \\
 = \int p(\tilde{y}|\theta)p(\theta|y)d\theta.\]
@@ -353,6 +446,7 @@ Bayesian inference refers to statistical procedures that model unknown parameter
 \section{Estimation}\label{estimation}}
 
 \label{sec:estimation}
+For model estimation I decided to use the brms packageby Bürkner (Bürkner (2017)). It imlements Bayesian multilevel models in `R' using the probabilistic programming language `Stan'. It allows for individual prior specifications and facilitates incorporating prior distributions that reflect the users beliefs. The package is also suitable for assessing and comparing models with the Watanabe-Akaike information criterion and leave-one-out cross-validation
 
 \hypertarget{the-model}{%
 \subsection{The model}\label{the-model}}
@@ -362,6 +456,15 @@ Bayesian inference refers to statistical procedures that model unknown parameter
 In a first step, I will set up a full probability mode - a joint probability distribution for all observable and unobservable quantities in a problem. The model should be consistent with knowledge about the underlying scientific problem and the data collection process.
 After that I will calculate and interpret the appropriate posterior distribution - the conditional probability distribution of the unobserved quantities of ultimate interest, given the observed data.
 Finally, in a third step the fit of the model will be evaluated and the models' implications of the resulting posterior distribution is presented (how sensitive are the results to the modeling assumptions in step 1?)
+
+\begin{align}
+lsat & \sim {\sf Normal} (\mu_{ijt}, \sigma), \\
+\mu_{ijt} & = \beta_0 + \beta_{1j[i]} T_i + \sum\limits_{l=2}^5\delta_{lj[i]} (T_{i} \times \text{Period}_{t}) + \lambda_t + \mu_{j[i]} + \alpha_{i} + \epsilon_{ijt}, \\
+\beta_0 & \sim  {\sf Normal}(7,2), \\
+Population-level effects & \sim {\sf Normal}(0,5), \\
+Group-level effects & \sim {\sf Cauchy}(0,1), \\
+\sigma & \sim {\sf Exponential}(0,5)
+\end{align}
 
 We have repeat measures and heterogeneity across clusters (McElreath). After all, schools are different but each school does help estimating the treatment effect in other schools.
 The study of effectiveness of the music project, with the students in school \(j\) having a certain unknown parameter vector \(\theta_j\), it might be reasonable to expect that estimates \(\theta_j\), which represent a sample of schools, should be related to each other. This is achieved in a natural way by using a prior distribution in which life satisfaction is viewed as a sample from a common \emph{population distribution}. A key feature of such applications is that the observed data, \(y_{ij}\), with student index \(i\) within group indexed by \(j\), can be used to estimate aspects of the population distribution of the \(theta_j\)'s even though the values of \(\theta_j\) are not themselves observed. In contrast, hierarchical models can have enough parameters to fit the model well, while using a population distribution to structure some dependence into the parameters, thereby avoiding problems of overfitting.
@@ -396,7 +499,7 @@ For doing \emph{blah} I use \emph{blub} {[}ref{]}
 \subsection{Prior distribution}\label{prior-distribution}}
 
 \label{subsec:priors}
-As stated above in \ref{sec:methodology} in a Bayesian framework parameters are not point estimates but they have distributions. The specification for these parameters are called prior distribution because they must be specified \emph{before} the model is fit to data and it assigns them a probability to every possible value of each parameter to be estimated. If the specification is done properly, for all parameters in the model, a Bayesian model yields a joint prior distribution on parameters and data, and hence a prior marginal distribution for the data (Gabry p5). This process can be described as the prior distributions and data interacting to finally produce the posterior distribution. The posterior can be seen as a compromise between the prior distribution and the likelihood function. Therefore, the choice of the prior should be done carefully since it can determine the outcome severely. After identifying the type of data being described, creating a descriptive model with meaningful parameters, and defining a likelihood function, the next step is to establish a prior distribution over the parameter values (kruschke 110). The prior distribution indicates the believes about the distribution of each parameter without knowing the specific data. Depending on the choice of prior and the respective data set, the ``compromise'' favors one of them over the other. Flat priors or super-vague priors (\(\sf {N}(0,1e6)\)) are usually not recommended. They lead to a posterior distribution that is mainly influenced by the data which means that though the data set is very well described by the model but predictions are very poor. The model only ``learned'' about the distribution from the data because the prior did not carry any information. However if the prior has strong believes about the distribution of the parameters, meaning the prior distribution is sharply peaked, and there are only relatively few data, the posterior distribution is more influenced by the prior. Generally, weakly informative priors (\(\sf{N}(0,10)\)) are recommended because they help by providing a very gentle nudge towards reasonable values of the parameter (mcelreath p 299). If there is a reasonable large amount of data, they will dominate while the prior becomes less important. In case of not very meaningful data though, the ``weakly informative prior'' make up for it by strongly influencing the posterior inference. This relation is illustrated in \ref{fig:flat_peaked}. The upper row shows the posterior that appears when having a prior distribution \(lsat \sim {\sf Normal}(5, 200)\). The standard deviation in this prior is huge an gives barely any useful information about the distribution of life satisfaction among the population. The shape of the posterior is almost identical to the one of the likelihood. The opposite is the case when the prior is highly informative. A normal distribution with parameters of \(\mu = 5\) and \(\sigma = 1\) suggests that life satisfaction is very narrow around the mean of 5. The prior is so sharp that the posterior distribution is noticeably influenced by the prior. Bayesian models with proper priors are generative models (Gabry p5)
+As stated above in \ref{sec:methodology} in a Bayesian framework parameters are not point estimates but they have distributions. The specification for these parameters are called prior distribution because they must be specified \emph{before} the model is fit to data and it assigns them a probability to every possible value of each parameter to be estimated. If the specification is done properly, for all parameters in the model, a Bayesian model yields a joint prior distribution on parameters and data, and hence a prior marginal distribution for the data (Gabry p5). This process can be described as the prior distributions and data interacting to finally produce the posterior distribution. The posterior can be seen as a compromise between the prior distribution and the likelihood function. Therefore, the choice of the prior should be done carefully since it can determine the outcome severely. After identifying the type of data being described, creating a descriptive model with meaningful parameters, and defining a likelihood function, the next step is to establish a prior distribution over the parameter values (kruschke 110). The prior distribution indicates the believes about the distribution of each parameter without knowing the specific data. Depending on the choice of prior and the respective data set, the ``compromise'' favors one of them over the other. Flat priors or super-vague priors (\(\sf {N}(0,1e6)\)) are usually not recommended. They lead to a posterior distribution that is mainly influenced by the data which means that though the data set is very well described by the model, predictions are very poor. The model only ``learned'' about the distribution from the data because the prior did not carry any information. However if the prior has strong believes about the distribution of the parameters, meaning the prior distribution is sharply peaked, and there are only relatively few data, the posterior distribution is more influenced by the prior. Generally, weakly informative priors (\(\sf{N}(0,10)\)) are recommended because they help by providing a very gentle nudge towards reasonable values of the parameter (mcelreath p 299). If there is a reasonable large amount of data, they will dominate while the prior becomes less important. In case of not very meaningful data though, the ``weakly informative prior'' make up for it by strongly influencing the posterior inference. This relation is illustrated in \ref{fig:flat_peaked}. The upper row shows the posterior that appears when having a prior distribution \(lsat \sim {\sf Normal}(5, 200)\). The standard deviation in this prior is huge and gives barely any useful information about the distribution of life satisfaction among the population. The shape of the posterior is almost identical to the one of the likelihood. The opposite is the case when the prior is highly informative. A normal distribution with parameters of \(\mu = 5\) and \(\sigma = 1\) suggests that life satisfaction is very narrow around the mean of 5. The prior is so sharp that the posterior distribution is noticeably influenced by the prior. Bayesian models with proper priors are generative models (Gabry p5)
 
 \includegraphics[width=1\linewidth]{../figures/flat_peaked}
 A good prior also tackles the problem of overfitting which was discussed above. By choosing a skeptical prior. The term skeptical refers to the prior being skeptical about values outside the range of parameter values that are not reasonable. The most common skeptical prior is the regularizing prior which effectively reduces overfitting whil still allowing the model to learn about the regular features of a sample.
@@ -408,12 +511,16 @@ made some prior predictive simulations as suggested by MacElreath. This method i
 \subsection{Posterior distribution}\label{posterior-distribution}}
 
 \label{subsec:posterior}
+Using `posterior predict', I generate samples of predictions and compute standard deviations over those samples. This makes explicit the choice between predicting for the participants in the study (i.e.~using the data you used for fitting for predictions) and predicting for hypothetical new participants (the inference for those could - in general - differ)
 
 \includegraphics[width=1\linewidth]{../figures/lsat_predicted}
 
 \includegraphics[width=1\linewidth]{../figures/plot_priors}
 
 \clearpage
+
+\hypertarget{model-validation}{%
+\subsection{Model validation}\label{model-validation}}
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
@@ -462,6 +569,9 @@ Andrew Gelman, J. H. (2013). \emph{Data analysis using regression and multilevel
 \leavevmode\hypertarget{ref-BundesverbandMusikunterricht}{}%
 Bundesverband Musikunterricht (BMU). (2016). \emph{Grundsdatzpapier}. Retrieved from \url{https://www.bmu-musik.de/ueber-uns/positionen/agenda-2030-bmu-positionen-9-2016.html}
 
+\leavevmode\hypertarget{ref-Buerkner2017}{}%
+Bürkner, P.-C. (2017). Brms: An r package for bayesian multilevel models using stan. \emph{Journal of Statistical Software}, \emph{80}(1). \url{https://doi.org/10.18637/jss.v080.i01}
+
 \leavevmode\hypertarget{ref-Casas2015}{}%
 Casas, F., \& Rees, G. (2015). Measures of children's subjective well-being: Analysis of the potential for cross-national comparisons. \emph{Child Indicators Research}, \emph{8}(1), 49--69. \url{https://doi.org/10.1007/s12187-014-9293-z}
 
@@ -470,6 +580,9 @@ Casas, F., Sarriera, J. C., Alfaro, J., González, M., Malo, S., Bertran, I., \l
 
 \leavevmode\hypertarget{ref-Johnston2002}{}%
 Chambers, C. T., \& Johnston, C. (2002). Developmental differences in childrens use of rating scales. \emph{Journal of Pediatric Psychology}, \emph{27}(1), 27--36. \url{https://doi.org/10.1093/jpepsy/27.1.27}
+
+\leavevmode\hypertarget{ref-Cheung2014}{}%
+Cheung, F., \& Lucas, R. E. (2014). Assessing the validity of single-item life satisfaction measures: Results from three large samples. \emph{Quality of Life Research}, \emph{23}(10), 2809--2818. \url{https://doi.org/10.1007/s11136-014-0726-4}
 
 \leavevmode\hypertarget{ref-CostaGiomi2004}{}%
 Costa-Giomi, E. (2004). Effects of three years of piano instruction on children's academic achievement, school performance and self-esteem. \emph{Psychology of Music}, \emph{32}(2), 139--152. \url{https://doi.org/10.1177/0305735604041491}
@@ -485,6 +598,9 @@ Diener, E. (2009). \emph{Culture and well-being} (T. Moum, M. A. G. Sprangers, J
 
 \leavevmode\hypertarget{ref-Diener1985}{}%
 Diener, E., Emmons, R. A., Larsen, R. J., \& Griffin, S. (1985). The satisfaction with life scale. \emph{Journal of Personality Assessment}, \emph{49}(1), 71--75. \url{https://doi.org/10.1207/s15327752jpa4901_13}
+
+\leavevmode\hypertarget{ref-iCarbonell2004}{}%
+Ferrer-i-Carbonell, A., \& Frijters, P. (2004). How important is methodology for the estimates of the determinants of happiness? \emph{The Economic Journal}, \emph{114}(497), 641--659. \url{https://doi.org/10.1111/j.1468-0297.2004.00235.x}
 
 \leavevmode\hypertarget{ref-Gebert2018}{}%
 Gebert, S. (2018). \emph{Musische erziehung ist keine privatangelegenheit}. Retrieved from \url{https://www.deutschlandfunk.de/musikunterricht-an-schulen-musische-erziehung-ist-keine.680.de.html?dram:article_id=419333}
@@ -530,6 +646,9 @@ Mcelreath, R. (2020). \emph{Statistical rethinking}. Retrieved from \url{https:/
 
 \leavevmode\hypertarget{ref-Mehr2013}{}%
 Mehr, S. A., Schachner, A., Katz, R. C., \& Spelke, E. S. (2013). Two randomized trials provide no consistent evidence for nonmusical cognitive benefits of brief preschool music enrichment. \emph{PLoS ONE}, \emph{8}(12), e82007. \url{https://doi.org/10.1371/journal.pone.0082007}
+
+\leavevmode\hypertarget{ref-Mellor2008}{}%
+Mellor, D., Stokes, M., Firth, L., Hayashi, Y., \& Cummins, R. (2008). Need for belonging, relationship satisfaction, loneliness, and life satisfaction. \emph{Personality and Individual Differences}, \emph{45}(3), 213--218. \url{https://doi.org/10.1016/j.paid.2008.03.020}
 
 \leavevmode\hypertarget{ref-Moeller2017}{}%
 Möller, T. (2017). \emph{Ausverkauf musikalischer Bildung?} Retrieved from \url{https://www.deutschlandfunk.de/musikunterricht-in-der-schule-ausverkauf-musikalischer.1992.de.html?dram:article_id=382783}
@@ -605,50 +724,11 @@ Example of nice appendix in Hille (2014)
 \hypertarget{figures}{%
 \section{Figures}\label{figures}}
 
+\includegraphics[width=1\linewidth]{../figures/Wie zufrieden bist du....pdf}
+
 \clearpage
 
 \hypertarget{tables}{%
 \section{Tables}\label{tables}}
-
-\begin{table}[H]
-
-\caption{\label{tab:smdtab}Standardized mean differences}
-\centering
-\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X}
-\toprule
-  & control group & treatment group & SMD\\
-\midrule
-N & 154 & 163 & \\
-Life satisfaction & 7.50 (2.39) & 7.11 (2.70) & 0.155\\
-Sex &  &  & 0.159\\
-male & 82 (53.2) & 88 (54.0) & \\
-female & 70 (45.5) & 69 (42.3) & \\
-\addlinespace
-unknown & 2 ( 1.3) & 6 ( 3.7) & \\
-Satisfaction with friends & 8.70 (1.82) & 8.99 (1.82) & 0.157\\
-Satisfaction with class & 7.74 (2.06) & 7.42 (2.00) & 0.156\\
-Grade german & 2.53 (0.62) & 2.59 (0.61) & 0.097\\
-Grade maths & 2.46 (0.74) & 2.56 (0.73) & 0.128\\
-\addlinespace
-Grade music & 1.91 (0.92) & 1.75 (0.77) & 0.192\\
-Hobby music 'yes' (\%) & 24 (15.6) & 63 (38.7) & 0.537\\
-Duration music listening & 2.61 (1.02) & 2.51 (1.04) & 0.097\\
-Duration music making &  &  & 0.450\\
-not at all & 94 (64.8) & 70 (44.0) & \\
-\addlinespace
-ca 30 min & 34 (23.4) & 54 (34.0) & \\
-ca 1-2 hours & 13 ( 9.0) & 29 (18.2) & \\
-ca 3-4 hours & 3 ( 2.1) & 3 ( 1.9) & \\
-more than 4 hours & 1 ( 0.7) & 3 ( 1.9) & \\
-Playing instrument 'yes' (\%) & 41 (30.1) & 53 (34.6) & 0.096\\
-\addlinespace
-Musically active & 0.33 (0.47) & 0.41 (0.49) & 0.165\\
-Migration background &  &  & 0.151\\
-native & 102 (67.1) & 98 (60.1) & \\
-immigrant & 49 (32.2) & 63 (38.7) & \\
-unknown & 1 ( 0.7) & 2 ( 1.2) & \\
-\bottomrule
-\end{tabu}
-\end{table}
 \end{document}
 

@@ -41,29 +41,28 @@ library(plm)
 
 ```{r}
 d <- readRDS("../data/d_satisfaction.RDS")
-describe(d)
 ```
 
 ```{r}
-compare <- rbind(no.tibble, complete.tibble, partial.tibble)
-saveRDS(compare, file = "../results/compare.RDS")
+# compare <- rbind(no.tibble, complete.tibble, partial.tibble)
+# saveRDS(compare, file = "../results/compare.RDS")
 ```
 
 ```{r}
 # Compare
-  ggplot(data = compare, aes(x = wave, y = estimate)) +
-  geom_point(aes( group = school, color = school),
-                  position=position_dodge(width=0.40)) +
-  scale_x_discrete("Wave", limits=seq(2:6) )  +
-  geom_hline(yintercept=0) + 
-  theme(legend.position="bottom")
-
-compare_estimates_lsat <-  ggplot(data = compare, aes(x = wave, y = estimate)) +
-    geom_point(aes(color = method), size = 4) +
-    theme(legend.position = "bottom") +
-    scale_color_manual(values = c("magenta3", "deepskyblue3", "green3"))
-ggsave("../figures/compare_estimates_lsat.png", compare_estimates_lsat, 
-       width = 7, height = 4, units = "in")
+#   ggplot(data = compare, aes(x = wave, y = estimate)) +
+#   geom_point(aes( group = school, color = school),
+#                   position=position_dodge(width=0.40)) +
+#   scale_x_discrete("Wave", limits=seq(2:6) )  +
+#   geom_hline(yintercept=0) + 
+#   theme(legend.position="bottom")
+# 
+# compare_estimates_lsat <-  ggplot(data = compare, aes(x = wave, y = estimate)) +
+#     geom_point(aes(color = method), size = 4) +
+#     theme(legend.position = "bottom") +
+#     scale_color_manual(values = c("magenta3", "deepskyblue3", "green3"))
+# ggsave("../figures/compare_estimates_lsat.png", compare_estimates_lsat, 
+#        width = 7, height = 4, units = "in")
 ```
 
 # Model statement - Multilevel model (partial pooling)
@@ -97,47 +96,11 @@ m1 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 +
              (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
            prior = prior, cores = 4, chains = 4, 
            data = d, seed=123,
-           # file = "../results/lsat"
+           file = "../results/m1"
            )
 print(m1)
 # m1 <- readRDS("../results/lsat.RDS")
-
 ```
-```{r}
-# plotting the priors
-p_intercept_sim <-
-  tibble(x = seq(from = 0, to = 10, by = 0.1)) %>%
-  
-  ggplot(aes(x = x, y = dnorm(x, mean = 0, sd = 5))) +
-  geom_line() +
-  scale_x_continuous(breaks = seq(from = 0, to = 10, by = 1)) +
-  labs(title = "mu ~ dnorm(0, 5)", y = "density")
-p_intercept_sim
-ggsave("../figures/p_intercept_sim.pdf", p_intercept_sim, width = 7, height = 4, units = "in")
-
-p_b_sim <-
-  tibble(x = seq(from = 0, to = 10, by = 0.1)) %>%
-  
-  ggplot(aes(x = x, y = dnorm(x, mean = 0, sd = 10))) +
-  geom_line() +
-  scale_x_continuous(breaks = seq(from = 0, to = 10, by = 1)) +
-  labs(title = "b ~ dnorm(0, 10)", y = "density")
-p_b_sim
-ggsave("../figures/p_b_sim.pdf", p_b_sim, width = 7, height = 4, units = "in")
-```
-
-```{r}
-m2 <- brm( lsat ~ welle +
-             female + migback + hob.mus.making +
-             (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
-           prior = prior, cores = 4, chains = 4, 
-           data = lsat, seed=123,
-           file = "../results/lsat2")
-print(m2)
-m2 <- readRDS("../results/lsat2.RDS")
-```
-
-
 
 ## Posterior predictions for average (or marginal) school
 
@@ -180,7 +143,7 @@ gr_lsat_pred <-  ggplot( pred_df, aes( x = welle, y = Estimate, group = treated)
   scale_x_discrete("Wave", limits = seq(1:5) ) +
   theme(legend.position="bottom") +
   scale_color_brewer("treated", type = 'qual', palette = "Set1")
-ggsave("../figures/lsat_pred.pdf", gr_lsat_pred, width = 7, height = 4, units = "in")
+ggsave("../figures/lsat_pred.png", gr_lsat_pred, width = 7, height = 4, units = "in")
 gr_lsat_pred
 ```
 
@@ -198,21 +161,20 @@ teff <- tibble( teff2 = post$`b_tXw2`,
 teff_mean <- apply( X = teff, MARGIN = 2, FUN = mean )
 teff_quant <- t(apply( X = teff, MARGIN = 2, 
                      FUN = quantile, probs = c(0.1, 0.9) ))
-su_teff <- tibble( school = c(7, 7, 7, 7),
-                   wave = seq(2:5),
+su_teff <- tibble( wave = seq(1:4),
                    mean = teff_mean,
                    Q10 = teff_quant[,1],
                    Q90 = teff_quant[,2])
-saveRDS(su_teff, file = "../results/partial_pooling.RDS")
+                
 su_teff
-partial.tibble <- tibble(school = c(8,8,8,8),
-                         wave = seq(2:5),
-                         estimate = su_teff$mean,
-                         lower = NA,
-                         upper = NA,
-                         Q10 = su_teff$Q10,
-                         Q90 = su_teff$Q90,
-                         method = "partpool")
+# partial.tibble <- tibble(school = c(8,8,8,8),
+#                          wave = seq(2:5),
+#                          estimate = su_teff$mean,
+#                          lower = NA,
+#                          upper = NA,
+#                          Q10 = su_teff$Q10,
+#                          Q90 = su_teff$Q90,
+#                          method = "partpool")
 ```
 
 ```{r} 
@@ -223,7 +185,7 @@ gr_lsat_teff <- ggplot(data = su_teff,
   scale_x_discrete("Wave", limits=c("2", "3", "4", "5")) +
   geom_hline(yintercept=0) +
   ylab("Average treatment effect")
-ggsave("../figures/lsat_teff.pdf", gr_lsat_teff, width = 7, height = 4, units = "in")
+ggsave("../figures/lsat_teff.png", gr_lsat_teff, width = 7, height = 4, units = "in")
 gr_lsat_teff
 ```
 
@@ -254,7 +216,7 @@ gr_lsat_pred_across_schools <-
     school = c("1" = "School: 1", "2" = "School: 2", "3" = "School: 3",
                "4" = "School: 4", "5" = "School: 5", "6" = "School: 6" ))) +
   theme(legend.position="bottom")
-ggsave("../figures/lsat_pred_across_schools.pdf", gr_lsat_pred_across_schools, 
+ggsave("../figures/lsat_pred_across_schools.png", gr_lsat_pred_across_schools, 
        width = 7, height = 4, units = "in")
 gr_lsat_pred_across_schools
 ```
@@ -324,14 +286,13 @@ gr_lsat_teff_across_schools <-
   scale_x_discrete("Wave", limits=seq(2:6) )  +
   geom_hline(yintercept=0) + 
   theme(legend.position="bottom")
-ggsave("../figures/lsat_teff_across_schools.pdf", gr_lsat_teff_across_schools, 
+ggsave("../figures/lsat_teff_across_schools.png", gr_lsat_teff_across_schools, 
        width = 7, height = 4, units = "in")
 ggsave("../figures/lsat_teff_across_schools.png", gr_lsat_teff_across_schools, width = 7, height = 4)
 gr_lsat_teff_across_schools
 ```
 
 Try graphical illustration as in Gelman and Hill - Hierarchical models p352
-
 
 # Satisfaction with friends
 
@@ -344,7 +305,6 @@ m2 <- brm( sat_friends ~ treated + welle + tXw2 + tXw3 + tXw4 + tXw5 +
            prior = prior, cores = 4, chains = 4, 
            data = d, seed=123,
            file = "../results/sat_friends")
-print(m2)
 ```
 
 ## Posterior predictions for average (or marginal) school
@@ -367,7 +327,7 @@ gr_sat_friends_pred <-
   ylab("Satisfaction with friends") +
   scale_x_discrete("Wave", limits = seq(1:5) ) +
   theme(legend.position="bottom")
-ggsave("../figures/sat_friends_pred.pdf", gr_sat_friends_pred, width = 7, height = 4, units = "in")
+ggsave("../figures/sat_friends_pred.png", gr_sat_friends_pred, width = 7, height = 4, units = "in")
 gr_sat_friends_pred
 ```
 
@@ -397,14 +357,14 @@ gr_sat_friends_teff <- ggplot(data = su_teff,
   scale_x_discrete("Wave", limits=c("2", "3", "4", "5")) +
   geom_hline(yintercept=0) +
   ylab("Average treatment effect")
-ggsave("../figures/sat_friends_teff.pdf", gr_sat_friends_teff, width = 7, height = 4, units = "in")
+ggsave("../figures/sat_friends_teff.png", gr_sat_friends_teff, width = 7, height = 4, units = "in")
 gr_sat_friends_teff
 ```
 
 ## Posterior predictions for existing schools
 
 ```{r}
-y_pred <- fitted( m4, newdata = x_pred_school, 
+y_pred <- fitted( m2, newdata = x_pred_school, 
                   re_formula = ~(1 + treated + tXw2 + tXw3 +
                                    tXw4 + tXw5 | school) ) 
 pred_df <- cbind.data.frame( y_pred, x_pred_school )
@@ -418,7 +378,7 @@ gr_sat_friends_pred_across_schools <-
     school = c("1" = "School: 1", "2" = "School: 2", "3" = "School: 3",
                "4" = "School: 4", "5" = "School: 5", "6" = "School: 6" ))) +
   theme(legend.position="bottom")
-ggsave("../figures/sat_friends_pred_across_schools.pdf", gr_sat_friends_pred_across_schools, 
+ggsave("../figures/sat_friends_pred_across_schools.png", gr_sat_friends_pred_across_schools, 
        width = 7, height = 4, units = "in")
 gr_sat_friends_pred_across_schools
 ```
@@ -487,7 +447,7 @@ gr_sat_friends_teff_across_schools <-
   scale_x_discrete("Wave", limits=seq(2:6) )  +
   geom_hline(yintercept=0) + 
   theme(legend.position="bottom")
-ggsave("../figures/sat_friends_teff_across_schools.pdf", gr_sat_friends_teff_across_schools, 
+ggsave("../figures/sat_friends_teff_across_schools.png", gr_sat_friends_teff_across_schools, 
        width = 7, height = 4, units = "in")
 gr_sat_friends_teff_across_schools
 ```
@@ -503,13 +463,12 @@ m3 <- brm( sat_class ~ treated + welle + tXw2 + tXw3 + tXw4 + tXw5 +
            prior = prior, cores = 4, chains = 4, 
            data = d, seed=123,
            file = "../results/sat_class")
-print(m4)
 ```
 
 ## Posterior predictions for average (or marginal) school
 
 ```{r}
-y_pred <- fitted( m4, newdata = x_pred_avg, 
+y_pred <- fitted( m3, newdata = x_pred_avg, 
                   re_formula = NA,
                   probs = c(0.25, 0.75) )
 pred_df <- cbind.data.frame( y_pred, x_pred_avg )
@@ -526,7 +485,7 @@ gr_sat_class_pred <-
   ylab("Satisfaction with class") +
   scale_x_discrete("Wave", limits = seq(1:5) ) +
   theme(legend.position="bottom")
-ggsave("../figures/sat_class_pred.pdf", gr_sat_class_pred, width = 7, height = 4, units = "in")
+ggsave("../figures/sat_class_pred.png", gr_sat_class_pred, width = 7, height = 4, units = "in")
 gr_sat_class_pred
 ```
 
@@ -556,14 +515,14 @@ gr_sat_class_teff <- ggplot(data = su_teff,
   scale_x_discrete("Wave", limits=c("2", "3", "4", "5")) +
   geom_hline(yintercept=0) +
   ylab("Average treatment effect")
-ggsave("../figures/sat_class_teff.pdf", gr_sat_class_teff, width = 7, height = 4, units = "in")
+ggsave("../figures/sat_class_teff.png", gr_sat_class_teff, width = 7, height = 4, units = "in")
 gr_sat_class_teff
 ```
 
 ## Posterior predictions for existing schools
 
 ```{r}
-y_pred <- fitted( m4, newdata = x_pred_school, 
+y_pred <- fitted( m3, newdata = x_pred_school, 
                   re_formula = ~(1 + treated + tXw2 + tXw3 +
                                    tXw4 + tXw5 | school) ) 
 pred_df <- cbind.data.frame( y_pred, x_pred_school )
@@ -577,7 +536,7 @@ gr_sat_class_pred_across_schools <-
     school = c("1" = "School: 1", "2" = "School: 2", "3" = "School: 3",
                "4" = "School: 4", "5" = "School: 5", "6" = "School: 6" ))) +
   theme(legend.position="bottom")
-ggsave("../figures/sat_class_pred_across_schools.pdf", gr_sat_class_pred_across_schools, 
+ggsave("../figures/sat_class_pred_across_schools.png", gr_sat_class_pred_across_schools, 
        width = 7, height = 4, units = "in")
 gr_sat_class_pred_across_schools
 ```
@@ -646,7 +605,7 @@ gr_sat_class_teff_across_schools <-
   scale_x_discrete("Wave", limits=seq(2:6) )  +
   geom_hline(yintercept=0) + 
   theme(legend.position="bottom")
-ggsave("../figures/sat_class_teff_across_schools.pdf", gr_sat_class_teff_across_schools, 
+ggsave("../figures/sat_class_teff_across_schools.png", gr_sat_class_teff_across_schools, 
        width = 7, height = 4, units = "in")
 gr_sat_class_teff_across_schools
 ```
@@ -663,7 +622,6 @@ m4 <- brm( sat_school ~ treated + welle + tXw2 + tXw3 + tXw4 + tXw5 +
            prior = prior, cores = 4, chains = 4, 
            data = d, seed=123,
            file = "../results/sat_school")
-print(m1)
 ```
 
 
@@ -686,7 +644,7 @@ gr_sat_school_pred <-  ggplot( pred_df, aes( x = welle, y = Estimate, group = tr
   ylab("Satisfaction with school") +
   scale_x_discrete("Wave", limits = seq(1:5) ) +
   theme(legend.position="bottom")
-ggsave("../figures/sat_school_pred.pdf", gr_sat_school_pred, width = 7, height = 4, units = "in")
+ggsave("../figures/sat_school_pred.png", gr_sat_school_pred, width = 7, height = 4, units = "in")
 gr_sat_school_pred
 ```
 
@@ -716,7 +674,7 @@ gr_sat_school_teff <- ggplot(data = su_teff,
   scale_x_discrete("Wave", limits=c("2", "3", "4", "5")) +
   geom_hline(yintercept=0) +
   ylab("Average treatment effect")
-ggsave("../figures/sat_school_teff.pdf", gr_lsat_teff, width = 7, height = 4, units = "in")
+ggsave("../figures/sat_school_teff.png", gr_lsat_teff, width = 7, height = 4, units = "in")
 gr_sat_school_teff
 ```
 
@@ -737,7 +695,7 @@ gr_sat_school_pred_across_schools <-
     school = c("1" = "School: 1", "2" = "School: 2", "3" = "School: 3",
                "4" = "School: 4", "5" = "School: 5", "6" = "School: 6" ))) +
   theme(legend.position="bottom")
-ggsave("../figures/sat_school_pred_across_schools.pdf", gr_lsat_pred_across_schools, 
+ggsave("../figures/sat_school_pred_across_schools.png", gr_lsat_pred_across_schools, 
        width = 7, height = 4, units = "in")
 gr_sat_school_pred_across_schools
 ```
@@ -806,7 +764,7 @@ gr_sat_school_teff_across_schools <-
   scale_x_discrete("Wave", limits=seq(2:6) )  +
   geom_hline(yintercept=0) + 
   theme(legend.position="bottom")
-ggsave("../figures/sat_school_teff_across_schools.pdf", gr_sat_school_teff_across_schools, 
+ggsave("../figures/sat_school_teff_across_schools.png", gr_sat_school_teff_across_schools, 
        width = 7, height = 4, units = "in")
 gr_sat_school_teff_across_schools
 ```

@@ -33,33 +33,61 @@ library(RColorBrewer)
 library(xtable)
 library(knitr)
 library(kableExtra)
+library(ggplot2)
+library(extrafont)
+library(grid)
+library(gridExtra)
+# windowsFonts(CMU = windowsFont("CMU Serif")) # Define CMU font as the computer modern serif font that is used in my latex template
+
+theme_set(theme_bw(base_family = "Times New Roman")) # Set the gg-theme to use the latex font
+# Sys.setenv(LANG="en") # get better error messages for googling
 ```
 
 
 # Data
 
 ```{r}
-welle1 <- readRDS("data/d_welle1s.RDS")
+welle1 <- readRDS("../data/welle1.RDS")
+welle2 <- readRDS("../data/welle2.RDS")
+welle3 <- readRDS("../data/welle3.RDS")
+welle4 <- readRDS("../data/welle4.RDS")
+welle5 <- readRDS("../data/welle5.RDS")
 ```
 
 
 ## Pre-treatment Analysis
-```{r, eval=FALSE}
-# Mean differences life satisfaction treatment group vs. control group
-welle1 <- left_join(welle1, welle1 %>% group_by(school, treated) %>%
-                      summarise( mean.lsat = mean(lsat, na.rm = TRUE), 
-                                 sd.lsat=sd(lsat, na.rm=TRUE) ),
-                    by=c("school", "treated"))
-lsat_pre_treat <- ggplot( welle1, aes(x=school, y=mean.lsat, fill=treated)) +
-  geom_bar (stat="identity", position = "dodge") + coord_cartesian(ylim = c(0, 11)) + labs(title = "Life satisfaction", caption = "Mean pretreatment life satisfaction (+ 1 sd) (wave 1) for treatment and control group per School") + 
-  geom_errorbar(aes(ymin=mean.lsat-sd.lsat, ymax=mean.lsat+sd.lsat), width=.2,
-                position=position_dodge(.9)) +
-  scale_fill_brewer(palette="Blues")
 
-ggsave("../figures/lsat_pre_treat.pdf", lsat_pre_treat, width = 7, height = 5, units = "in")
+```{r}
 
-lsat_pre_treat
+sum_satisfaction <-
+  tibble(
+    variable = c("Life satisfaction",
+                "Satisfaction friends",
+                "Satisfaction class",
+                "Satisfaction school"),
+    mean = c(mean( welle1$lsat, na.rm=T),
+                  mean(welle1$sat_friends, na.rm=T),
+                  mean(welle1$sat_class, na.rm=T),
+                  mean(welle1$sat_school, na.rm=T)),
+    sd = c(sd(welle1$lsat, na.rm=T),
+           sd(welle1$lsat, na.rm=T),
+           sd(welle1$lsat, na.rm=T),
+           sd(welle1$lsat, na.rm=T))
+    )
+    
+saveRDS(sum_satisfaction, file = "../results/sum_satisfaction.RDS")
+
 ```
+
+```{r}
+lsat_bar <- ggplot(welle1, aes(x=lsat)) +
+  geom_bar((aes(y=(..count..)/sum(..count..))), fill = "#011f4b") +
+  labs(x="Life satisfaction", y="Density") +
+  scale_x_discrete( limits = seq(0, 10) )
+ggsave("../figures/lsat_bar.png", lsat_bar, width = 7, height = 5, units = "in")
+```
+
+
 
 ```{r}
 # Mean differences life satisfaction treatment group vs. control group
@@ -70,13 +98,14 @@ lsat_pre_treat <- ggplot( su_welle1,
                           aes(x=school, y=mean.lsat, fill=treated) ) +
   geom_bar ( stat="identity", position = "dodge" ) + 
   coord_cartesian( ylim = c(0, 11) ) + 
-  labs(title = "Life satisfaction", 
-       caption = "Mean pretreatment life satisfaction (+ 1 sd) (wave 1) for treatment and control group per School") +
+  labs(x = "School", y = "Mean Life Satisfaction",
+       title = "Life satisfaction", 
+       caption = "Mean pretreatment life satisfaction (+ 1 sd) (wave 1) for treatment and control group per school") +
   geom_errorbar( aes(ymin=mean.lsat-sd.lsat, ymax=mean.lsat+sd.lsat), 
                  width=.2, position=position_dodge(.9) ) +
   scale_fill_brewer(palette="Blues")
 
-ggsave("../figures/lsat_pre_treat.pdf", lsat_pre_treat, width = 7, height = 5, units = "in")
+ggsave("../figures/lsat_pre_treat.png", lsat_pre_treat, width = 7, height = 5, units = "in")
 
 lsat_pre_treat
 ```
@@ -89,73 +118,76 @@ sat_friends_pre_treat <- ggplot( su_welle1,
                           aes(x=school, y=mean.sat.friends, fill=treated) ) +
   geom_bar ( stat="identity", position = "dodge" ) + 
   coord_cartesian( ylim = c(0, 11) ) + 
-  labs(title = "Satisfaction with friends", 
+  labs(x = "School", y = "Mean Satisfaction with Friends",
+       title = "Satisfaction with Friends", 
        caption = "Mean pretreatment satisfaction with friends (+ 1 sd) (wave 1) for treatment and control group per school") +
   geom_errorbar( aes(ymin=mean.sat.friends-sd.sat.friends, ymax=mean.sat.friends+sd.sat.friends), 
                  width=.2, position=position_dodge(.9) ) +
   scale_fill_brewer(palette="Blues")
 
-ggsave("../figures/sat_friends_pre_treat.pdf", sat_friends_pre_treat, width = 7, height = 5, units = "in")
+ggsave("../figures/sat_friends_pre_treat.png", sat_friends_pre_treat, width = 7, height = 5, units = "in")
 
 sat_friends_pre_treat
 ```
 
 ```{r}
-# Mean differences satisfaction with friends treatment group vs. control group
+# Mean differences satisfaction with class treatment group vs. control group
 su_welle1 <- welle1 %>% group_by(school, treated) %>%
-                      summarise( mean.sat.friends = mean(sat_friends, na.rm = TRUE), 
-                                 sd.sat.friends=sd(sat_friends, na.rm=TRUE) )
-sat_friends_pre_treat <- ggplot( su_welle1, 
-                          aes(x=school, y=mean.sat.friends, fill=treated) ) +
+                      summarise(mean.sat.class = mean(sat_class, na.rm = TRUE), 
+                                 sd.sat.class=sd(sat_class, na.rm=TRUE) )
+sat_class_pre_treat <- ggplot( su_welle1, 
+                          aes(x=school, y=mean.sat.class, fill=treated) ) +
   geom_bar ( stat="identity", position = "dodge" ) + 
   coord_cartesian( ylim = c(0, 11) ) + 
-  labs(title = "Satisfaction with friends", 
-       caption = "Mean pretreatment satisfaction with friends (+ 1 sd) (wave 1) for treatment and control group per school") +
-  geom_errorbar( aes(ymin=mean.sat.friends-sd.sat.friends, ymax=mean.sat.friends+sd.sat.friends), 
+  labs(x = "School", y = "Mean Satisfaction with Class",
+       title = "Satisfaction with class", 
+       caption = "Mean pretreatment satisfaction with class (+ 1 sd) (wave 1) for treatment and control group per school") +
+  geom_errorbar( aes(ymin=mean.sat.class-sd.sat.class, ymax=mean.sat.class+sd.sat.class), 
                  width=.2, position=position_dodge(.9) ) +
   scale_fill_brewer(palette="Blues")
 
-ggsave("../figures/sat_friends_pre_treat.pdf", sat_friends_pre_treat, width = 7, height = 5, units = "in")
-
-sat_friends_pre_treat
-```
-
-```{r}
-welle1 <- left_join(welle1, welle1 %>% group_by(school, treated) %>% summarise( mean.clsat = mean(sat_class, na.rm = TRUE),
-                                                                                sd.clsat=sd(sat_class, na.rm=TRUE)),
-                    by=c("school", "treated"))
-
-sat_class_pre_treat <- ggplot (welle1, aes(x=school, y=mean.clsat, fill=treated)) + 
-  geom_bar (stat="identity", position = "dodge") + coord_cartesian(ylim = c(0, 11)) + labs(title = "Satisfaction with the class", caption = "Mean pretreatment satisfaction (+ 1 sd) with the class (wave 1) for treatment and control group per School") + 
-  geom_errorbar(aes(ymin=mean.clsat-sd.frsat, ymax=mean.clsat+sd.frsat), width=.2,
-                position=position_dodge(.9)) +
-  scale_fill_brewer(palette="Blues")
-
-ggsave("../figures/sat_class_pre_treat.pdf", sat_class_pre_treat, width = 7, height = 5, units = "in")
+ggsave("../figures/sat_class_pre_treat.png", sat_class_pre_treat, width = 7, height = 5, units = "in")
 
 sat_class_pre_treat
 ```
 
 ```{r}
+# Mean differences satisfaction with school treatment group vs. control group
+su_welle1 <- welle1 %>% group_by(school, treated) %>%
+                      summarise( mean.sat.school = mean(sat_school, na.rm = TRUE), 
+                                 sd.sat.school=sd(sat_school, na.rm=TRUE) )
+sat_school_pre_treat <- ggplot( su_welle1, 
+                          aes(x=school, y=mean.sat.school, fill=treated) ) +
+  geom_bar ( stat="identity", position = "dodge" ) + 
+  coord_cartesian( ylim = c(0, 11) ) + 
+  labs(x = "School", y = "Mean Satisfaction with School",
+       title = "Satisfaction with school", 
+       caption = "Mean pretreatment satisfaction with school (+ 1 sd) (wave 1) for treatment and control group per school") +
+  geom_errorbar( aes(ymin=mean.sat.school-sd.sat.school, ymax=mean.sat.school+sd.sat.school), 
+                 width=.2, position=position_dodge(.9) ) +
+  scale_fill_brewer(palette="Blues")
+
+ggsave("../figures/sat_school_pre_treat.png", sat_school_pre_treat, width = 7, height = 5, units = "in")
+
+sat_school_pre_treat
+```
+```{r}
+grid.arrange(lsat_pre_treat, sat_friends_pre_treat, sat_class_pre_treat, sat_school_pre_treat)
+```
+
+
+
+```{r}
 vars <- c("lsat","female", "sat_friends", "sat_class", "class.prob", "class.excl", "note.deu", "note.mat", "note.mus", "hob.mus.making", "dauer.mus.lis", "dauer.mus.making", "play.instr", "mus.active", "migback")
-smd <- CreateTableOne(vars = vars, strata = "treated", data = welle1, test = FALSE, includeNA = F)
+smd <- CreateTableOne(vars = vars, strata = "treated", data = welle1, test = FALSE, includeNA = F, smd = TRUE)
 
-smdtab <- print(smd, smd = TRUE)
+# rownames(smd) <- c("N", "Life satisfaction", "Sex", "male", "female", "unknown", "Satisfaction with friends", "Satisfaction with class", "Grade german", "Grade maths", "Grade music", "Hobby music 'yes' (%)", "Duration music listening", "Duration music making", "not at all", "ca 30 min", "ca 1-2 hours", "ca 3-4 hours", "more than 4 hours", "Playing instrument 'yes' (%)", "Musically active", "Migration background", "  native", "  immigrant", "  unknown" )
+# colnames(smdtab) <- c("control group", "treatment group", "SMD")
 
+extract_smd <- ExtractSmd(smd)
 
+saveRDS(object = extract_smd, file = "../results/extract_smd.Rds")
 
-rownames(smdtab) <- c("N", "Life satisfaction", "Sex", "male", "female", "unknown", "Satisfaction with friends", "Satisfaction with class", "Grade german", "Grade maths", "Grade music", "Hobby music 'yes' (%)", "Duration music listening", "Duration music making", "not at all", "ca 30 min", "ca 1-2 hours", "ca 3-4 hours", "more than 4 hours", "Playing instrument 'yes' (%)", "Musically active", "Migration background", "  native", "  immigrant", "  unknown" )
-colnames(smdtab) <- c("control group", "treatment group", "SMD")
-
-ExtractSmd(smd)
-SMD <- ExtractSmd(smd)
-
-test <- data.frame(SMD)
-ggplot(data = test, aes)
-
-kable(SMD)
-saveRDS(object = SMD, file = "C:/Users/vera/Documents/NEUER-VERSUCH-OHNE-CHILD-UND-PARENT/results/smd.Rds")
-saveRDS(object = smdtab, file = "C:/Users/vera/Documents/NEUER-VERSUCH-OHNE-CHILD-UND-PARENT/results/smdtab.Rds")
 
 # 2020-09-03 vs: Preferred method to compute smd was "stddiff" but an error occured that I could not fix:
 # stddiff.numeric(data=welle1, gcol=4, vcol=5)
@@ -166,6 +198,7 @@ saveRDS(object = smdtab, file = "C:/Users/vera/Documents/NEUER-VERSUCH-OHNE-CHIL
 ```
 
 ```{r}
+d <- readRDS("../data/d_satisfaction.RDS")
 
 su_d <- d %>% group_by(school, welle) %>%
                       summarise( mean.lsat = mean(lsat, na.rm = TRUE))
@@ -185,7 +218,9 @@ lsat_vs_time_by_school <- ggplot(su_d, aes(y = mean.lsat, x = welle, group = sch
         "5" = "#00B6EB",
         "6" = "#C49A00")
   ) +
-  geom_line(aes(color = school))
+  geom_line(aes(color = school)) +
+  labs(x = "Wave", y = "Mean Life Satisfaction",
+       caption = "Life Satisfaction through time")
 
 ggsave("../figures/lsat_vs_time_by_school.png", lsat_vs_time_by_school, width = 7, height = 5, units = "in")
   
@@ -207,10 +242,107 @@ lsat_vs_time_by_school_treated <- ggplot(data = subset(su_d, treated == 1), aes(
         "5" = "#00B6EB",
         "6" = "#C49A00")
   ) +
-  geom_line(aes(color = school))
+  geom_line(aes(color = school)) +
+  labs(x = "Wave", y = "Mean Life Satisfaction",
+       caption = "Life Satisfaction through time in the treatment group")
 
 ggsave("../figures/lsat_vs_time_by_school_treated.png", lsat_vs_time_by_school_treated, width = 7, height = 5, units = "in")
 ```
+
+```{r}
+d_sum <- welle1 %>% 
+  select(pid, welle, migback, female)
+
+genderT <- table(d$female)
+genderT
+
+summary(d$female, factor(d$pid))
+
+df <- unique(d[c("pid", "female", "migback")])
+table(df$female)
+as.data.frame(table(df$pid))
+
+nrow(subset(welle1, school ==1))
+nrow(subset(welle1, school ==2))
+nrow(subset(welle2, school ==3))
+nrow(subset(welle2, school ==4))
+nrow(subset(welle1, school ==5))
+nrow(subset(welle1, school ==6))
+
+n_obs <- tibble(School = c("1", "2", "3", "4", "5", "6", "Sum"),
+       "Wave 1" = c(nrow(subset(welle1, school ==1)),
+                  nrow(subset(welle1, school ==2)),
+                  nrow(subset(welle1, school ==3)),
+                  nrow(subset(welle1, school ==4)),
+                  nrow(subset(welle1, school ==5)),
+                  nrow(subset(welle1, school ==6)),
+                  nrow(welle1)
+                 ),
+       "Wave 2" = c(nrow(subset(welle2, school ==1)),
+                  nrow(subset(welle2, school ==2)),
+                  nrow(subset(welle2, school ==3)),
+                  nrow(subset(welle2, school ==4)),
+                  nrow(subset(welle2, school ==5)),
+                  nrow(subset(welle2, school ==6)),
+                  nrow(welle2)
+                 ),
+       "Wave 3" = c(nrow(subset(welle3, school ==1)),
+                  nrow(subset(welle3, school ==2)),
+                  nrow(subset(welle3, school ==3)),
+                  nrow(subset(welle3, school ==4)),
+                  nrow(subset(welle3, school ==5)),
+                  nrow(subset(welle3, school ==6)),
+                  nrow(welle3)
+                 ),
+       "Wave 4" = c(nrow(subset(welle4, school ==1)),
+                  nrow(subset(welle4, school ==2)),
+                  nrow(subset(welle4, school ==3)),
+                  nrow(subset(welle4, school ==4)),
+                  nrow(subset(welle4, school ==5)),
+                  nrow(subset(welle4, school ==6)),
+                  nrow(welle4)
+                 ),
+       "Wave 5" = c(nrow(subset(welle5, school ==1)),
+                  nrow(subset(welle5, school ==2)),
+                  nrow(subset(welle5, school ==3)),
+                  nrow(subset(welle5, school ==4)),
+                  nrow(subset(welle5, school ==5)),
+                  nrow(subset(welle5, school ==6)),
+                  nrow(welle5)
+                 ),
+       Sum = c(nrow(subset(d, school ==1)),
+               nrow(subset(d, school ==2)),
+               nrow(subset(d, school ==3)),
+               nrow(subset(d, school ==4)),
+               nrow(subset(d, school ==5)),
+               nrow(subset(d, school ==6)),
+               nrow(d)
+              )
+        )
+saveRDS(n_obs, "../results/n_obs.RDS")
+kable(n_obs)
+
+n_obs_treat <- tibble(
+  " " = c("Treatment group", "Control group"),
+  "Wave 1" = c(nrow(subset(welle1, treated==1)),
+               nrow(subset(welle1, treated==0))),
+  "Wave 2" = c(nrow(subset(welle2, treated==1)),
+               nrow(subset(welle2, treated==0))),
+  "Wave 3" = c(nrow(subset(welle3, treated==1)),
+               nrow(subset(welle3, treated==0))),
+  "Wave 4" = c(nrow(subset(welle4, treated==1)),
+               nrow(subset(welle4, treated==0))),
+  "Wave 5" = c(nrow(subset(welle5, treated==1)),
+               nrow(subset(welle5, treated==0)))
+)
+saveRDS(n_obs_treat, "../results/n_obs_treat.RDS")
+kable(n_obs_treat)
+
+d %>% filter( welle==5 ) %>% select(school, treated) %>% group_by(treated) %>% table()
+
+kable(d %>% select(school, welle) %>% group_by(school) %>% table())
+```
+
 
 
 # Original computing environment

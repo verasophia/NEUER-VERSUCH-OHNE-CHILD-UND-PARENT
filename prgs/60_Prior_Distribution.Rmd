@@ -177,38 +177,38 @@ ggsave("../figures/lsat_predicted.png", lsat_predicted, width = 5, height = 3, u
 ```{r}
 # plotting the priors
 p_intercept_sim <-
-  tibble(x = seq(from = 0, to = 10, by = 0.1)) %>%
+  tibble(x = seq(from = -10, to = 10, by = 0.1)) %>%
   
   ggplot(aes(x = x, y = dnorm(x, mean = 7, sd = 2))) +
   geom_line() +
-  scale_x_continuous(breaks = seq(from = 0, to = 10, by = 1)) +
+  scale_x_continuous(breaks = seq(from = -10, to = 10, by = 1)) +
   labs(title = "intercept ~ dnorm(7,2)", y = "density")
 p_intercept_sim
 
 p_b_sim <-
-  tibble(x = seq(from = 0, to = 10, by = 0.1)) %>%
+  tibble(x = seq(from = -10, to = 10, by = 0.1)) %>%
   
   ggplot(aes(x = x, y = dnorm(x, mean = 0, sd = 1))) +
   geom_line() +
-  scale_x_continuous(breaks = seq(from = 0, to = 10, by = 1)) +
+  scale_x_continuous(breaks = seq(from = -10, to = 10, by = 1)) +
   labs(title = "b ~ dnorm(0, 1)", y = "density")
 p_b_sim
 
 p_sd_sim <-
-  tibble(x = seq(from = 0, to = 10, by = 0.1)) %>%
+  tibble(x = seq(from = -10, to = 10, by = 0.1)) %>%
   
   ggplot(aes(x = x, y = dcauchy(x, location = 0, scale = 1))) +
   geom_line() +
-  scale_x_continuous(breaks = seq(from = 0, to = 10, by = 1)) +
+  scale_x_continuous(breaks = seq(from = -10, to = 10, by = 1)) +
   labs(title = "sd ~ dcauchy(0, 1)", y = "density")
 p_sd_sim
 
 p_sigma_sim <-
-  tibble(x = seq(from = 0, to = 10, by = 0.1)) %>%
+  tibble(x = seq(from = -10, to = 10, by = 0.1)) %>%
   
   ggplot(aes(x = x, y = dexp(x, rate = 0.5))) +
   geom_line() +
-  scale_x_continuous(breaks = seq(from = 0, to = 10, by = 1)) +
+  scale_x_continuous(breaks = seq(from = -10, to = 10, by = 1)) +
   labs(title = "sigma ~ dexp(0.5)", y = "density")
 p_sigma_sim
 

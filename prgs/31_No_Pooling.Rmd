@@ -43,50 +43,49 @@ No pooling - hier führen wir eine einzelne Regression für jede Schule durch.
 
 
 ```{r}
-plm(formula = lsat ~ treated * welle + hob.mus.making + female + migback
-    , data = d.p
-    , model = "between"
-    )
+# plm(formula = lsat ~ treated * welle + hob.mus.making + female + migback
+#     , data = d.p
+#     , model = "between"
+#     )
 ```
 
 
 ```{r}
-sch1 <- plm(formula = lsat ~ treated*welle + hob.mus.making + female + migback
-      , data = 
-      subset(
-      d.p
-      , school == "1")
-      , model = "between"
-      )
+# sch1 <- plm(formula = lsat ~ treated*welle + hob.mus.making + female + migback
+#       , data = 
+#       subset(
+#       d.p
+#       , school == "1")
+#       , model = "between"
+#       )
 ```
 
 ```{r}
-sch2 <- plm(formula = lsat ~ treated*welle + hob.mus.making + female + migback
-      , data = 
-      subset(
-      d.p
-      , school == "2")
-      , model = "between"
-      )
+# sch2 <- plm(formula = lsat ~ treated*welle + hob.mus.making + female + migback
+#       , data = 
+#       subset(
+#       d.p
+#       , school == "2")
+#       , model = "between"
+#       )
 ```
 
 # Data
 
 ```{r}
 d <- readRDS("../data/d_satisfaction.RDS")
-describe(d)
 ```
 
 # Model statement - Linear model (no-pooling)
 ```{r}
 d.p <- pdata.frame(d, index = c("pid", "welle"))
-m0 <- lm(lsat ~ treated + tXw2 + tXw3 + tXw4 + tXw5 + 
+lm1 <- lm(lsat ~ treated + tXw2 + tXw3 + tXw4 + tXw5 + 
              female + migback + hob.mus.making +
              factor(school), data=d)
-summary(m0)
+summary(lm1)
 ```
 ```{r}
-lm(formula = lsat ~ tXw2 + tXw3 + tXw4 + tXw5 + factor(school) + factor (welle) + hob.mus.making + female + migback
+lm2 <- lm(formula = lsat ~ tXw2 + tXw3 + tXw4 + tXw5 + factor(school) + factor (welle) + hob.mus.making + female + migback
       , data = d
       )
 ```
@@ -103,7 +102,7 @@ lm(formula = lsat ~ treated + hob.mus.making + female + migback
 
 
 ```{r}
-sch1 <- plm(formula = lsat ~  tXw2 + tXw3 + tXw4 + tXw5 + hob.mus.making + female + migback
+sch1 <- plm(formula = lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making
       , data = subset(d.p, school == 1)
       , model = "pooling"
       )
@@ -120,16 +119,16 @@ wave3.sch1.se <- summary(sch1)$coefficient["tXw31",2]
 wave4.sch1.se <- summary(sch1)$coefficient["tXw41",2]
 wave5.sch1.se <- summary(sch1)$coefficient["tXw51",2]
 sch1.df <- data.frame(school = c(1, 1, 1, 1),
-                         wave = seq(1:4) + 1  ,
+                         wave = seq(1:4),
                          estimate = c(wave2.sch1, wave3.sch1, wave4.sch1, wave5.sch1),
-                         lower = c(wave2.sch1 - wave2.sch1.se,
-                                   wave3.sch1 - wave3.sch1.se,
-                                   wave4.sch1 - wave4.sch1.se,
-                                   wave5.sch1 - wave5.sch1.se),
-                         upper = c(wave2.sch1 + wave2.sch1.se,
-                                   wave3.sch1 + wave3.sch1.se,
-                                   wave4.sch1 + wave4.sch1.se,
-                                   wave5.sch1 + wave5.sch1.se))
+                         lower = c(wave2.sch1 - 2*wave2.sch1.se,
+                                   wave3.sch1 - 2*wave3.sch1.se,
+                                   wave4.sch1 - 2*wave4.sch1.se,
+                                   wave5.sch1 - 2*wave5.sch1.se),
+                         upper = c(wave2.sch1 + 2*wave2.sch1.se,
+                                   wave3.sch1 + 2*wave3.sch1.se,
+                                   wave4.sch1 + 2*wave4.sch1.se,
+                                   wave5.sch1 + 2*wave5.sch1.se))
 sch1.df
 ```
 ```{r}
@@ -137,14 +136,13 @@ ggplot(data = sch1.df, aes(x = wave, y = estimate)) +
   geom_pointrange(aes(ymin = lower, 
                       ymax = upper),
                   position=position_dodge(width=0.40)) +
-  scale_x_discrete("Wave", limits=seq(2:6) )  +
+  scale_x_discrete("Wave", limits=seq(1:5) )  +
   geom_hline(yintercept=0) + 
-  xlim(2, 5)
   theme(legend.position="bottom")
 ```
 
 ```{r}
-sch2 <- plm(formula = lsat ~ welle + tXw2 + tXw3 + tXw4 + tXw5 + hob.mus.making + female + migback
+sch2 <- plm(formula = lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making
       , data = subset(d.p, school == 2)
       , model = "pooling"
       )
@@ -163,14 +161,14 @@ wave5.sch2.se <- summary(sch2)$coefficient["tXw51",2]
 sch2.df <- data.frame(school = c(2, 2, 2, 2),
                          wave = seq(2:5),
                          estimate = c(wave2.sch2, wave3.sch2, wave4.sch2, wave5.sch2),
-                         lower = c(wave2.sch2 - wave2.sch2.se,
-                                   wave3.sch2 - wave3.sch2.se,
-                                   wave4.sch2 - wave4.sch2.se,
-                                   wave5.sch2 - wave5.sch2.se),
-                         upper = c(wave2.sch2 + wave2.sch2.se,
-                                   wave3.sch2 + wave3.sch2.se,
-                                   wave4.sch2 + wave4.sch2.se,
-                                   wave5.sch2 + wave5.sch2.se))
+                         lower = c(wave2.sch2 - 2*wave2.sch2.se,
+                                   wave3.sch2 - 2*wave3.sch2.se,
+                                   wave4.sch2 - 2*wave4.sch2.se,
+                                   wave5.sch2 - 2*wave5.sch2.se),
+                         upper = c(wave2.sch2 + 2*wave2.sch2.se,
+                                   wave3.sch2 + 2*wave3.sch2.se,
+                                   wave4.sch2 + 2*wave4.sch2.se,
+                                   wave5.sch2 + 2*wave5.sch2.se))
 sch2.df
 ```
 ```{r}
@@ -178,13 +176,13 @@ ggplot(data = sch2.df, aes(x = wave, y = estimate)) +
   geom_pointrange(aes(ymin = lower, 
                       ymax = upper),
                   position=position_dodge(width=0.40)) +
-  scale_x_discrete("Wave", limits=seq(2:6) )  +
+  scale_x_discrete("Wave", limits=seq(1:5) )  +
   geom_hline(yintercept=0) + 
   theme(legend.position="bottom")
 ```
 
 ```{r}
-sch3 <- plm(formula = lsat ~ welle + tXw2 + tXw3 + tXw4 + tXw5 + hob.mus.making + female + migback
+sch3 <- plm(formula = lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making
       , data = subset(d.p, school == 3)
       , model = "pooling"
       )
@@ -203,14 +201,14 @@ wave5.sch3.se <- summary(sch3)$coefficient["tXw51",2]
 sch3.df <- data.frame(school = c(3, 3, 3, 3),
                          wave = seq(2:5),
                          estimate = c(wave2.sch3, wave3.sch3, wave4.sch3, wave5.sch3),
-                         lower = c(wave2.sch3 - wave2.sch3.se,
-                                   wave3.sch3 - wave3.sch3.se,
-                                   wave4.sch3 - wave4.sch3.se,
-                                   wave5.sch3 - wave5.sch3.se),
-                         upper = c(wave2.sch3 + wave2.sch3.se,
-                                   wave3.sch3 + wave3.sch3.se,
-                                   wave4.sch3 + wave4.sch3.se,
-                                   wave5.sch3 + wave5.sch3.se))
+                         lower = c(wave2.sch3 - 2*wave2.sch3.se,
+                                   wave3.sch3 - 2*wave3.sch3.se,
+                                   wave4.sch3 - 2*wave4.sch3.se,
+                                   wave5.sch3 - 2*wave5.sch3.se),
+                         upper = c(wave2.sch3 + 2*wave2.sch3.se,
+                                   wave3.sch3 + 2*wave3.sch3.se,
+                                   wave4.sch3 + 2*wave4.sch3.se,
+                                   wave5.sch3 + 2*wave5.sch3.se))
 sch3.df
 ```
 ```{r}
@@ -218,13 +216,13 @@ ggplot(data = sch3.df, aes(x = wave, y = estimate)) +
   geom_pointrange(aes(ymin = lower, 
                       ymax = upper),
                   position=position_dodge(width=0.40)) +
-  scale_x_discrete("Wave", limits=seq(2:6) )  +
+  scale_x_discrete("Wave", limits=seq(1:5) )  +
   geom_hline(yintercept=0) + 
   theme(legend.position="bottom")
 ```
 
 ```{r}
-sch4 <- plm(formula = lsat ~ welle + tXw2 + tXw3 + tXw4 + tXw5 + hob.mus.making + female + migback
+sch4 <- plm(formula = lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making
       , data = subset(d.p, school == 4)
       , model = "pooling"
       )
@@ -243,14 +241,14 @@ wave5.sch4.se <- summary(sch4)$coefficient["tXw51",2]
 sch4.df <- data.frame(school = c(4, 4, 4, 4),
                          wave = seq(2:5),
                          estimate = c(wave2.sch4, wave3.sch4, wave4.sch4, wave5.sch4),
-                         lower = c(wave2.sch4 - wave2.sch4.se,
-                                   wave3.sch4 - wave3.sch4.se,
-                                   wave4.sch4 - wave4.sch4.se,
-                                   wave5.sch4 - wave5.sch4.se),
-                         upper = c(wave2.sch4 + wave2.sch4.se,
-                                   wave3.sch4 + wave3.sch4.se,
-                                   wave4.sch4 + wave4.sch4.se,
-                                   wave5.sch4 + wave5.sch4.se))
+                         lower = c(wave2.sch4 - 2*wave2.sch4.se,
+                                   wave3.sch4 - 2*wave3.sch4.se,
+                                   wave4.sch4 - 2*wave4.sch4.se,
+                                   wave5.sch4 - 2*wave5.sch4.se),
+                         upper = c(wave2.sch4 + 2*wave2.sch4.se,
+                                   wave3.sch4 + 2*wave3.sch4.se,
+                                   wave4.sch4 + 2*wave4.sch4.se,
+                                   wave5.sch4 + 2*wave5.sch4.se))
 sch4.df
 ```
 ```{r}
@@ -258,13 +256,13 @@ ggplot(data = sch4.df, aes(x = wave, y = estimate)) +
   geom_pointrange(aes(ymin = lower, 
                       ymax = upper),
                   position=position_dodge(width=0.40)) +
-  scale_x_discrete("Wave", limits=seq(2:6) )  +
+  scale_x_discrete("Wave", limits=seq(1:5) )  +
   geom_hline(yintercept=0) + 
   theme(legend.position="bottom")
 ```
 
 ```{r}
-sch5 <- plm(formula = lsat ~ welle + tXw2 + tXw3 + tXw4 + tXw5 + hob.mus.making + female + migback
+sch5 <- plm(formula = lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making
       , data = subset(d.p, school == 5)
       , model = "pooling"
       )
@@ -283,14 +281,14 @@ wave5.sch5.se <- summary(sch5)$coefficient["tXw51",2]
 sch5.df <- data.frame(school = c(5, 5, 5, 5),
                          wave = seq(2:5),
                          estimate = c(wave2.sch5, wave3.sch5, wave4.sch5, wave5.sch5),
-                         lower = c(wave2.sch5 - wave2.sch5.se,
-                                   wave3.sch5 - wave3.sch5.se,
-                                   wave4.sch5 - wave4.sch5.se,
-                                   wave5.sch5 - wave5.sch5.se),
-                         upper = c(wave2.sch5 + wave2.sch5.se,
-                                   wave3.sch5 + wave3.sch5.se,
-                                   wave4.sch5 + wave4.sch5.se,
-                                   wave5.sch5 + wave5.sch5.se))
+                         lower = c(wave2.sch5 - 2*wave2.sch5.se,
+                                   wave3.sch5 - 2*wave3.sch5.se,
+                                   wave4.sch5 - 2*wave4.sch5.se,
+                                   wave5.sch5 - 2*wave5.sch5.se),
+                         upper = c(wave2.sch5 + 2*wave2.sch5.se,
+                                   wave3.sch5 + 2*wave3.sch5.se,
+                                   wave4.sch5 + 2*wave4.sch5.se,
+                                   wave5.sch5 + 2*wave5.sch5.se))
 sch5.df
 ```
 ```{r}
@@ -298,13 +296,13 @@ ggplot(data = sch5.df, aes(x = wave, y = estimate)) +
   geom_pointrange(aes(ymin = lower, 
                       ymax = upper),
                   position=position_dodge(width=0.40)) +
-  scale_x_discrete("Wave", limits=seq(2:6) )  +
+  scale_x_discrete("Wave", limits=seq(1:5) )  +
   geom_hline(yintercept=0) + 
   theme(legend.position="bottom")
 ```
 
 ```{r}
-sch6 <- plm(formula = lsat ~ welle + tXw2 + tXw3 + tXw4 + tXw5 + hob.mus.making + female + migback
+sch6 <- plm(formula = lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making
       , data = subset(d.p, school == 6)
       , model = "pooling"
       )
@@ -323,14 +321,14 @@ wave5.sch6.se <- summary(sch6)$coefficient["tXw51",2]
 sch6.df <- data.frame(school = c(6, 6, 6, 6),
                          wave = seq(2:5),
                          estimate = c(wave2.sch6, wave3.sch6, wave4.sch6, wave5.sch6),
-                         lower = c(wave2.sch6 - wave2.sch6.se,
-                                   wave3.sch6 - wave3.sch6.se,
-                                   wave4.sch6 - wave4.sch6.se,
-                                   wave5.sch6 - wave5.sch6.se),
-                         upper = c(wave2.sch6 + wave2.sch6.se,
-                                   wave3.sch6 + wave3.sch6.se,
-                                   wave4.sch6 + wave4.sch6.se,
-                                   wave5.sch6 + wave5.sch6.se))
+                         lower = c(wave2.sch6 - 2*wave2.sch6.se,
+                                   wave3.sch6 - 2*wave3.sch6.se,
+                                   wave4.sch6 - 2*wave4.sch6.se,
+                                   wave5.sch6 - 2*wave5.sch6.se),
+                         upper = c(wave2.sch6 + 2*wave2.sch6.se,
+                                   wave3.sch6 + 2*wave3.sch6.se,
+                                   wave4.sch6 + 2*wave4.sch6.se,
+                                   wave5.sch6 + 2*wave5.sch6.se))
 sch6.df
 ```
 ```{r}
@@ -338,7 +336,7 @@ ggplot(data = sch6.df, aes(x = wave, y = estimate)) +
   geom_pointrange(aes(ymin = lower, 
                       ymax = upper),
                   position=position_dodge(width=0.40)) +
-  scale_x_discrete("Wave", limits=seq(2:6) )  +
+  scale_x_discrete("Wave", limits=seq(1:5) )  +
   geom_hline(yintercept=0) + 
   theme(legend.position="bottom")
 ```
@@ -352,10 +350,11 @@ no_pool <- ggplot(data = all, aes(x = wave, y = estimate)) +
 geom_pointrange(aes(ymin = lower, 
                     ymax = upper, group = school, color = school),
                 position=position_dodge(width=0.40)) +
-scale_x_discrete("Wave", limits=seq(2:6) )  +
+scale_x_discrete("Wave", limits=c("2", "3", "4", "5") ) +
 geom_hline(yintercept=0) + 
 theme(legend.position="bottom")
 ggsave("../figures/no_pool.png", no_pool, width = 5, height = 3, units = "in")
+no_pool
 ```
 
 

@@ -42,7 +42,7 @@ library(kableExtra)
 ## Select variables
 
 ```{r}
-d <- read.dta("~/NEUER-VERSUCH-OHNE-CHILD-UND-PARENT/data/master_kip+netwerk_Stata12.dta")
+d <- read.dta("../data/master_kip+netwerk_Stata12.dta")
 # Primary outcomes
 names(d)[names(d) == 'v07a'] <- 'lsat'
 names(d)[names(d) == 'v07e'] <- 'sat_friends'
@@ -102,8 +102,8 @@ d$female <- as.factor(d$female)
 d$mus.active = ifelse(d$play.instr=="Ja" | d$orch=="Ja" | d$choir=="Ja", 1, 0) 
 
 # replacing NAs by category "unknown"
-levels(d$female) <- c(levels(d$female), "unknown")
-d$female[which(is.na(d$female))] <- "unknown"
+levels(d$female) <- c(levels(d$female), "Unknown")
+d$female[which(is.na(d$female))] <- "Unknown"
 
 # replacing NAs by category "unknown"
 levels(d$spr.deu) <- c(levels(d$spr.deu), "unknown")
@@ -152,7 +152,47 @@ welle1 <- d %>% filter(welle==1) %>%
          note.deu, note.mat, note.mus, 
          hob.mus.making, dauer.mus.lis, dauer.mus.making, play.instr, mus.active,
          spr.deu, migback, female)
-saveRDS(welle1, file = "../data/d_welle1s.RDS")
+saveRDS(welle1, file = "../data/welle1.RDS")
+
+welle2 <- d %>% filter(welle==2) %>% 
+  select(school, pid, welle, treated,
+         lsat, sat_friends, sat_class, sat_school,
+         std_big5, lonely, fear, exanx,
+         class.prob, class.excl, 
+         note.deu, note.mat, note.mus, 
+         hob.mus.making, dauer.mus.lis, dauer.mus.making, play.instr, mus.active,
+         spr.deu, migback, female)
+saveRDS(welle2, file = "../data/welle2.RDS")
+
+welle3 <- d %>% filter(welle==3) %>% 
+   select(school, pid, welle, treated,
+         lsat, sat_friends, sat_class, sat_school,
+         std_big5, lonely, fear, exanx,
+         class.prob, class.excl, 
+         note.deu, note.mat, note.mus, 
+         hob.mus.making, dauer.mus.lis, dauer.mus.making, play.instr, mus.active,
+         spr.deu, migback, female)
+saveRDS(welle3, file = "../data/welle3.RDS")
+
+welle4 <- d %>% filter(welle==4) %>% 
+  select(school, pid, welle, treated,
+         lsat, sat_friends, sat_class, sat_school,
+         std_big5, lonely, fear, exanx,
+         class.prob, class.excl, 
+         note.deu, note.mat, note.mus, 
+         hob.mus.making, dauer.mus.lis, dauer.mus.making, play.instr, mus.active,
+         spr.deu, migback, female)
+saveRDS(welle4, file = "../data/welle4.RDS")
+
+welle5 <- d %>% filter(welle==5) %>% 
+  select(school, pid, welle, treated,
+         lsat, sat_friends, sat_class, sat_school,
+         std_big5, lonely, fear, exanx,
+         class.prob, class.excl, 
+         note.deu, note.mat, note.mus, 
+         hob.mus.making, dauer.mus.lis, dauer.mus.making, play.instr, mus.active,
+         spr.deu, migback, female)
+saveRDS(welle5, file = "../data/welle5.RDS")
 ```
 
 ```{r}

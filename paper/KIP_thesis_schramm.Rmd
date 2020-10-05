@@ -8,6 +8,7 @@ output:
     lof: true
 bibliography: 'masterarbeit.bib'
 csl: apa-6th-edition.csl
+mainfont: Arial
 ---
 
 ```{r setup, include=FALSE}
@@ -95,7 +96,7 @@ The structure of my thesis is as follows: At first there will be an overview of 
 *Gute Einleitung bei @Southgate2009*
 <!-- LITERATURE REVIEW -->
 
-# The role of music in chidlrens' lives
+# The role of music in childrens' lives
 \clearpage
 \label{ch:roleofmusic}
 With regard to the effect of music on students' lives, most of the researchers are interested in academic outcomes and intelligence among students who are actively involved in music. Generally, there is the predominant perception of a positive link between music and cognitive abilities. @Osborne2015 [14] observed improved math skills and higher subjective well-being scores in children that were part of a music project. He also found them to have a better self-control over impulsive behavior. @Yang2015 (p. 385),@Wetter2008 (p. 372) , @Hille2014 (p. 62), and @Guhn2019 (p. 316) present evidence that children playing music have better grades at school. But this conclusion is not very meaningful as all of these studies follow a correlational design and do not allow for causal inference.  Nonetheless, the very optimistic and as we will see not quite realistic belief has prevailed that playing music causes children to achieve better results at school. This conclusion needs to be *revised*. In an extensive review of the available evidence concerning associations between music and cognitive abilities, the picture is not so clear any longer [@Schellenberg2013]. Small associations between music training and mathematical ability in correlational and quasi-experimental studies might result from individual differences in general intellectual ability (p. 527). The available evidence simply indicates that high-functioning children (i.e., higher IQ, better performance in school) are more likely than other children to take music lessons and to perform well in mathematics and other tests of cognitive ability (p. 534). This fits with the @Hille2014 study where the outcome difference in cognitive skills between musically active and inactive children reduces greatly when holding constant observable characteristics. An other plausible interpretation of study outcomes that fail to detect a causal relationship comes from @Wetter2008. He points out the possibility that the relationship is explained by affluent parents being more likely to afford music lessons for their child and thus, the socio-economic background may be the cause of higher performance at school. Despite the weakness of the above studies to draw causal inference, there is slight evidence that there may be a causal direction *from* music training *to* cognitive abilities in a study by @Schellenberg2004. He compares two treatment groups who receive piano lesson and voice lesson respectively to a control group in which the children have drama lessons. Random assignment to the different conditions allowed for inference that music lessons caused small increases in cognitive abilities (namely larger increases in full-scale IQ). However, this does not preclude the possibility that high-functioning children are more likely driven to play music. The misconception of music being a predictor for academic achievement is also discussed by @Southgate2009 (p. 17) who states that music is rather a mediator, to some degree, of family background and student status. Results from a meta-analysis, suggest that music training does not reliably enhance children and young adolescents' cognitive or academic skills, and that previous positive findings were probably due to confounding variables, such as placebo effects and lack of random allocation of participants [@Sala2016, p. 64]. The effect size was reduced in studies that applied a proper study design (random allocation of participants to the treatment group and comparison to an active control group). With respect to the mathematical outcomes, the only study comparing a music training to an active control group and with random allocation of the participants to the group [@Mehr2013] found a negative effect size. These considerations are in clear contrast to the popular perception that music training enhances any non-music related cognitive skill.
@@ -106,18 +107,16 @@ The takeaway from this section is we must be very careful when drawing causal co
 
 This paper complements existing literature by using different music indicators and estimation strategies to provide further insight on the relationship between music and education as well as the potential sources of endogeneity.
 
+
 <!-- DATA -->
 \clearpage
-
 # Data
 \label{ch:data}
-## Pre-treatment differences
-
-
+In this section, I will first give more background information on the KIP project, before describing the data themselves. After general summary statistics, there is a section about handling potential issues arising with differences in the treatment and control group.
 
 ## The project
 \label{sec:project}
-The data come from the years 2012-2014 when KIP was conducted in six different secondary schools (Mittel- und Realschulen) in Nuremberg. Generally, there are different types of implementations of the KIP project (e.g. choir, brass band, string orchestra) among which the rock band model was implemented in all of the schools that are subject to this study. Probably due to parents' and students' music preferences, this type has been the most popular. A school was able to apply for the project if certain criteria were fulfilled. For example, the school had to make sure that there was a full-time music teacher who was qualified to carry out the  project. That person was trained to lead a band class and attended yearly meetings with other music teachers to share experiences. This way, it can be assured that the treatment in each school looked pretty much the same and there were no noteworthy differences in the way the teachers arranged the music lessons in the band classes. Participating schools were supported in acquiring equipment and instruments to implement ensemble music class teaching. In each school was a band class and a control class. The band classes received three music lessons per week, whereas the control classes only received two lessons of regular music education. Music lessons in the treatment classes differed significantly from that in the control group. In the band classes, the teachers had a more practical approach and there was less theoretical music education than in the control group. The three music lessons per week were split into a) Instrumental instructions in small groups, b) ensemble playing, and c) general music education (music theory or history). The latter was similar to how regular music education was implemented in the control group. Thefor not only the amount of music education is higher in the treatment group but also the way that music education is delivered differs a lot from normal music lessons in a way that it is more practical and with better equipment. The students played concerts in regular intervals and were thus able to share what they had learned. In five different points of time, the students were asked to fill in a questionnaire:
+The data come from the years 2012-2014 when KIP was conducted in six different secondary schools (Mittel- und Realschulen) in Nuremberg. Generally, there are different types of implementations of the KIP project (e.g. choir, brass band, string orchestra) among which the rock band model was implemented in all of the schools that are subject to this study. Probably due to parents' and students' music preferences, this type has been the most popular. A school had to fulfill certain criteria in order to get support for the project. For example, the school had to make sure that there was a full-time music teacher who was qualified to carry out the  project. That person was trained to lead a band class and attended yearly meetings with other music teachers to share experiences. This way, it can be assured that the treatment in each school looked pretty much the same and there were no noteworthy differences in the way the teachers arranged the music lessons in the band classes. Participating schools were supported in acquiring equipment and instruments to implement ensemble music class teaching. In each school was a band class and a control class. The band classes received three music lessons per week, whereas the control classes only received two lessons of regular music education. Music lessons in the treatment classes differed significantly from that in the control group. In the band classes, the teachers had a more practical approach and there was less theoretical music education than in the control group. The three music lessons per week were split into a) Instrumental instructions in small groups, b) ensemble playing, and c) general music education (music theory or history). The latter was similar to how regular music education was implemented in the control group. Therefor not only the amount of music education is higher in the treatment group but also the way that music education is delivered differs a lot from normal music lessons in a way that it is more practical and with better equipment. The students played concerts in regular intervals and were thus able to share what they had learned. In five different points of time, the students were asked to fill in a questionnaire:
 
 wave 1: Beginning of 5th grade (pre-treatment)
 wave 2: Mid of 5th grade
@@ -125,14 +124,58 @@ wave 3: end of 5th grade
 wave 4: mid of 6th grade
 wave 6: end of 6th grade
 
-In total, 394 students were observed, however not all of them occur in each wave. Some questions were only asked in wave 1 (i.e. sex) which leads to the problem that there were no information about gender for students who did not attend in the first wave. Only 309 reported their gender in wave 1 which leads to 85 students for whom the gender is "unknown". To not miss all of these observations in regressions including gender, NAs were replaced by a category "unknown". The same was done for the variable of migration background and language spoken at home. An other issue to point out is the comparably low number of observations in wave 5 in school 5. 
+## Variables
+\label{sec:variables}
 
-Students had to rate their level of life satisfaction on a scale reaching from 0 ("completely unsatisfied) to 10 (completely satisfied) for the question "How satisfied are you with your life overall?"
+### Satisfaction
+To measure life satisfaction and any area of satisfaction, I use a 11-point scale, with responds on a scale from 0 to 10. Life satisfaction is the variable of interest in my thesis, alongside with *Satisfaction with friends*, *Satisfaction with class*, and *Satisfaction with school*. An extract of the questionnaire can be found in the index. Measuring life satisfaction on a 0-10-scale is quite common in that field of literature [@Mellor2008 @Cheung2014} but also 7-point scales are found a lot [@Diener1985]. For the model, the satisfaction measures are assumed to be cardinal comparable both across and within individuals across time. There is broad consensus in the literature to interpret satisfaction responds as cardinally scaled [@iCarbonell2004]. Summary statistics about the different areas of satisfaction are presented in Table \ref{tab:mean}.
 
-## selection process (and pre-treatment differences)
+```{r mean LS, echo=FALSE}
+sum_satisfaction <- readRDS("../results/sum_satisfaction.RDS")
+knitr::kable(sum_satisfaction, digits = 2, booktabs = T, col.names = c("Variable", "Mean", "SD"), caption = "Mean satisfaction")
+```
+As already cited above in @Johnston2002, children tend to give values at the extreme ends of a scale. This is also what happened in the KIP sample: The histogram in Figure \ref{fig:hist lsat} shows a striking portion of the students indicating to have a life satisfaction of 10. Also, 50% of the students respond with a 5 on the scale. This might indicate the issue that children how did not understand what the question asked them to do or that were not able to make the transfer from their individual assessment of their life satisfaction to pair it with a number just chose 5 randomly, hoping that it was neither "right or wrong".
+```{r hist lsat, echo=FALSE, echo=FALSE, out.width = "100%"}
+knitr::include_graphics("../figures/lsat_bar.png")
+```
+### Treatment
+The treatment is represented by a binary variable, indicating whether a student participated in the treatment ("1") or not ("0"). The treatment is conducted on the class level. All students in the same class are assigned the same indicator of whether or not they attend the treatment. Students did not change the class.
+
+### Individual characterisitc background
+In the first wave, students were asked to state their gender (Tick either *"Bist du ein Junge/ein Mädchen?"*). This question did not appear in subsequent waves which leads to the issue that children who were not in school on the day the first questionnaire was handed to them, appear as NAs in the sample. The same happened for migration background. To avoid drop out of too many observations in the estimation process, gender and migration background were manipulated as category variables and NAs were replaced by the category *unknown* This leads to the following distribution of time-invariant individual characteristics: Both the gender and the migration background is not known for around 20% of the total of 394 students.
+
+The fact that it is an unbalanced panel that is studied should be considered more thoroughly. In Table \ref{tab:N Obs per wave and school} shows that the number of students in each class is varying over time, most severely in class five. The number of participants of the questionnaire drops by more than a third in wave 5 compared to the first period. The overall effect of this decline on the whole sample is shown in table \ref{tab:n_Obs_treat}. In the treatment group, their number of students decreases from 163 to 146 and in the treatment group from 154 to 141. This could be a reason to exclude school five from the observation completely as the attrition rate in the remaining schools is not that alarming.
+
+```{r N Obs per wave and school, echo=FALSE}
+n_obs <- readRDS("../results/n_obs.RDS")
+
+knitr::kable(n_obs, booktabs = T, caption = "Number of observations")
+
+```
+
+```{r N Obs, echo=FALSE}
+n_obs_treat <- readRDS("../results/n_obs_treat.RDS")
+
+knitr::kable(n_obs_treat, booktabs = T, caption = "Number of observations")
+
+```
+
+
+
+
+## Pre-treatment differences
+
 The decision who attended the treatment group was made before the entrance to grade 5. Parents could choose to put their child into a music class. Therefore, the experiment is not fully randomized. Children who were already into music in the first place might have been more likely to have chosen the music class. Also the decision can be a a consequence of parental and socio-economic background of the student. To have a better idea of possible differences between the treatment and the control group, I computed standardized mean differences:
 
-The standardized mean differences are not a reason of concern in this setting. For most of the observed variables, there are no notable differences between the treatment group and the control group. However, as already suspected, there are differences in prior musical knowledge. Among the treated, there are relatively more children who have music as a hobby before the project has even started. Of the 87 students who answered with "yes" to the question if music was their hobby, only 24 were assigned to the control group and the remaining 63 students attended the band classes. Also, the duration of making music is very different in the two subgroups. In the Treatment group, 56% are parcticing at leats 30 min, while in the control group that share is only 35%. However, the model addresses this issue by applying a difference-in difference approach to estimate the causal effect of additional music lessons on students' well-being. accounts for the individual musical background of the child by. Therfore the fact that the model accounts for musical background of the student, differences in the control group and the treatment group are not a problem for inference.
+The standardized mean differences are not a reason of concern in this setting. For most of the observed variables, there are no notable differences between the treatment group and the control group. However, as already suspected, there are differences in prior musical knowledge. Among the treated, there are relatively more children who have music as a hobby before the project has even started. Of the 87 students who answered with "yes" to the question if music was their hobby, only 24 were assigned to the control group and the remaining 63 students attended the band classes. Also, the duration of making music is very different in the two subgroups. In the Treatment group, 56% are practicing at least 30 min, while in the control group that share is only 35%. However, the model addresses this issue by applying a difference-in-difference approach to estimate the causal effect of additional music lessons on students' well-being. Possible differences in the control group and the treatment group are not a problem for inference.
+
+```{r std mean diff, echo=FALSE}
+extract_smd <- readRDS("../results/extract_smd.Rds")
+
+knitr::kable(extract_smd, booktabs = T, caption = "Standardized mean differences")
+
+```
+
 
 ## Measuring LS in children
 \label{sec:measurement}
@@ -146,11 +189,6 @@ One of them is @GonzalezCarrasco2016 [p. 70] who applied the instrument for chil
 On the other hand, @Tomyn2016 conducted a study with children aged 10-12 and concluded that subjective well-being data of children must be interpreted with caution. They also show that response bias towards the extreme positive end of a scale is higher with decreasing age. The authors do not recommend using the PWI-SC for children younger than 12 years. As for the specific sample, the PWI-SC did not serve as a valid instrument for measuring the SWB.
 
 In conclusion, measuring life satisfaction in children is more challenging than for adults and is still in progress. It is advisable to check the validity and reliability of their data when testing children. Considering, the majority of the children from the KIP project are 10 year sold in wave 1 (72% of those participating in wave 1), they might be just too young to give valid responses when asked about their life satisfaction. This must be kept in mind when evaluating the significance of the results.
-
-## Descriptive statistics
-\label{sec:descriptives}
-<!-- RESULTS --> 
-<!-- ESTIMATION STRATEGY -->
 
 # Identification strategy
 \label{sec:identification}
@@ -210,6 +248,15 @@ In a first step, I will set up a full probability mode - a joint probability dis
 After that I will calculate and interpret the appropriate posterior distribution - the conditional probability distribution of the unobserved quantities of ultimate interest, given the observed data.
 Finally, in a third step the fit of the model will be evaluated and the models' implications of the resulting posterior distribution is presented (how sensitive are the results to the modeling assumptions in step 1?)
 
+\begin{align}
+lsat & \sim {\sf Normal} (\mu_{ijt}, \sigma), \\
+\mu_{ijt} & = \beta_0 + \beta_{1j[i]} T_i + \sum\limits_{l=2}^5\delta_{lj[i]} (T_{i} \times \text{Period}_{t}) + \lambda_t + \mu_{j[i]} + \alpha_{i} + \epsilon_{ijt}, \\
+\beta_0 & \sim  {\sf Normal}(7,2), \\
+Population-level effects & \sim {\sf Normal}(0,5), \\
+Group-level effects & \sim {\sf Cauchy}(0,1), \\
+\sigma & \sim {\sf Exponential}(0,5)
+\end{align}
+
 We have repeat measures and heterogeneity across clusters (McElreath). After all, schools are different but each school does help estimating the treatment effect in other schools.
 The study of effectiveness of the music project, with the students in school $j$ having a certain unknown parameter vector $\theta_j$, it might be reasonable to expect that estimates $\theta_j$, which represent a sample of schools, should be related to each other. This is achieved in a natural way by using a prior distribution in which life satisfaction is viewed as a sample from a common *population distribution*. A key feature of such applications is that the observed data, $y_{ij}$, with student index $i$ within group indexed by $j$, can be used to estimate aspects of the population distribution of the $theta_j$'s even though the values of $\theta_j$ are not themselves observed. In contrast, hierarchical models can have enough parameters to fit the model well, while using a population distribution to structure some dependence into the parameters, thereby avoiding problems of overfitting.
 
@@ -233,7 +280,7 @@ For doing *blah* I use *blub* [ref]
 
 ## Prior distribution
 \label{subsec:priors}
-As stated above in \ref{sec:methodology} in a Bayesian framework parameters are not point estimates but they have distributions. The specification for these parameters are called prior distribution because they must be specified *before* the model is fit to data and it assigns them a probability to every possible value of each parameter to be estimated. If the specification is done properly, for all parameters in the model, a Bayesian model yields a joint prior distribution on parameters and data, and hence a prior marginal distribution for the data (Gabry p5). This process can be described as the prior distributions and data interacting to finally produce the posterior distribution. The posterior can be seen as a compromise between the prior distribution and the likelihood function. Therefore, the choice of the prior should be done carefully since it can determine the outcome severely. After identifying the type of data being described, creating a descriptive model with meaningful parameters, and defining a likelihood function, the next step is to establish a prior distribution over the parameter values (kruschke 110). The prior distribution indicates the believes about the distribution of each parameter without knowing the specific data. Depending on the choice of prior and the respective data set, the "compromise" favors one of them over the other. Flat priors or super-vague priors ($\sf {N}(0,1e6)$) are usually not recommended. They lead to a posterior distribution that is mainly influenced by the data which means that though the data set is very well described by the model but predictions are very poor. The model only "learned" about the distribution from the data because the prior did not carry any information. However if the prior has strong believes about the distribution of the parameters, meaning the prior distribution is sharply peaked, and there are only relatively few data, the posterior distribution is more influenced by the prior. Generally, weakly informative priors ($\sf{N}(0,10)$) are recommended because they help by providing a very gentle nudge towards reasonable values of the parameter (mcelreath p 299). If there is a reasonable large amount of data, they will dominate while the prior becomes less important. In case of not very meaningful data though, the "weakly informative prior" make up for it by strongly influencing the posterior inference. This relation is illustrated in \ref{fig:flat_peaked}. The upper row shows the posterior that appears when having a prior distribution $lsat \sim {\sf Normal}(5, 200)$. The standard deviation in this prior is huge an gives barely any useful information about the distribution of life satisfaction among the population. The shape of the posterior is almost identical to the one of the likelihood. The opposite is the case when the prior is highly informative. A normal distribution with parameters of $\mu = 5$ and $\sigma = 1$ suggests that life satisfaction is very narrow around the mean of 5. The prior is so sharp that the posterior distribution is noticeably influenced by the prior. Bayesian models with proper priors are generative models (Gabry p5)
+As stated above in \ref{sec:methodology} in a Bayesian framework parameters are not point estimates but they have distributions. The specification for these parameters are called prior distribution because they must be specified *before* the model is fit to data and it assigns them a probability to every possible value of each parameter to be estimated. If the specification is done properly, for all parameters in the model, a Bayesian model yields a joint prior distribution on parameters and data, and hence a prior marginal distribution for the data (Gabry p5). This process can be described as the prior distributions and data interacting to finally produce the posterior distribution. The posterior can be seen as a compromise between the prior distribution and the likelihood function. Therefore, the choice of the prior should be done carefully since it can determine the outcome severely. After identifying the type of data being described, creating a descriptive model with meaningful parameters, and defining a likelihood function, the next step is to establish a prior distribution over the parameter values (kruschke 110). The prior distribution indicates the believes about the distribution of each parameter without knowing the specific data. Depending on the choice of prior and the respective data set, the "compromise" favors one of them over the other. Flat priors or super-vague priors ($\sf {N}(0,1e6)$) are usually not recommended. They lead to a posterior distribution that is mainly influenced by the data which means that though the data set is very well described by the model, predictions are very poor. The model only "learned" about the distribution from the data because the prior did not carry any information. However if the prior has strong believes about the distribution of the parameters, meaning the prior distribution is sharply peaked, and there are only relatively few data, the posterior distribution is more influenced by the prior. Generally, weakly informative priors ($\sf{N}(0,10)$) are recommended because they help by providing a very gentle nudge towards reasonable values of the parameter (mcelreath p 299). If there is a reasonable large amount of data, they will dominate while the prior becomes less important. In case of not very meaningful data though, the "weakly informative prior" make up for it by strongly influencing the posterior inference. This relation is illustrated in \ref{fig:flat_peaked}. The upper row shows the posterior that appears when having a prior distribution $lsat \sim {\sf Normal}(5, 200)$. The standard deviation in this prior is huge and gives barely any useful information about the distribution of life satisfaction among the population. The shape of the posterior is almost identical to the one of the likelihood. The opposite is the case when the prior is highly informative. A normal distribution with parameters of $\mu = 5$ and $\sigma = 1$ suggests that life satisfaction is very narrow around the mean of 5. The prior is so sharp that the posterior distribution is noticeably influenced by the prior. Bayesian models with proper priors are generative models (Gabry p5)
 ```{r flat_peaked, echo=FALSE, out.width = "100%"}
 knitr::include_graphics("../figures/flat_peaked.png")
 ```
@@ -245,6 +292,7 @@ made some prior predictive simulations as suggested by MacElreath. This method i
 
 ## Posterior distribution
 \label{subsec:posterior}
+Using 'posterior predict', I generate samples of predictions and compute standard deviations over those samples. This makes explicit the choice between predicting for the participants in the study (i.e. using the data you used for fitting for predictions) and predicting for hypothetical new participants (the inference for those could - in general - differ)
 
 ```{r lsat_predicted, echo=FALSE, out.width = "100%"}
 knitr::include_graphics("../figures/lsat_predicted.png")
@@ -302,14 +350,17 @@ CONLCUSION
 Example of nice appendix in @Hille2014
 
 # Figures
+```{r questionnaire, echo=FALSE, echo=FALSE, out.width = "100%"}
+knitr::include_graphics("../figures/Wie zufrieden bist du....pdf")
+```
 
 \clearpage
 
 # Tables
 
 ```{r smdtab, echo=FALSE}
-smdtab <- readRDS("../results/smdtab.Rds")
-knitr::kable(x = smdtab, booktabs = T, caption = "Standardized mean differences") %>%
-  kableExtra::kable_styling(full_width = T, latex_options = "HOLD_position")
+# smdtab <- readRDS("../results/smdtab.Rds")
+# knitr::kable(x = smdtab, booktabs = T, caption = "Standardized mean differences") %>%
+#   kableExtra::kable_styling(full_width = T, latex_options = "HOLD_position")
 ```
 
