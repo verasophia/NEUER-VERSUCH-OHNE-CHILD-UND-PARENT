@@ -261,6 +261,7 @@ wave 6: end of 6th grade
 \subsection{Variables}\label{variables}}
 
 \label{sec:variables}
+The sample that is studied has a hierarchical structure with three levels: (Ideally) Each student is observed multiple times, ideally at five points throughout the project if he was present every day a questionnaire was given to the students. The different time periods are level one. The students themselves are level two and as the students are nested within schools, the third level is the school level. More details on the specific variables follow now:
 
 \hypertarget{satisfaction}{%
 \subsubsection{Satisfaction}\label{satisfaction}}
@@ -286,8 +287,11 @@ Satisfaction school & 7.72 & 2.56\\
 As already cited above in Chambers \& Johnston (2002), children tend to give values at the extreme ends of a scale. This is also what happened in the KIP sample: The histogram in Figure \ref{fig:hist lsat} shows a striking portion of the students indicating to have a life satisfaction of 10. Also, 50\% of the students respond with a 5 on the scale. This might indicate the issue that children how did not understand what the question asked them to do or that were not able to make the transfer from their individual assessment of their life satisfaction to pair it with a number just chose 5 randomly, hoping that it was neither ``right or wrong''.
 
 \includegraphics[width=1\linewidth]{../figures/lsat_bar}
-\#\#\# Treatment
-The treatment is represented by a binary variable, indicating whether a student participated in the treatment (``1'') or not (``0''). The treatment is conducted on the class level. All students in the same class are assigned the same indicator of whether or not they attend the treatment. Students did not change the class.
+
+\hypertarget{treatment}{%
+\subsubsection{Treatment}\label{treatment}}
+
+The treatment is represented by a binary variable, indicating whether a student participated in the treatment (``1'') or not (``0''). The treatment is conducted on the class level. All students in the same class are assigned the same indicator of whether or not they attend the treatment. Students did not change the class. Treatment also appears in the data set as an interaction term with each time period in that a treatment effect can be measured. Multiplying the binary indicator of treatment with the dummy variable for each period gives four indicators with the variable indicating 1 if the observation was in the treatment group and was made in the respective wave and 0 otherwise.
 
 \hypertarget{individual-characterisitc-background}{%
 \subsubsection{Individual characterisitc background}\label{individual-characterisitc-background}}
@@ -316,6 +320,8 @@ Sum & 317 & 294 & 308 & 294 & 287 & 1500\\
 \end{tabular}
 \end{table}
 
+As a third individual background variable, I included if a student had some musical experience before the project had started. I expected students who already played an instrument before or received private music lessons would be more drawn to the treatment class. Also, as I want to find out if the project made students more satisfied, any previous effects of music on satisfaction should be minimized.
+
 \begin{table}
 
 \caption{(\#tab:N Obs)Number of observations}
@@ -343,7 +349,7 @@ The standardized mean differences are not a reason of concern in this setting. F
 \centering
 \begin{tabular}[t]{lr}
 \toprule
-  & 1 vs 2\\
+  & treated = 1 vs 0\\
 \midrule
 lsat & 0.1547095\\
 female & 0.1589880\\
@@ -507,34 +513,32 @@ To decide on proper priors, I plottet the influence of different priors on the d
 
 made some prior predictive simulations as suggested by MacElreath. This method is useful for understanding the implication of a prior and is neatly executed by Gabry ( see full code\ldots). It simulates predictions from a model, using only the prior distribution instead of the posterior distribution. Once priors are chosen, they imply a joint prior distribution of individual life satisfaction (elreath p85). This procedure is based on choosing priors conditional on pre-data knowledge of the data, on general facts so to say (elreath, p100). Only when this step is done, the model is applied to the data.
 
-\hypertarget{posterior-distribution}{%
-\subsection{Posterior distribution}\label{posterior-distribution}}
-
-\label{subsec:posterior}
-Using `posterior predict', I generate samples of predictions and compute standard deviations over those samples. This makes explicit the choice between predicting for the participants in the study (i.e.~using the data you used for fitting for predictions) and predicting for hypothetical new participants (the inference for those could - in general - differ)
-
 \includegraphics[width=1\linewidth]{../figures/lsat_predicted}
 
 \includegraphics[width=1\linewidth]{../figures/plot_priors}
-
 \clearpage
+\#\# Posterior distribution
+\label{subsec:posterior}
+Using `posterior predict', I generate samples of predictions and compute standard deviations over those samples. This makes explicit the choice between predicting for the participants in the study (i.e.~using the data you used for fitting for predictions) and predicting for hypothetical new participants (the inference for those could - in general - differ)
+
+\includegraphics[width=1\linewidth]{../figures/post_dens_overlay}
+
+\includegraphics[width=1\linewidth]{../figures/post_pred}
 
 \hypertarget{model-validation}{%
 \subsection{Model validation}\label{model-validation}}
+
+\hypertarget{graphical-mcmc-diagnostic}{%
+\subsubsection{Graphical MCMC diagnostic}\label{graphical-mcmc-diagnostic}}
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
 
 \label{sec:results}
 
-As described in Section 4, estimation biases resulting from selection into treatment take place at two stages: The initial decision to take up music lessons and the decision not to give up until age 17\ldots{} At such a young age, the choice of a long-term extracurricular activity such as music is strongly determined by the parents. For the parents, however, we observe a large number of characteristics, in particular their socio-economic status, personality, involvement with the child's education, and taste for the arts\ldots{} (Hille, 2014, p. 65)
-NOTE: I have to observe parents (``parental background differences'')
-NOTE: Results in Hille (2014) might be driven by unobserved heterogeneity\ldots{} unobserved individual characteristics could still determine the decision to keep on playing music until age 17 rather than giving up earlier (p.~67).
-NOTE: Sensitivity of Hille (2014) results to reverse causality by performing mediation analysis in which we estimate the correlation between music practice and outcome p, while subsequently controlling for all outcomes q rather than p (p.~67). How do I address the issue of reverse causality?
-Three challenges should determine the agenda of future research on this agenda.
-1. separate the influence of parental and individual background from that of music (identify a variable that increases the likelihood to learn a musical instrument without affecting the development of skills.)
-2. answer the question of the extent to which extracurricular activities are substitutable (substitutes vs.~compliments).
-3. long-term effects of music training on outcomes such a s labor market success or life satisfaction
+\includegraphics[width=1\linewidth]{../figures/m1_coef}
+
+\includegraphics[width=1\linewidth]{../figures/m1_coef}
 
 \includegraphics[width=1\linewidth]{../figures/lsat_teff_across_schools}
 CONLCUSION

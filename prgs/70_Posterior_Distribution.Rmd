@@ -1,0 +1,97 @@
+---
+title: "Prior predictive distribution"
+author: "VS"
+date: "24 9 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment=NA)
+rm(list=ls())
+```
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(brms)
+library(sjlabelled)
+library(parallel)
+library(gridExtra)
+library(haven)
+library(RColorBrewer)
+library(ggmcmc)
+library(mcmcplots)
+library(bayesplot)
+library(cowplot) # cowplot helps align multiple ggplots in a grid for comparison
+# options(mc.cores = detectCores()) #detect number of cores for Rstan
+# library(extrafont)
+# windowsFonts(CMU = windowsFont("CMU Serif")) # Define CMU font as the computer modern serif font that is used in my latex template
+# theme_set(theme_bw(base_family = "CMU")) # Set the gg-theme to use the latex font
+# Sys.setenv(LANG="en")
+library(extrafont)
+library(patchwork)
+theme_set(theme_bw(base_family = "Times New Roman")) # Set the gg-theme to use the latex font
+if (!require("devtools")) {
+  install.packages("devtools")
+}
+devtools::install_github("stan-dev/bayesplot")
+```
+```{r}
+m1 <- readRDS("../results/m1.rds")
+d <- readRDS("../data/d_sat.RDS")
+```
+
+```{r}
+post_dens_overlay <- ppc_dens_overlay(y = d$lsat,
+                 yrep = posterior_predict(m1, draws = 50))
+ggsave("../figures/post_dens_overlay.png", post_dens_overlay, width = 7, height = 5, units = "in")
+
+fitted(m1) %>%
+  as_tibble() %>%
+  bind_cols(d) %>%
+  ggplot(aes(x = lsat, y = Estimate)) +
+  geom_abline(linetype = 2, color = "grey50", size = .5) +
+  geom_point(size = 1.5, color = "firebrick4", alpha = 3/4) +
+  geom_linerange(aes(ymin = Q2.5, ymax = Q97.5),
+                 size = 1/4, color = "firebrick4") +
+  geom_linerange(aes(ymin = Estimate - Est.Error,
+                     ymax = Estimate + Est.Error),
+                 size = 1/2, color = "firebrick4")
+
+color_scheme_set("brightblue")
+post_pred <- m1 %>%
+  posterior_predict(draws = 500) %>%
+  ppc_stat_grouped(y = d$lsat,
+                   group = d$treated,
+                   stat = "median")
+ggsave("../figures/post_pred.png", post_pred, width = 7, height = 5, units = "in")
+```
+
+
+
+
+
+```{r}
+
+post <- posterior_samples(m1)
+
+color_scheme_set("red")
+mcmc_intervals(post[, 1:22],
+               prob = .5,
+               point_est = "median") +
+  labs(title = "My fancy bayesplot-based coefficients plot") +
+  theme(axis.text.y = element_text(hjust = 0),
+        axis.line.x = element_line(size = 1/4),
+        axis.line.y = element_blank(),
+        axis.ticks = element_blank())
+
+
+
+
+
+
+
+
+mcmc_plot(m1)
+```
+
+

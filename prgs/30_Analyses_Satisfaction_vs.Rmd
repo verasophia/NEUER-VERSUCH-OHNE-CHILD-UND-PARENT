@@ -40,7 +40,7 @@ library(plm)
 # Data
 
 ```{r}
-d <- readRDS("../data/d_satisfaction.RDS")
+d <- readRDS("../data/d_sat.RDS")
 ```
 
 ```{r}
@@ -88,9 +88,10 @@ where
 ## Fit
 
 ```{r, cache=TRUE}
-prior <- c(prior(normal(0, 5), class = Intercept),
-           prior(normal(0, 10), class = b),
-           prior(cauchy(0, 1), class = sd))
+prior <- c(prior(normal(7, 2), class = Intercept),
+           prior(normal(0, 1), class = b),
+           prior(cauchy(0, 1), class = sd),
+           prior(exponential(0.5), class = sigma))
 m1 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + 
              female + migback + hob.mus.making +
              (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
@@ -99,7 +100,26 @@ m1 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 +
            file = "../results/m1"
            )
 print(m1)
-# m1 <- readRDS("../results/lsat.RDS")
+
+intercept <- ggplot(data = tibble(x = seq(from = 0, to = 15, by = .1)),
+       aes(x=x, y = dnorm(x, mean = 8, sd = 2))) +
+  geom_line() +
+  ylab("density")
+
+b <- ggplot(data = tibble(x = seq(from = -5, to = 5, by = .1)),
+       aes(x=x, y = dnorm(x, mean = 0, sd = 0.75))) +
+  geom_line() +
+  ylab("density")
+
+sd <- ggplot(data = tibble(x = seq(from = -5, to = 5, by = .1)),
+       aes(x=x, y = dcauchy(x, location = 0, scale = 1))) +
+  geom_line() +
+  ylab("density")
+
+sigma <- ggplot(data = tibble(x = seq(from = -5, to = 5, by = .1)),
+       aes(x=x, y = dexp(x, rate = 1))) +
+  geom_line() +
+  ylab("density")
 ```
 
 ## Posterior predictions for average (or marginal) school

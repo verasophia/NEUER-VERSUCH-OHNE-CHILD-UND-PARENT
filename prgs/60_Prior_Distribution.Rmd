@@ -24,8 +24,7 @@ library(cowplot) # cowplot helps align multiple ggplots in a grid for comparison
 # Sys.setenv(LANG="en")
 library(extrafont)
 library(patchwork)
-windowsFonts(CMU = windowsFont("CMU Serif")) # Define CMU font as the computer modern serif font that is used in my latex template
-theme_set(theme_bw(base_family = "CMU")) # Set the gg-theme to use the latex font
+theme_set(theme_bw(base_family = "Times New Roman")) # Set the gg-theme to use the latex font
 ```
 
 ```{r}
@@ -110,15 +109,15 @@ p4 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migbac
 ```
 
 ```{r}
-readRDS("../resuls/prior_p1.rds")
-readRDS("../resuls/prior_p2.rds")
-readRDS("../resuls/prior_p3.rds")
-readRDS("../resuls/prior_p4.rds")
+p1 <- readRDS("../resuls/prior_p1.rds")
+p2 <- readRDS("../resuls/prior_p2.rds")
+p3 <- readRDS("../resuls/prior_p3.rds")
+p4 <- readRDS("../resuls/prior_p4.rds")
 
 ```
 
 ```{r}
-p1_predict <- posterior_epred(object = prior_p1, nsamples = 100)
+p1_predict <- posterior_epred(object = p1, nsamples = 100)
 p1_long <- gather(data.frame(p1_predict))
 p1_long
 plotp1 <- ggplot(p1_long, aes(x=value, group=key)) +
@@ -131,7 +130,7 @@ plotp1 <- ggplot(p1_long, aes(x=value, group=key)) +
 plotp1
 ```
 ```{r}
-p2_predict <- posterior_epred(object = prior_p2, nsamples = 100)
+p2_predict <- posterior_epred(object = p2, nsamples = 100)
 p2_long <- gather(data.frame(p2_predict))
 p2_long
 plotp2 <- ggplot(p2_long, aes(x=value, group=key)) +
@@ -144,7 +143,7 @@ plotp2 <- ggplot(p2_long, aes(x=value, group=key)) +
 plotp2
 ```
 ```{r}
-p3_predict <- posterior_epred(object = prior_p3, nsamples = 100)
+p3_predict <- posterior_epred(object = p3, nsamples = 100)
 p3_long <- gather(data.frame(p3_predict))
 p3_long
 plotp3 <- ggplot(p3_long, aes(x=value, group=key)) +
@@ -157,7 +156,7 @@ plotp3 <- ggplot(p3_long, aes(x=value, group=key)) +
 plotp3
 ```
 ```{r}
-p4_predict <- posterior_epred(object = prior_p4, nsamples = 100)
+p4_predict <- posterior_epred(object = p4, nsamples = 100)
 p4_long <- gather(data.frame(p4_predict))
 p4_long
 plotp4 <- ggplot(p4_long, aes(x=value, group=key)) +
@@ -171,6 +170,11 @@ plotp4
 ```
 ```{r}
 lsat_predicted <- grid.arrange(plotp1, plotp2, plotp3, plotp4, ncol = 2)
+ggsave("../figures/lsat_predicted.png", lsat_predicted, width = 5, height = 3, units = "in")
+```
+
+```{r}
+lsat_predicted <- grid.arrange(plotp1, plotp2, plotp3, ncol = 3)
 ggsave("../figures/lsat_predicted.png", lsat_predicted, width = 5, height = 3, units = "in")
 ```
 
@@ -216,17 +220,6 @@ plot_priors <- grid.arrange(p_intercept_sim, p_b_sim, p_sd_sim, p_sigma_sim)
 ggsave("../figures/plot_priors.png", plot_priors, width = 7, height = 4, units = "in")
 plot_priors
 ```
-
-
-
-
-
-
-
-
-
-
-
 
 ```{r}
 m3.1 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),

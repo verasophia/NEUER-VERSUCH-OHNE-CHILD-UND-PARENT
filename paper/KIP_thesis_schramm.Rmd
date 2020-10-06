@@ -126,6 +126,7 @@ wave 6: end of 6th grade
 
 ## Variables
 \label{sec:variables}
+The sample that is studied has a hierarchical structure with three levels: (Ideally) Each student is observed multiple times, ideally at five points throughout the project if he was present every day a questionnaire was given to the students. The different time periods are level one. The students themselves are level two and as the students are nested within schools, the third level is the school level. More details on the specific variables follow now:
 
 ### Satisfaction
 To measure life satisfaction and any area of satisfaction, I use a 11-point scale, with responds on a scale from 0 to 10. Life satisfaction is the variable of interest in my thesis, alongside with *Satisfaction with friends*, *Satisfaction with class*, and *Satisfaction with school*. An extract of the questionnaire can be found in the index. Measuring life satisfaction on a 0-10-scale is quite common in that field of literature [@Mellor2008 @Cheung2014} but also 7-point scales are found a lot [@Diener1985]. For the model, the satisfaction measures are assumed to be cardinal comparable both across and within individuals across time. There is broad consensus in the literature to interpret satisfaction responds as cardinally scaled [@iCarbonell2004]. Summary statistics about the different areas of satisfaction are presented in Table \ref{tab:mean}.
@@ -138,8 +139,9 @@ As already cited above in @Johnston2002, children tend to give values at the ext
 ```{r hist lsat, echo=FALSE, echo=FALSE, out.width = "100%"}
 knitr::include_graphics("../figures/lsat_bar.png")
 ```
+
 ### Treatment
-The treatment is represented by a binary variable, indicating whether a student participated in the treatment ("1") or not ("0"). The treatment is conducted on the class level. All students in the same class are assigned the same indicator of whether or not they attend the treatment. Students did not change the class.
+The treatment is represented by a binary variable, indicating whether a student participated in the treatment ("1") or not ("0"). The treatment is conducted on the class level. All students in the same class are assigned the same indicator of whether or not they attend the treatment. Students did not change the class. Treatment also appears in the data set as an interaction term with each time period in that a treatment effect can be measured. Multiplying the binary indicator of treatment with the dummy variable for each period gives four indicators with the variable indicating 1 if the observation was in the treatment group and was made in the respective wave and 0 otherwise.
 
 ### Individual characterisitc background
 In the first wave, students were asked to state their gender (Tick either *"Bist du ein Junge/ein Mädchen?"*). This question did not appear in subsequent waves which leads to the issue that children who were not in school on the day the first questionnaire was handed to them, appear as NAs in the sample. The same happened for migration background. To avoid drop out of too many observations in the estimation process, gender and migration background were manipulated as category variables and NAs were replaced by the category *unknown* This leads to the following distribution of time-invariant individual characteristics: Both the gender and the migration background is not known for around 20% of the total of 394 students.
@@ -152,6 +154,7 @@ n_obs <- readRDS("../results/n_obs.RDS")
 knitr::kable(n_obs, booktabs = T, caption = "Number of observations")
 
 ```
+As a third individual background variable, I included if a student had some musical experience before the project had started. I expected students who already played an instrument before or received private music lessons would be more drawn to the treatment class. Also, as I want to find out if the project made students more satisfied, any previous effects of music on satisfaction should be minimized.
 
 ```{r N Obs, echo=FALSE}
 n_obs_treat <- readRDS("../results/n_obs_treat.RDS")
@@ -159,9 +162,6 @@ n_obs_treat <- readRDS("../results/n_obs_treat.RDS")
 knitr::kable(n_obs_treat, booktabs = T, caption = "Number of observations")
 
 ```
-
-
-
 
 ## Pre-treatment differences
 
@@ -172,8 +172,9 @@ The standardized mean differences are not a reason of concern in this setting. F
 ```{r std mean diff, echo=FALSE}
 extract_smd <- readRDS("../results/extract_smd.Rds")
 
-knitr::kable(extract_smd, booktabs = T, caption = "Standardized mean differences")
+knitr::kable(extract_smd, booktabs = T, caption = "Standardized mean differences", col.names = c("treated = 1 vs 0"))
 
+# https://cran.r-project.org/web/packages/tableone/vignettes/smd.html
 ```
 
 
@@ -290,9 +291,7 @@ To decide on proper priors, I plottet the influence of different priors on the d
 
 made some prior predictive simulations as suggested by MacElreath. This method is useful for understanding the implication of a prior and is neatly executed by Gabry ( see full code...). It simulates predictions from a model, using only the prior distribution instead of the posterior distribution. Once priors are chosen, they imply a joint prior distribution of individual life satisfaction (elreath p85). This procedure is based on choosing priors conditional on pre-data knowledge of the data, on general facts so to say (elreath, p100). Only when this step is done, the model is applied to the data.
 
-## Posterior distribution
-\label{subsec:posterior}
-Using 'posterior predict', I generate samples of predictions and compute standard deviations over those samples. This makes explicit the choice between predicting for the participants in the study (i.e. using the data you used for fitting for predictions) and predicting for hypothetical new participants (the inference for those could - in general - differ)
+
 
 ```{r lsat_predicted, echo=FALSE, out.width = "100%"}
 knitr::include_graphics("../figures/lsat_predicted.png")
@@ -300,22 +299,31 @@ knitr::include_graphics("../figures/lsat_predicted.png")
 ```{r chosen_priors, echo=FALSE, out.width = "100%"}
 knitr::include_graphics("../figures/plot_priors.png")
 ```
-
 \clearpage
+## Posterior distribution
+\label{subsec:posterior}
+For every unique combination of data, likelihood, parameters, and prior, there is a unique posterior distribution (elreath p36). This distribution gives information about the relative plausibility of different parameters, conditional on the data and model. The best way to interpret the resulting posterior distribution is by sampling from it. *So if we were to compute the sampling distribution of outcomes at each values of p, then you could average all of these prediction distributions together, using posterior probability of each values of p, to get a posterior predictive distribution*
+sampling to simulate prediction
+```{r post_dens_overlay, echo=FALSE, out.width = "100%"}
+knitr::include_graphics("../figures/post_dens_overlay.png")
+```
+```{r post_pred, echo=FALSE, out.width = "100%"}
+knitr::include_graphics("../figures/post_pred.png")
+```
 
 ## Model validation
 
+### Graphical MCMC diagnostic
+
 # Results
 \label{sec:results}
+```{r m1_coef, echo=FALSE, out.width = "100%"}
+knitr::include_graphics("../figures/m1_coef.png")
+```
+```{r m1_coef2, echo=FALSE, out.width = "100%"}
+knitr::include_graphics("../figures/m1_coef.pdf")
+```
 
-As described in Section 4, estimation biases resulting from selection into treatment take place at two stages: The initial decision to take up music lessons and the decision not to give up until age 17... At such a young age, the choice of a long-term extracurricular activity such as music is strongly determined by the parents. For the parents, however, we observe a large number of characteristics, in particular their socio-economic status, personality, involvement with the child's education, and taste for the arts... [@Hille2014, p. 65]
-NOTE: I have to observe parents ("parental background differences")
-NOTE: Results in @Hille2014 might be driven by unobserved heterogeneity... unobserved individual characteristics could still determine the decision to keep on playing music until age 17 rather than giving up earlier (p. 67).
-NOTE: Sensitivity of @Hille2014 results to reverse causality by performing mediation analysis in which we estimate the correlation between music practice and outcome p, while subsequently controlling for all outcomes q rather than p (p. 67). How do I address the issue of reverse causality?
-Three challenges should determine the agenda of future research on this agenda.
-1. separate the influence of parental and individual background from that of music (identify a variable that increases the likelihood to learn a musical instrument without affecting the development of skills.)
-2. answer the question of the extent to which extracurricular activities are substitutable (substitutes vs. compliments).
-3. long-term effects of music training on outcomes such a s labor market success or life satisfaction
 
 ```{r lsat_teff_across_schools, echo=FALSE, out.width = "100%"}
 knitr::include_graphics("../figures/lsat_teff_across_schools.png")

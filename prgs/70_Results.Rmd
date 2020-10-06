@@ -1,0 +1,57 @@
+---
+title: "Prior predictive distribution"
+author: "VS"
+date: "24 9 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment=NA)
+rm(list=ls())
+```
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(brms)
+library(sjlabelled)
+library(parallel)
+library(gridExtra)
+library(haven)
+library(RColorBrewer)
+library(ggmcmc)
+library(mcmcplots)
+library(bayesplot)
+library(cowplot) # cowplot helps align multiple ggplots in a grid for comparison
+# options(mc.cores = detectCores()) #detect number of cores for Rstan
+# library(extrafont)
+# windowsFonts(CMU = windowsFont("CMU Serif")) # Define CMU font as the computer modern serif font that is used in my latex template
+# theme_set(theme_bw(base_family = "CMU")) # Set the gg-theme to use the latex font
+# Sys.setenv(LANG="en")
+library(extrafont)
+library(patchwork)
+theme_set(theme_bw(base_family = "Times New Roman")) # Set the gg-theme to use the latex font
+if (!require("devtools")) {
+  install.packages("devtools")
+}
+devtools::install_github("stan-dev/bayesplot")
+```
+```{r}
+m1 <- readRDS("../results/m1.rds")
+```
+
+```{r}
+post <- posterior_samples(m1)
+
+color_scheme_set("red")
+m1_coef <- mcmc_intervals(post[, 1:22],
+               prob = .5,
+               point_est = "median") +
+  labs(title = "My fancy bayesplot-based coefficients plot") +
+  theme(axis.text.y = element_text(hjust = 0),
+        axis.line.x = element_line(size = 1/4),
+        axis.line.y = element_blank(),
+        axis.ticks = element_blank())
+ggsave("../figures/m1_coef.pdf", m1_coef, width = 7, height = 5, units = "in")
+```
+
+

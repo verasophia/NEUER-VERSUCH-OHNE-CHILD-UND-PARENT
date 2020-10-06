@@ -49,10 +49,6 @@ names(d)[names(d) == 'v07e'] <- 'sat_friends'
 names(d)[names(d) == 'v08a'] <- 'sat_class'
 names(d)[names(d) == 'v08b'] <- 'sat_school'
 #names(d)[names(d) == 'v08c'] <- 'sat_music' # nur in WElle 4 und 5 vorhanden
-names(d)[names(d) == 'v12c'] <- 'lonely' # Emotionen letzte Woche: Einsamkeit
-names(d)[names(d) == 'v12d'] <- 'fear' # Emotionen letzte Woche: Angst
-names(d)[names(d) == 'v10e'] <- 'exanx' # exam anxiety
-names(d)[names(d) == 'std_big5index'] <- 'std_big5' 
 
 # Covariates
 names(d)[names(d) == 'Treatment'] <- 'treated'
@@ -71,7 +67,7 @@ names(d)[names(d) == 'v04c'] <- 'choir' # Musikalisch aktiv im Chor
 names(d)[names(d) == 'v04o'] <- 'sonst' # Musikalisch aktiv: Sonstiges
 names(d)[names(d) == 'v14a'] <- 'migback.f' # Herkunftsland: Vater
 names(d)[names(d) == 'v14b'] <- 'migback.m' # Herkunftsland: Mutter
-names(d)[names(d) == 'v15']  <- 'immigr' # Herkunftsland: Schüler
+names(d)[names(d) == 'v15']  <- 'migback.s' # Herkunftsland: Schüler
 names(d)[names(d) == 'v16']  <- 'spr.deu' # Wird zuhause deutschgesprochen? 1 - "überwiegend deutsch", 2 - "überwiegend andere Sprache", 3 - "teils-teils, "unknown" - "Keine Angabe"
 names(d)[names(d) == 'v22b'] <- 'betr.tg' # Taschengeld: Betrag (Problem: Nicht sicher, ob hier Variable v22a (Tschengeld: Rythmus) bereits berücksichtigt wurde
 ```
@@ -106,8 +102,8 @@ levels(d$female) <- c(levels(d$female), "Unknown")
 d$female[which(is.na(d$female))] <- "Unknown"
 
 # replacing NAs by category "unknown"
-levels(d$spr.deu) <- c(levels(d$spr.deu), "unknown")
-d$spr.deu[which(is.na(d$spr.deu))] <- "unknown"
+levels(d$spr.deu) <- c(levels(d$spr.deu), "Unknown")
+d$spr.deu[which(is.na(d$spr.deu))] <- "Unknown"
 
 # create treated-wave interactions: "tXw"
 d$tXw2 <- as.factor( ifelse( (d$treated==1 & d$welle==2), 1, 0) )
@@ -119,25 +115,29 @@ d$tXw5 <- as.factor( ifelse( (d$treated==1 & d$welle==5), 1, 0) )
 ## Fill in missing values
 
 ```{r}
-# BIG 5
-summary( d$std_big5 )
-d <- d %>% group_by( pid ) %>% fill( std_big5, .direction="downup" )
-summary(d$std_big5)
-
 # fill missing information in wave 2-5
-d$immigr[d$immigr==""] <- NA
-d$immigr[d$immigr==" - 99 fehlender Wert"] <- NA
+d$migback.s[d$migback.s==""] <- NA
+d$migback.s[d$migback.s==" - 99 fehlender Wert"] <- NA
 d$migback.f[d$migback.f==""] <- NA
 d$migback.f[d$migback.f==" - 88 unplausible Angabe"] <- NA
 d$migback.f[d$migback.f==" - 99 fehlender Wert"] <- NA
 d$migback.m[d$migback.m==""] <- NA
 d$migback.m[d$migback.m==" - 99 fehlender Wert"] <- NA
-d <- d %>% group_by( pid ) %>% fill( immigr, migback.f, migback.m, .direction="down" )
+d <- d %>% group_by( pid ) %>% fill( migback.s, migback.f, migback.m, .direction="down" )
 d$migback <- factor( 
-  if_else(is.na(d$immigr) & is.na(d$migback.f) & is.na(d$migback.m), 3, 
-          if_else(d$immigr=="1 Deutschland" & d$migback.f=="1 Deutschland" & d$migback.m=="1 Deutschland", 1, 2)))
+  if_else(is.na(d$migback.s) & is.na(d$migback.f) & is.na(d$migback.m), 3, 
+          if_else(d$migback.s=="1 Deutschland" & d$migback.f=="1 Deutschland" & d$migback.m=="1 Deutschland", 1, 2)))
 d$migback <- factor(x=d$migback, labels=c("Native", "Immigrant", "Unknown"))
-d <- d %>% arrange(school, treated, pid, welle)
+
+d_sat <- d %>% 
+  select(school, pid, welle, treated, tXw2, tXw3, tXw4, tXw5, lsat, sat_friends, sat_class, sat_school, hob.mus.making, migback, female) %>% 
+  arrange( school, treated, pid, welle) %>% ungroup()
+
+d_sat <- na.omit(d_sat)
+
+
+saveRDS(d, file = "../data/d.RDS")
+saveRDS(d_sat, file = "../data/d_sat.RDS")
 ```
 
 # Create subsamples
@@ -145,19 +145,13 @@ d <- d %>% arrange(school, treated, pid, welle)
 ```{r}
 # Dataframe for wave 1 (pre-treatment)
 welle1 <- d %>% filter(welle==1) %>% 
-  select(school, pid, welle, treated,
-         lsat, sat_friends, sat_class, sat_school,
-         std_big5, lonely, fear, exanx,
-         class.prob, class.excl, 
-         note.deu, note.mat, note.mus, 
-         hob.mus.making, dauer.mus.lis, dauer.mus.making, play.instr, mus.active,
-         spr.deu, migback, female)
+  select(school, pid, welle, treated, lsat, sat_friends, sat_class, sat_school, class.prob, class.excl, note.deu, note.mat, note.mus, hob.mus.making, dauer.mus.lis, dauer.mus.making, play.instr, mus.active, spr.deu, migback, female)
+
 saveRDS(welle1, file = "../data/welle1.RDS")
 
 welle2 <- d %>% filter(welle==2) %>% 
   select(school, pid, welle, treated,
          lsat, sat_friends, sat_class, sat_school,
-         std_big5, lonely, fear, exanx,
          class.prob, class.excl, 
          note.deu, note.mat, note.mus, 
          hob.mus.making, dauer.mus.lis, dauer.mus.making, play.instr, mus.active,
@@ -167,7 +161,6 @@ saveRDS(welle2, file = "../data/welle2.RDS")
 welle3 <- d %>% filter(welle==3) %>% 
    select(school, pid, welle, treated,
          lsat, sat_friends, sat_class, sat_school,
-         std_big5, lonely, fear, exanx,
          class.prob, class.excl, 
          note.deu, note.mat, note.mus, 
          hob.mus.making, dauer.mus.lis, dauer.mus.making, play.instr, mus.active,
@@ -177,7 +170,6 @@ saveRDS(welle3, file = "../data/welle3.RDS")
 welle4 <- d %>% filter(welle==4) %>% 
   select(school, pid, welle, treated,
          lsat, sat_friends, sat_class, sat_school,
-         std_big5, lonely, fear, exanx,
          class.prob, class.excl, 
          note.deu, note.mat, note.mus, 
          hob.mus.making, dauer.mus.lis, dauer.mus.making, play.instr, mus.active,
@@ -187,21 +179,11 @@ saveRDS(welle4, file = "../data/welle4.RDS")
 welle5 <- d %>% filter(welle==5) %>% 
   select(school, pid, welle, treated,
          lsat, sat_friends, sat_class, sat_school,
-         std_big5, lonely, fear, exanx,
          class.prob, class.excl, 
          note.deu, note.mat, note.mus, 
          hob.mus.making, dauer.mus.lis, dauer.mus.making, play.instr, mus.active,
          spr.deu, migback, female)
 saveRDS(welle5, file = "../data/welle5.RDS")
-```
-
-```{r}
-d_sat <- d %>% 
-  select(school, pid, welle, treated, tXw2, tXw3, tXw4, tXw5, 
-         lsat, sat_friends, sat_class, sat_school,
-         hob.mus.making, migback, female) %>% 
-  arrange( school, treated, pid, welle) %>% ungroup()
-saveRDS(d_sat, file = "../data/d_satisfaction.RDS")
 ```
 
 # Original computing environment
