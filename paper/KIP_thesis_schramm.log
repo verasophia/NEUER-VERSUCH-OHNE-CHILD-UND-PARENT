@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.9.23)  6 OCT 2020 17:25
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.9.23)  10 OCT 2020 17:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1080,13 +1080,8 @@ LaTeX Info: Redefining \nameref on input line 162.
 
 [1
 
-{/usr/local/texlive/2020/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]pdfTeX w
-arning (ext4): destination with the same identifier (name{page.1}) has been alr
-eady used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.196 \clearpage
-                 [1] (./KIP_thesis_schramm.toc
+{/usr/local/texlive/2020/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] (./
+KIP_thesis_schramm.toc
 LaTeX Font Info:    Trying to load font information for OT1+ptmcm on input line
  10.
 (/usr/local/texlive/2020/texmf-dist/tex/latex/psnfss/ot1ptmcm.fd
@@ -1125,217 +1120,282 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \tf@toc=\write6
 \openout6 = `KIP_thesis_schramm.toc'.
 
-[2
+[3
+
+] (./KIP_thesis_schramm.lot)
+\tf@lot=\write7
+\openout7 = `KIP_thesis_schramm.lot'.
+
+[4
+
+] (./KIP_thesis_schramm.lof)
+\tf@lof=\write8
+\openout8 = `KIP_thesis_schramm.lof'.
+
+[5
 
 ]
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 214.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 224.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 214.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 224.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 214.
-[3
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 224.
+pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.226 
+       [1
 
-] [4] [5] [6
+] [2] [3] [4
 
-] [7] [8] [9
+] [5] [6] [7
 
-]
-
-LaTeX Warning: Reference `tab:mean' on page 10 undefined on input line 269.
-
-
-LaTeX Warning: Reference `fig:hist lsat' on page 10 undefined on input line 287
-.
-
-[10]
-<../figures/lsat_bar.png, id=176, 2107.875pt x 1505.625pt>
+] [8]
+<../figures/lsat_bar.png, id=246, 2107.875pt x 1505.625pt>
 File: ../figures/lsat_bar.png Graphic file (type png)
 <use ../figures/lsat_bar.png>
-Package pdftex.def Info: ../figures/lsat_bar.png  used on input line 289.
-(pdftex.def)             Requested size: 455.24277pt x 325.1734pt.
-[11 <../figures/lsat_bar.png>]
+Package pdftex.def Info: ../figures/lsat_bar.png  used on input line 303.
+(pdftex.def)             Requested size: 364.18777pt x 260.13412pt.
+[9 <../figures/lsat_bar.png>] [10] [11] [12] [13] [14] [15
 
-LaTeX Warning: Reference `tab:N Obs per wave and school' on page 12 undefined o
-n input line 301.
-
-
-LaTeX Warning: Reference `tab:n_Obs_treat' on page 12 undefined on input line 3
-01.
-
-[12] [13] [14] [15] [16]
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 4
-04.
-(/usr/local/texlive/2020/texmf-dist/tex/latex/psnfss/ts1ptm.fd
-File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-)
-
-LaTeX Warning: Reference `fig:complete pooling' on page 17 undefined on input l
-ine 405.
-
-
-LaTeX Warning: Reference `fig:lsat_vs_time_school_treated' on page 17 undefined
- on input line 405.
-
-<../figures/complete_pool.png, id=216, 2107.875pt x 1204.5pt>
-File: ../figures/complete_pool.png Graphic file (type png)
-<use ../figures/complete_pool.png>
-Package pdftex.def Info: ../figures/complete_pool.png  used on input line 408.
-(pdftex.def)             Requested size: 455.24277pt x 260.13872pt.
-[17]
-<../figures/lsat_vs_time_by_school_treated.png, id=221, 2107.875pt x 1505.625pt
+]
+<../figures/lsat_vs_time_by_school_treated.png, id=291, 2107.875pt x 1505.625pt
 >
 File: ../figures/lsat_vs_time_by_school_treated.png Graphic file (type png)
 <use ../figures/lsat_vs_time_by_school_treated.png>
 Package pdftex.def Info: ../figures/lsat_vs_time_by_school_treated.png  used on
- input line 410.
-(pdftex.def)             Requested size: 455.24277pt x 325.1734pt.
+ input line 436.
+(pdftex.def)             Requested size: 364.18777pt x 260.13412pt.
+[16] [17 <../figures/lsat_vs_time_by_school_treated.png>]
+<../figures/compare_models.pdf, id=307, 505.89pt x 289.08pt>
+File: ../figures/compare_models.pdf Graphic file (type pdf)
+<use ../figures/compare_models.pdf>
+Package pdftex.def Info: ../figures/compare_models.pdf  used on input line 467.
 
-LaTeX Warning: Reference `fig:no_pool' on page 18 undefined on input line 416.
-
-<../figures/no_pool.png, id=222, 1505.625pt x 903.375pt>
-File: ../figures/no_pool.png Graphic file (type png)
-<use ../figures/no_pool.png>
-Package pdftex.def Info: ../figures/no_pool.png  used on input line 419.
-(pdftex.def)             Requested size: 455.25195pt x 273.15117pt.
-[18 <../figures/complete_pool.png> <../figures/lsat_vs_time_by_school_treated.p
-ng>] [19 <../figures/no_pool.png>] [20] [21] [22]
-
-LaTeX Warning: Reference `sec:methodology' on page 23 undefined on input line 5
-08.
-
-
-LaTeX Warning: Reference `fig:flat_peaked' on page 23 undefined on input line 5
-08.
-
-[23]
-<../figures/flat_peaked.png, id=268, 1806.75pt x 903.375pt>
-File: ../figures/flat_peaked.png Graphic file (type png)
-<use ../figures/flat_peaked.png>
-Package pdftex.def Info: ../figures/flat_peaked.png  used on input line 510.
-(pdftex.def)             Requested size: 455.24277pt x 227.62138pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 510--513
-[][]
+(pdftex.def)             Requested size: 364.20192pt x 208.11537pt.
+[18] [19 <../figures/compare_models.pdf>]
+Overfull \hbox (3.29062pt too wide) in paragraph at lines 482--489
+\T1/ptm/m/it/12 (-20) ``Bayesian inference is the process of fitting a probabil
+ity model to a set of data and summarizing the
  []
 
-[24] [25 <../figures/flat_peaked.png>]
-<../figures/lsat_predicted.png, id=279, 1505.625pt x 903.375pt>
+[20] [21] [22
+
+]
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 5
+34.
+(/usr/local/texlive/2020/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
+) [23] [24]
+<../figures/flat_peaked.png, id=348, 1806.75pt x 903.375pt>
+File: ../figures/flat_peaked.png Graphic file (type png)
+<use ../figures/flat_peaked.png>
+Package pdftex.def Info: ../figures/flat_peaked.png  used on input line 559.
+(pdftex.def)             Requested size: 364.18318pt x 182.09158pt.
+[25 <../figures/flat_peaked.png>]
+<../figures/lsat_predicted.png, id=354, 1505.625pt x 903.375pt>
 File: ../figures/lsat_predicted.png Graphic file (type png)
 <use ../figures/lsat_predicted.png>
-Package pdftex.def Info: ../figures/lsat_predicted.png  used on input line 516.
+Package pdftex.def Info: ../figures/lsat_predicted.png  used on input line 571.
 
-(pdftex.def)             Requested size: 455.25195pt x 273.15117pt.
-<../figures/plot_priors.png, id=280, 2107.875pt x 1204.5pt>
+(pdftex.def)             Requested size: 364.18318pt x 218.5099pt.
+<../figures/plot_priors.png, id=355, 2107.875pt x 1204.5pt>
 File: ../figures/plot_priors.png Graphic file (type png)
 <use ../figures/plot_priors.png>
-Package pdftex.def Info: ../figures/plot_priors.png  used on input line 518.
-(pdftex.def)             Requested size: 455.24277pt x 260.13872pt.
-[26 <../figures/lsat_predicted.png> <../figures/plot_priors.png>]
-<../figures/post_dens_overlay.png, id=287, 2107.875pt x 1505.625pt>
+Package pdftex.def Info: ../figures/plot_priors.png  used on input line 582.
+(pdftex.def)             Requested size: 364.18777pt x 208.1073pt.
+
+LaTeX Warning: Reference `hist-lsat' on page 26 undefined on input line 589.
+
+[26 <../figures/lsat_predicted.png>] [27 <../figures/plot_priors.png>]
+
+LaTeX Warning: Reference `fig:post-skew' on page 28 undefined on input line 598
+.
+
+<../figures/post_dens_overlay.png, id=369, 2107.875pt x 1505.625pt>
 File: ../figures/post_dens_overlay.png Graphic file (type png)
 <use ../figures/post_dens_overlay.png>
-Package pdftex.def Info: ../figures/post_dens_overlay.png  used on input line 5
-24.
-(pdftex.def)             Requested size: 455.24277pt x 325.1734pt.
-<../figures/post_pred.png, id=288, 2107.875pt x 1505.625pt>
-File: ../figures/post_pred.png Graphic file (type png)
-<use ../figures/post_pred.png>
-Package pdftex.def Info: ../figures/post_pred.png  used on input line 526.
-(pdftex.def)             Requested size: 455.24277pt x 325.1734pt.
-[27
+Package pdftex.def Info: ../figures/post_dens_overlay.png  used on input line 6
+01.
+(pdftex.def)             Requested size: 227.62138pt x 162.5867pt.
+<../figures/post_skew.png, id=370, 2107.875pt x 1505.625pt>
+File: ../figures/post_skew.png Graphic file (type png)
+<use ../figures/post_skew.png>
+Package pdftex.def Info: ../figures/post_skew.png  used on input line 601.
+(pdftex.def)             Requested size: 227.62138pt x 162.5867pt.
 
- <../figures/post_dens_overlay.png>]
-<../figures/m1_coef.pdf, id=295, 505.89pt x 361.35pt>
+Overfull \hbox (2.27869pt too wide) in paragraph at lines 601--601
+[][] [] 
+ []
+
+[28 <../figures/post_dens_overlay.png> <../figures/post_skew.png>]
+<../figures/m1_coef.pdf, id=378, 505.89pt x 361.35pt>
 File: ../figures/m1_coef.pdf Graphic file (type pdf)
 <use ../figures/m1_coef.pdf>
-Package pdftex.def Info: ../figures/m1_coef.pdf  used on input line 539.
-(pdftex.def)             Requested size: 455.25046pt x 325.17891pt.
-[28 <../figures/post_pred.png>]
-File: ../figures/m1_coef.pdf Graphic file (type pdf)
-<use ../figures/m1_coef.pdf>
-Package pdftex.def Info: ../figures/m1_coef.pdf  used on input line 541.
-(pdftex.def)             Requested size: 455.25046pt x 325.17891pt.
-[29 <../figures/m1_coef.pdf>]
-<../figures/lsat_teff_across_schools.png, id=316, 2107.875pt x 1204.5pt>
+Package pdftex.def Info: ../figures/m1_coef.pdf  used on input line 616.
+(pdftex.def)             Requested size: 364.20192pt x 260.14423pt.
+<../figures/lsat_pred.png, id=379, 2107.875pt x 1204.5pt>
+File: ../figures/lsat_pred.png Graphic file (type png)
+<use ../figures/lsat_pred.png>
+Package pdftex.def Info: ../figures/lsat_pred.png  used on input line 633.
+(pdftex.def)             Requested size: 364.18777pt x 208.1073pt.
+File: ../figures/lsat_pred.png Graphic file (type png)
+<use ../figures/lsat_pred.png>
+Package pdftex.def Info: ../figures/lsat_pred.png  used on input line 641.
+(pdftex.def)             Requested size: 227.62138pt x 130.06935pt.
+<../figures/sat_friends_pred.pdf, id=380, 505.89pt x 289.08pt>
+File: ../figures/sat_friends_pred.pdf Graphic file (type pdf)
+<use ../figures/sat_friends_pred.pdf>
+Package pdftex.def Info: ../figures/sat_friends_pred.pdf  used on input line 64
+1.
+(pdftex.def)             Requested size: 227.62523pt x 130.07155pt.
+<../figures/sat_class_pred.pdf, id=381, 505.89pt x 289.08pt>
+File: ../figures/sat_class_pred.pdf Graphic file (type pdf)
+<use ../figures/sat_class_pred.pdf>
+Package pdftex.def Info: ../figures/sat_class_pred.pdf  used on input line 641.
+
+(pdftex.def)             Requested size: 227.62523pt x 130.07155pt.
+<../figures/sat_school_pred.pdf, id=382, 505.89pt x 289.08pt>
+File: ../figures/sat_school_pred.pdf Graphic file (type pdf)
+<use ../figures/sat_school_pred.pdf>
+Package pdftex.def Info: ../figures/sat_school_pred.pdf  used on input line 641
+.
+(pdftex.def)             Requested size: 227.62523pt x 130.07155pt.
+
+Overfull \hbox (2.28253pt too wide) in paragraph at lines 641--641
+[][] []
+ []
+
+
+Overfull \hbox (2.28638pt too wide) in paragraph at lines 641--641
+[] [] 
+ []
+
+
+LaTeX Warning: Reference `fig:lsat-teff' on page 29 undefined on input line 644
+.
+
+[29
+
+ <../figures/m1_coef.pdf>] [30 <../figures/lsat_pred.png> <../figures/sat_frien
+ds_pred.pdf> <../figures/sat_class_pred.pdf> <../figures/sat_school_pred.pdf>]
+<../figures/lsat_teff.png, id=418, 2107.875pt x 1204.5pt>
+File: ../figures/lsat_teff.png Graphic file (type png)
+<use ../figures/lsat_teff.png>
+Package pdftex.def Info: ../figures/lsat_teff.png  used on input line 647.
+(pdftex.def)             Requested size: 227.62138pt x 130.06935pt.
+<../figures/sat_friends_teff.pdf, id=419, 505.89pt x 289.08pt>
+File: ../figures/sat_friends_teff.pdf Graphic file (type pdf)
+<use ../figures/sat_friends_teff.pdf>
+Package pdftex.def Info: ../figures/sat_friends_teff.pdf  used on input line 64
+7.
+(pdftex.def)             Requested size: 227.62523pt x 130.07155pt.
+<../figures/sat_class_teff.pdf, id=420, 505.89pt x 289.08pt>
+File: ../figures/sat_class_teff.pdf Graphic file (type pdf)
+<use ../figures/sat_class_teff.pdf>
+Package pdftex.def Info: ../figures/sat_class_teff.pdf  used on input line 647.
+
+(pdftex.def)             Requested size: 227.62523pt x 130.07155pt.
+<../figures/sat_school_teff.pdf, id=421, 505.89pt x 289.08pt>
+File: ../figures/sat_school_teff.pdf Graphic file (type pdf)
+<use ../figures/sat_school_teff.pdf>
+Package pdftex.def Info: ../figures/sat_school_teff.pdf  used on input line 647
+.
+(pdftex.def)             Requested size: 227.62523pt x 130.07155pt.
+
+Overfull \hbox (2.28253pt too wide) in paragraph at lines 647--647
+[][] []
+ []
+
+
+Overfull \hbox (2.28638pt too wide) in paragraph at lines 647--647
+[] [] 
+ []
+
+
+LaTeX Warning: Reference `fig:lsat-teff' on page 31 undefined on input line 653
+.
+
+<../figures/lsat_pred_across_schools.png, id=424, 2107.875pt x 1204.5pt>
+File: ../figures/lsat_pred_across_schools.png Graphic file (type png)
+<use ../figures/lsat_pred_across_schools.png>
+Package pdftex.def Info: ../figures/lsat_pred_across_schools.png  used on input
+ line 657.
+(pdftex.def)             Requested size: 364.18777pt x 208.1073pt.
+[31 <../figures/lsat_teff.png> <../figures/sat_friends_teff.pdf> <../figures/sa
+t_class_teff.pdf> <../figures/sat_school_teff.pdf>]
+<../figures/lsat_teff_across_schools.png, id=447, 2107.875pt x 1204.5pt>
 File: ../figures/lsat_teff_across_schools.png Graphic file (type png)
 <use ../figures/lsat_teff_across_schools.png>
 Package pdftex.def Info: ../figures/lsat_teff_across_schools.png  used on input
- line 543.
-(pdftex.def)             Requested size: 455.24277pt x 260.13872pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 543--545
-[][]
- []
-
-[30 <../figures/lsat_teff_across_schools.png>] [31
+ line 666.
+(pdftex.def)             Requested size: 364.18777pt x 208.1073pt.
+[32 <../figures/lsat_pred_across_schools.png> <../figures/lsat_teff_across_scho
+ols.png>] [33] [34
 
 ]
-Underfull \hbox (badness 1194) in paragraph at lines 603--605
+Underfull \hbox (badness 1194) in paragraph at lines 747--749
  [][]\T1/ptm/m/n/12 (+20) Diener, E., Em-mons, R. A., Larsen, R. J., & Grif-fin
 , S. (1985). The sat-is-fac-tion
  []
 
 
-Underfull \hbox (badness 2961) in paragraph at lines 603--605
+Underfull \hbox (badness 2961) in paragraph at lines 747--749
  \T1/ptm/m/n/12 (+20) with life scale. \T1/ptm/m/it/12 (+20) Jour-nal of Per-so
 n-al-ity As-sess-ment\T1/ptm/m/n/12 (+20) , \T1/ptm/m/it/12 (+20) 49\T1/ptm/m/n
 /12 (+20) (1), 71--75. []$https :
  []
 
-[32
+[35
 
-] [33]
-Underfull \hbox (badness 1122) in paragraph at lines 657--659
+] [36]
+Underfull \hbox (badness 1122) in paragraph at lines 801--803
  [][]\T1/ptm/m/n/12 (+20) Möller, T. (2017). \T1/ptm/m/it/12 (+20) Ausverkauf m
 usikalis-cher Bil-dung? \T1/ptm/m/n/12 (+20) Re-trieved from []$https : / / www
  .
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 657--659
+Underfull \hbox (badness 10000) in paragraph at lines 801--803
  \T1/ptm/m/n/12 (+19) deutschlandfunk . de / musikunterricht-[]in-[]der-[]schul
 e-[]ausverkauf-[]musikalischer . 1992 . de .
  []
 
-[34]
-Underfull \hbox (badness 1270) in paragraph at lines 711--713
+[37]
+Underfull \hbox (badness 1270) in paragraph at lines 858--860
  [][]\T1/ptm/m/n/12 (+20) Wetter, O. E., Ko-erner, F., & Schwaninger, A. (2008)
 . Does mu-si-cal train-ing im-
  []
 
 
-Underfull \hbox (badness 3058) in paragraph at lines 711--713
+Underfull \hbox (badness 3058) in paragraph at lines 858--860
  \T1/ptm/m/n/12 (+20) prove school per-for-mance? \T1/ptm/m/it/12 (+20) In-stru
 c-tional Sci-ence\T1/ptm/m/n/12 (+20) , \T1/ptm/m/it/12 (+20) 37\T1/ptm/m/n/12 
 (+20) (4), 365--374. []$https :
  []
 
-[35]
-<../figures/Wie zufrieden bist du....pdf, id=463, 597.23125pt x 845.1575pt>
+[38]
+<../figures/Wie zufrieden bist du....pdf, id=605, 597.23125pt x 845.1575pt>
 File: ../figures/Wie zufrieden bist du....pdf Graphic file (type pdf)
 <use ../figures/Wie zufrieden bist du....pdf>
 Package pdftex.def Info: ../figures/Wie zufrieden bist du....pdf  used on input
- line 731.
+ line 877.
 (pdftex.def)             Requested size: 455.24918pt x 644.235pt.
+[39
 
-Overfull \hbox (36.14006pt too wide) in paragraph at lines 731--732
- [] 
- []
-
-[36
-
-] [37 <../figures/Wie zufrieden bist du....pdf>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 737.
-[38
+] [40 <../figures/Wie zufrieden bist du....pdf>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 886.
+[41
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 737.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 886.
 (./KIP_thesis_schramm.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 737.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 737.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 886.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 886.
 Package rerunfilecheck Info: File `KIP_thesis_schramm.out' has not changed.
-(rerunfilecheck)             Checksum: 7A79D7EB3730DAAC926EC8C6B40A9956;3075.
+(rerunfilecheck)             Checksum: 72F3707DB89CB1940A90E73852BF29B6;3879.
 
 LaTeX Warning: There were undefined references.
 
@@ -1347,10 +1407,10 @@ Package logreq Info: Writing requests to 'KIP_thesis_schramm.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 24472 strings out of 480608
- 397161 string characters out of 5903630
- 1196303 words of memory out of 5000000
- 39596 multiletter control sequences out of 15000+600000
+ 24589 strings out of 480608
+ 400103 string characters out of 5903630
+ 1197706 words of memory out of 5000000
+ 39673 multiletter control sequences out of 15000+600000
  588195 words of font info for 239 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  52i,10n,55p,4129b,4720s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1364,10 +1424,10 @@ live/2020/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></usr/local/texlive/2020/t
 exmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2020/texmf-dist/
 fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2020/texmf-dist/fonts/type
 1/urw/times/utmri8a.pfb>
-Output written on KIP_thesis_schramm.pdf (39 pages, 1279833 bytes).
+Output written on KIP_thesis_schramm.pdf (46 pages, 1536850 bytes).
 PDF statistics:
- 555 PDF objects out of 1000 (max. 8388607)
- 474 compressed objects within 5 object streams
- 149 named destinations out of 1000 (max. 500000)
- 16629 words of extra memory for PDF output out of 17280 (max. 10000000)
+ 701 PDF objects out of 1000 (max. 8388607)
+ 596 compressed objects within 6 object streams
+ 175 named destinations out of 1000 (max. 500000)
+ 16709 words of extra memory for PDF output out of 17280 (max. 10000000)
 

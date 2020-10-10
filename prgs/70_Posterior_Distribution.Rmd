@@ -29,6 +29,7 @@ library(cowplot) # cowplot helps align multiple ggplots in a grid for comparison
 # Sys.setenv(LANG="en")
 library(extrafont)
 library(patchwork)
+library(bayesplot)
 theme_set(theme_bw(base_family = "Times New Roman")) # Set the gg-theme to use the latex font
 if (!require("devtools")) {
   install.packages("devtools")
@@ -36,41 +37,43 @@ if (!require("devtools")) {
 devtools::install_github("stan-dev/bayesplot")
 ```
 ```{r}
-m1 <- readRDS("../results/m1.rds")
 d <- readRDS("../data/d_sat.RDS")
-```
+m1 <- readRDS("../results/m1.rds")
+m2 <- readRDS("../results/sat_friends.rds")
+m3 <- readRDS("../results/sat_class.rds")
+m4 <- readRDS("../results/sat_school.rds")
 
-```{r}
-post_dens_overlay <- ppc_dens_overlay(y = d$lsat,
+post_dens_overlay_lsat <- ppc_dens_overlay(y = d$lsat,
                  yrep = posterior_predict(m1, draws = 50))
-ggsave("../figures/post_dens_overlay.png", post_dens_overlay, width = 7, height = 5, units = "in")
 
-fitted(m1) %>%
-  as_tibble() %>%
-  bind_cols(d) %>%
-  ggplot(aes(x = lsat, y = Estimate)) +
-  geom_abline(linetype = 2, color = "grey50", size = .5) +
-  geom_point(size = 1.5, color = "firebrick4", alpha = 3/4) +
-  geom_linerange(aes(ymin = Q2.5, ymax = Q97.5),
-                 size = 1/4, color = "firebrick4") +
-  geom_linerange(aes(ymin = Estimate - Est.Error,
-                     ymax = Estimate + Est.Error),
-                 size = 1/2, color = "firebrick4")
+# fitted(m1) %>%
+#   as_tibble() %>%
+#   bind_cols(d) %>%
+#   ggplot(aes(x = lsat, y = Estimate)) +
+#   geom_abline(linetype = 2, color = "grey50", size = .5) +
+#   geom_point(size = 1.5, color = "firebrick4", alpha = 3/4) +
+#   geom_linerange(aes(ymin = Q2.5, ymax = Q97.5),
+#                  size = 1/4, color = "firebrick4") +
+#   geom_linerange(aes(ymin = Estimate - Est.Error,
+#                      ymax = Estimate + Est.Error),
+#                  size = 1/2, color = "firebrick4")
 
 color_scheme_set("brightblue")
-post_pred <- m1 %>%
+# m1 %>%
+#   posterior_predict(draws = 500) %>%
+#   ppc_stat_grouped(y = d$lsat,
+#                    group = d$treated,
+#                    stat = "median")
+# m1 %>%
+#   posterior_predict(draws = 500) %>%
+#   ppc_stat_grouped(y = d$lsat,
+#                    group = d$school,
+#                    stat = "median")
+
+post_skew_lsat <- m1 %>%
   posterior_predict(draws = 500) %>%
-  ppc_stat_grouped(y = d$lsat,
-                   group = d$treated,
+  ppc_stat(y = d$lsat,
                    stat = "median")
-ggsave("../figures/post_pred.png", post_pred, width = 7, height = 5, units = "in")
-```
-
-
-
-
-
-```{r}
 
 post <- posterior_samples(m1)
 
@@ -84,14 +87,116 @@ mcmc_intervals(post[, 1:22],
         axis.line.y = element_blank(),
         axis.ticks = element_blank())
 
+# 'posterior_predict': Draw from posterior predictive distribution. The posterior predictive disribution is the distribution of the outcome implied by the model after using the observed data to update our beliefs about the unknown parameters in the mode. Simulating data grom the posterior predictive distribution using the observed predictors is useful for checking the fit of the model. Drawing from the posterior predictive distribution at interesting values of predictors also lets us visualize how a manipulation of a predictor affects (a function of) the outcome(s). With new observations of predictor variables we can use posterior predictive distribution to generate predicted outcomes
+
+## Satisfaction Friends
+
+post_dens_overlay_friends <- ppc_dens_overlay(y = d$sat_friends,
+                 yrep = posterior_predict(m2, draws = 50))
+
+fitted(m2) %>%
+  as_tibble() %>%
+  bind_cols(d) %>%
+  ggplot(aes(x = sat_friends, y = Estimate)) +
+  geom_abline(linetype = 2, color = "grey50", size = .5) +
+  geom_point(size = 1.5, color = "firebrick4", alpha = 3/4) +
+  geom_linerange(aes(ymin = Q2.5, ymax = Q97.5),
+                 size = 1/4, color = "firebrick4") +
+  geom_linerange(aes(ymin = Estimate - Est.Error,
+                     ymax = Estimate + Est.Error),
+                 size = 1/2, color = "firebrick4")
+
+color_scheme_set("brightblue")
+m2 %>%
+  posterior_predict(draws = 500) %>%
+  ppc_stat_grouped(y = d$sat_friends,
+                   group = d$treated,
+                   stat = "median")
 
 
+m2 %>%
+  posterior_predict(draws = 500) %>%
+  ppc_stat_grouped(y = d$sat_friends,
+                   group = d$school,
+                   stat = "median")
+
+post_skew_friends <- m2 %>%
+  posterior_predict(draws = 500) %>%
+  ppc_stat(y = d$sat_friends,
+                   stat = "median")
+
+## Satisfaction class
+
+post_dens_overlay_class <- ppc_dens_overlay(y = d$sat_class,
+                 yrep = posterior_predict(m3, draws = 50))
+
+fitted(m3) %>%
+  as_tibble() %>%
+  bind_cols(d) %>%
+  ggplot(aes(x = sat_class, y = Estimate)) +
+  geom_abline(linetype = 2, color = "grey50", size = .5) +
+  geom_point(size = 1.5, color = "firebrick4", alpha = 3/4) +
+  geom_linerange(aes(ymin = Q2.5, ymax = Q97.5),
+                 size = 1/4, color = "firebrick4") +
+  geom_linerange(aes(ymin = Estimate - Est.Error,
+                     ymax = Estimate + Est.Error),
+                 size = 1/2, color = "firebrick4")
+
+color_scheme_set("brightblue")
+m3 %>%
+  posterior_predict(draws = 500) %>%
+  ppc_stat_grouped(y = d$sat_class,
+                   group = d$treated,
+                   stat = "median")
+
+m3 %>%
+  posterior_predict(draws = 500) %>%
+  ppc_stat_grouped(y = d$sat_class,
+                   group = d$school,
+                   stat = "median")
+
+post_skew_class <- m3 %>%
+  posterior_predict(draws = 500) %>%
+  ppc_stat(y = d$sat_class,
+                   stat = "median")
+
+# Satiscation School
+
+post_dens_overlay_school <- ppc_dens_overlay(y = d$sat_school,
+                 yrep = posterior_predict(m4, draws = 50))
+
+fitted(m4) %>%
+  as_tibble() %>%
+  bind_cols(d) %>%
+  ggplot(aes(x = sat_school, y = Estimate)) +
+  geom_abline(linetype = 2, color = "grey50", size = .5) +
+  geom_point(size = 1.5, color = "firebrick4", alpha = 3/4) +
+  geom_linerange(aes(ymin = Q2.5, ymax = Q97.5),
+                 size = 1/4, color = "firebrick4") +
+  geom_linerange(aes(ymin = Estimate - Est.Error,
+                     ymax = Estimate + Est.Error),
+                 size = 1/2, color = "firebrick4")
+
+color_scheme_set("brightblue")
+m4 %>%
+  posterior_predict(draws = 500) %>%
+  ppc_stat_grouped(y = d$sat_school,
+                   group = d$treated,
+                   stat = "median")
+
+m4 %>%
+  posterior_predict(draws = 500) %>%
+  ppc_stat_grouped(y = d$sat_class,
+                   group = d$school,
+                   stat = "median")
+
+post_skew_school <- m4 %>%
+  posterior_predict(draws = 500) %>%
+  ppc_stat(y = d$sat_school,
+                   stat = "median")
 
 
-
-
-
-mcmc_plot(m1)
+post_check_all <- grid.arrange(post_dens_overlay_lsat, post_skew_lsat, post_dens_overlay_friends, post_skew_friends, post_dens_overlay_class, post_skew_class, post_dens_overlay_school, post_skew_school, nrow=4)
+ggsave("../figures/post_check_all.png", post_check_all, width = 7, height = 5, units = "in")
 ```
-
 

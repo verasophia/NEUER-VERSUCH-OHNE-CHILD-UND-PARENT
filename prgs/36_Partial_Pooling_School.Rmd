@@ -1,0 +1,346 @@
+---
+title: Klasse im Puls
+author: 
+  - Christoph Wunder
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_document:
+    fig_caption: yes
+    theme: spacelab 
+    highlight: pygments
+    toc: TRUE
+    toc_depth: 2
+    number_sections: TRUE
+    toc_float:
+      smooth_scroll: FALSE
+bibliography: literature.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment=NA)
+rm(list=ls())
+```
+```{r, include=TRUE, message = FALSE}
+library(tidyverse)
+library(Hmisc)
+library(mosaic)
+library(foreign)
+library(lme4)
+library(rstanarm)
+library(brms)
+library(tableone)
+library(RColorBrewer)
+library(xtable)
+library(knitr)
+library(kableExtra)
+library(ggdist)
+library(plm)
+```
+```{r}
+d <- readRDS("../data/d_sat.RDS")
+```
+
+```{r, cache=TRUE}
+prior <- c(prior(normal(8, 2), class = Intercept),
+           prior(normal(0, 1), class = b),
+           prior(cauchy(0, 1), class = sd),
+           prior(exponential(0.5), class = sigma))
+m4 <- brm( sat_school ~ treated + welle + tXw2 + tXw3 + tXw4 + tXw5 + 
+             female + migback + hob.mus.making +
+             (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
+           prior = prior, cores = 4, chains = 4, 
+           data = d, seed=123,
+           file = "../results/sat_school")
+```
+
+
+## Posterior predictions for average (or marginal) school
+
+```{r}
+x_pred_avg <- tibble( treated = as.factor( rep(c(0, 1), 5)),
+                  welle   = as.factor( c(1, 1, 2, 2, 3, 3, 4, 4, 5, 5) ),
+                  tXw2    = c(0,0,0,1,0,0,0,0,0,0),
+                  tXw3    = c(0,0,0,0,0,1,0,0,0,0),
+                  tXw4    = c(0,0,0,0,0,0,0,1,0,0),
+                  tXw5    = c(0,0,0,0,0,0,0,0,0,1),
+                  female  = as.factor( rep(1, 10) ),
+                  migback = as.factor( rep("Native", 10) ),
+                  hob.mus.making = as.factor( rep("Ja", 10) ) )
+# Average school (and pupil)
+x_pred_avg
+
+y_pred <- fitted( m4, newdata = x_pred_avg, 
+                  re_formula = NA,
+                  probs = c(0.25, 0.75) )
+pred_df <- cbind.data.frame( y_pred, x_pred_avg )
+```
+
+```{r}
+gr_sat_school_pred <-  ggplot( pred_df, aes( x = welle, y = Estimate, group = treated) ) + 
+  geom_line( aes(color=treated) ) +
+  geom_point( aes(color=treated) ) +
+  geom_pointrange(aes(ymin = Q25, 
+                      ymax = Q75, color = treated ),
+                  position=position_dodge(width=0.1) ) +
+  ylab("Satisfaction with school") +
+  scale_x_discrete("Wave", limits = seq(1:5) ) +
+  theme(legend.position="bottom")
+ggsave("../figures/sat_school_pred.pdf", gr_sat_school_pred, width = 7, height = 4, units = "in")
+gr_sat_school_pred
+```
+
+## Average treatment effect
+
+```{r}
+post <- posterior_samples(m4)
+teff <- tibble( teff2 = post$`b_tXw2`,
+                teff3 = post$`b_tXw3`, 
+                teff4 = post$`b_tXw4`, 
+                teff5 = post$`b_tXw5` )
+teff_mean <- apply( X = teff, MARGIN = 2, FUN = mean )
+teff_quant <- t(apply( X = teff, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+su_teff <- tibble( mean = teff_mean, 
+                   Q10 = teff_quant[,1],
+                   Q90 = teff_quant[,2], 
+                   wave = seq(2:5) )
+su_teff
+```
+
+```{r} 
+gr_sat_school_teff <- ggplot(data = su_teff, 
+       aes(x = wave, 
+           y = mean)) +
+  geom_pointrange(aes(ymin = Q10, ymax = Q90)) +
+  scale_x_discrete("Wave", limits=c("2", "3", "4", "5")) +
+  geom_hline(yintercept=0) +
+  ylab("Average treatment effect")
+ggsave("../figures/sat_school_teff.pdf", gr_sat_school_teff, width = 7, height = 4, units = "in")
+gr_sat_school_teff
+```
+
+## Posterior predictions for existing schools
+
+```{r}
+x_pred_school <- tibble( treated = as.factor( rep(rep(c(0, 1), 5), 6) ),
+                  welle   = as.factor( rep(rep(1:5, each=2), 6) ),
+                  school  = as.factor( rep(1:6, each=10) ),
+                  tXw2    = rep(c(0,0,0,1,0,0,0,0,0,0), 6),
+                  tXw3    = rep(c(0,0,0,0,0,1,0,0,0,0), 6),
+                  tXw4    = rep(c(0,0,0,0,0,0,0,1,0,0), 6),
+                  tXw5    = rep(c(0,0,0,0,0,0,0,0,0,1), 6),
+                  female  = as.factor( rep(1, 60) ),
+                  migback = as.factor( rep("Native", 60) ),
+                  hob.mus.making = as.factor( rep("Ja", 60) ) )
+
+y_pred <- fitted( m4, newdata = x_pred_school, 
+                  re_formula = ~(1 + treated + tXw2 + tXw3 +
+                                   tXw4 + tXw5 | school) ) 
+pred_df <- cbind.data.frame( y_pred, x_pred_school )
+
+gr_sat_school_pred_across_schools <- 
+  ggplot( pred_df, aes( x = welle, y = Estimate, group = treated) ) + 
+  geom_line( aes(color=treated) ) +
+  ylab("Life satisfaction") +
+  scale_x_discrete("Wave", limits = seq(1:5) ) +
+  facet_wrap(vars(school), labeller = labeller(
+    school = c("1" = "School: 1", "2" = "School: 2", "3" = "School: 3",
+               "4" = "School: 4", "5" = "School: 5", "6" = "School: 6" ))) +
+  theme(legend.position="bottom")
+ggsave("../figures/sat_school_pred_across_schools.pdf", gr_sat_school_pred_across_schools, 
+       width = 7, height = 4, units = "in")
+gr_sat_school_pred_across_schools
+```
+
+## Treatment effect heterogeneity across schools
+
+```{r}
+post <- posterior_samples(m4)
+teff_w2 <- tibble( school1 = post$`b_tXw2` + post$`r_school[1,tXw21]`,
+                   school2 = post$`b_tXw2` + post$`r_school[2,tXw21]`,
+                   school3 = post$`b_tXw2` + post$`r_school[3,tXw21]`,
+                   school4 = post$`b_tXw2` + post$`r_school[4,tXw21]`,
+                   school5 = post$`b_tXw2` + post$`r_school[5,tXw21]`,
+                   school6 = post$`b_tXw2` + post$`r_school[6,tXw21]` )
+teff_mean_w2 <- apply( X = teff_w2, MARGIN = 2, FUN = mean )
+teff_quant_w2 <- t(apply( X = teff_w2, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+
+teff_w3 <- tibble( school1 = post$`b_tXw3` + post$`r_school[1,tXw31]`,
+                   school2 = post$`b_tXw3` + post$`r_school[2,tXw31]`,
+                   school3 = post$`b_tXw3` + post$`r_school[3,tXw31]`,
+                   school4 = post$`b_tXw3` + post$`r_school[4,tXw31]`,
+                   school5 = post$`b_tXw3` + post$`r_school[5,tXw31]`,
+                   school6 = post$`b_tXw3` + post$`r_school[6,tXw31]` )
+teff_mean_w3 <- apply( X = teff_w3, MARGIN = 2, FUN = mean )
+teff_quant_w3 <- t(apply( X = teff_w3, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+
+teff_w4 <- tibble( school1 = post$`b_tXw4` + post$`r_school[1,tXw41]`,
+                   school2 = post$`b_tXw4` + post$`r_school[2,tXw41]`,
+                   school3 = post$`b_tXw4` + post$`r_school[3,tXw41]`,
+                   school4 = post$`b_tXw4` + post$`r_school[4,tXw41]`,
+                   school5 = post$`b_tXw4` + post$`r_school[5,tXw41]`,
+                   school6 = post$`b_tXw4` + post$`r_school[6,tXw41]` )
+teff_mean_w4 <- apply( X = teff_w4, MARGIN = 2, FUN = mean )
+teff_quant_w4 <- t(apply( X = teff_w4, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+
+teff_w5 <- tibble( school1 = post$`b_tXw5` + post$`r_school[1,tXw51]`,
+                   school2 = post$`b_tXw5` + post$`r_school[2,tXw51]`,
+                   school3 = post$`b_tXw5` + post$`r_school[3,tXw51]`,
+                   school4 = post$`b_tXw5` + post$`r_school[4,tXw51]`,
+                   school5 = post$`b_tXw5` + post$`r_school[5,tXw51]`,
+                   school6 = post$`b_tXw5` + post$`r_school[6,tXw51]` )
+teff_mean_w5 <- apply( X = teff_w5, MARGIN = 2, FUN = mean )
+teff_quant_w5 <- t(apply( X = teff_w5, MARGIN = 2, 
+                     FUN = quantile, probs = c(0.1, 0.9) ))
+
+su_teff <- tibble( school = rep(seq(1:6), 4), 
+                   mean = c(teff_mean_w2, teff_mean_w3,
+                            teff_mean_w4, teff_mean_w5), 
+                   Q10 = c(teff_quant_w2[,1], teff_quant_w3[,1],
+                           teff_quant_w4[,1], teff_quant_w5[,1]),
+                   Q90 = c(teff_quant_w2[,2], teff_quant_w3[,2],
+                           teff_quant_w4[,2], teff_quant_w5[,2]),
+                   wave = rep(2:5, each=6) )
+```
+Graphical representation of results.
+
+```{r}
+gr_sat_school_teff_across_schools <-
+  ggplot(data = su_teff, aes(x = wave, y = mean)) +
+  geom_pointrange(aes(ymin = Q10, 
+                      ymax = Q90, group = school, color = school),
+                  position=position_dodge(width=0.40)) +
+  scale_x_discrete("Wave", limits=seq(2:6) )  +
+  geom_hline(yintercept=0) + 
+  theme(legend.position="bottom")
+ggsave("../figures/sat_school_teff_across_schools.pdf", gr_sat_school_teff_across_schools, 
+       width = 7, height = 4, units = "in")
+gr_sat_school_teff_across_schools
+```
+
+
+
+
+
+
+# Including gender interactions
+
+```{r}
+table(d2$female, d2$school, useNA = "ifany")
+```
+
+
+```{r, message=FALSE, cache=TRUE}
+bayes4 <- stan_lmer( lsat ~ treated + welle + tXw2 + female + female:tXw2 +
+                       (1 + treated + tXw2 + female + female:tXw2 | school) + (1 | pid), 
+                data=d2, chains = 4, cores = 4, seed=123 )
+summary(bayes4, 
+        pars = c("(Intercept)", "treated1", "welle2", "tXw21", "female1", "tXw21:female1",
+                 "b[tXw21 school:1]", "b[tXw21 school:2]", "b[tXw21 school:3]",
+                 "b[tXw21 school:4]", "b[tXw21 school:5]", "b[tXw21 school:6]",
+                 "b[tXw21:female1 school:1]", "b[tXw21:female1 school:2]", "b[tXw21:female1 school:3]",
+                 "b[tXw21:female1 school:4]", "b[tXw21:female1 school:5]", "b[tXw21:female1 school:6]"),
+        probs = c(0.1, 0.5, 0.9),
+        digits = 4)
+```
+
+```{r}
+teff2_gender <- as.matrix(bayes4, 
+                   pars = c("tXw21", "tXw21:female1",
+                            "b[tXw21 school:1]", "b[tXw21:female1 school:1]",
+                            "b[tXw21 school:2]", "b[tXw21:female1 school:2]",
+                            "b[tXw21 school:3]", "b[tXw21:female1 school:3]",
+                            "b[tXw21 school:4]", "b[tXw21:female1 school:4]",
+                            "b[tXw21 school:5]", "b[tXw21:female1 school:5]",
+                            "b[tXw21 school:6]", "b[tXw21:female1 school:6]")) 
+
+school1_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:1]"]
+school2_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:2]"]
+school3_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:3]"]
+school4_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:4]"]
+school5_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:5]"]
+school6_boys <- teff2_gender[,"tXw21"] + teff2_gender[,"b[tXw21 school:6]"]
+school1_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:1]"] + teff2_gender[,"b[tXw21:female1 school:1]"]
+school2_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:2]"] + teff2_gender[,"b[tXw21:female1 school:2]"]
+school3_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:3]"] + teff2_gender[,"b[tXw21:female1 school:3]"]
+school4_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:4]"] + teff2_gender[,"b[tXw21:female1 school:4]"]
+school5_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:5]"] + teff2_gender[,"b[tXw21:female1 school:5]"]
+school6_girls <- teff2_gender[,"tXw21"] + teff2_gender[,"tXw21:female1"] + teff2_gender[,"b[tXw21 school:6]"] + teff2_gender[,"b[tXw21:female1 school:6]"]
+
+teff2_boys <- data.frame( 
+                     school1 = school1_boys,
+                     school2 = school2_boys,
+                     school3 = school3_boys,
+                     school4 = school4_boys,
+                     school5 = school5_boys,
+                     school6 = school6_boys)
+
+teff2_girls <- data.frame( 
+                     school1 = school1_girls,
+                     school2 = school2_girls,
+                     school3 = school3_girls,
+                     school4 = school4_girls,
+                     school5 = school5_girls,
+                     school6 = school6_girls)
+
+```
+
+```{r}
+r2_mean_boys <- apply( X = teff2_boys, MARGIN = 2, FUN = mean )
+r2_mean_girls <- apply( X = teff2_girls, MARGIN = 2, FUN = mean )
+r2_quant_boys <- apply( X = teff2_boys, MARGIN = 2, FUN = quantile, probs = c(0.1, 0.9))
+r2_quant_girls <- apply( X = teff2_girls, MARGIN = 2, FUN = quantile, probs = c(0.1, 0.9))
+r2_quant_boys <- data.frame(t(r2_quant_boys))
+r2_quant_girls <- data.frame(t(r2_quant_girls))
+names(r2_quant_boys) <- c("Q10", "Q90")
+names(r2_quant_girls) <- c("Q10", "Q90")
+r2_boys <- data.frame( school = seq(1:6), mean = r2_mean_boys, r2_quant_boys, wave = 2, female = as.factor(0) )
+r2_girls <- data.frame( school = seq(1:6), mean = r2_mean_girls, r2_quant_girls, wave = 2, female = as.factor(1) )
+r2_gender <- rbind.data.frame(r2_boys, r2_girls)
+r2_gender
+```
+
+```{r}
+ggplot(data = r2_gender, 
+       aes(x = wave, 
+           y = mean)) +
+  geom_pointrange(aes(ymin = Q10, 
+                      ymax = Q90, group = school, color = school),
+                  position=position_dodge(width=0.20)) +
+  scale_x_discrete("Wave", limits = c(2)) +
+  geom_hline(yintercept=0) + facet_grid(~ female)
+```
+
+
+# Alternative model: varying intercepts for time trend across schools 
+
+## Model statement
+
+We allow for different time trends across schools. This preserves the common trend assumption within schools. The regression equation is:
+$$
+\begin{align}
+y_{ijt} = \beta_0 + \beta_{1j[i]} T_i + \sum\limits_{l=2}^5\delta_{lj[i]} (T_{i} \times \text{Period}_{t}) + \lambda_{tj[i]} + \mu_{j[i]} + \alpha_{i} + \epsilon_{ijt},
+\end{align}
+$$
+
+# Individual fixed effects
+
+## Model statement
+
+$$
+\begin{align}
+y_{ijt} = \beta_0 + \beta_{1j[i]} T_i + \sum\limits_{l=2}^5\delta_{lj[i]} (T_{i} \times \text{Period}_{t}) + \lambda_{t}[i] + \mu_{j[i]} + \alpha_{i} + \epsilon_{ijt},
+\end{align}
+$$
+
+* $\alpha_{i}$ models individual-specific unobserved factors. Individual heterogeneity is model because we have repeated observations for the same pupils over time. We do not specify a model the individual-specific term $\alpha_i$ here. This is equivalent to using dummy variables for all pupils (and omitting the overall intercept).
+
+# Original computing environment
+
+```{r, results='hide'}
+devtools::session_info()
+```
+

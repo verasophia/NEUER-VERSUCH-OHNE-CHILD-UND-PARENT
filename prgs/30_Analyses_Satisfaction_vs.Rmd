@@ -41,6 +41,7 @@ library(plm)
 
 ```{r}
 d <- readRDS("../data/d_sat.RDS")
+welle1 <- readRDS("../data/welle1.RDS")
 ```
 
 ```{r}
@@ -65,6 +66,28 @@ d <- readRDS("../data/d_sat.RDS")
 #        width = 7, height = 4, units = "in")
 ```
 
+```{r}
+m0 <- brm(lsat ~ treated + (1 + treated | school), data = welle1)
+print(m0)
+
+m01 <- lm(lsat ~ treated + factor(school), data = welle1)
+summary(m01)
+
+m02 <- lm(lsat ~ treated*school, data = welle1)
+summary(m02)
+print(m02)
+
+
+
+tibble(
+  " " = c("Intercept", "Treatmetn yes", "School 2", "School 3", "School 4", "School 5", "School 6", "T*School 2", "T*School 3", "T*School 4", "T*School 5", "T*School 6"),
+  "Coefficient" = m02$coefficients,
+  "Std. Error" = m02$stderr)
+
+tab_model(m02)
+```
+
+
 # Model statement - Multilevel model (partial pooling)
 
 We simultaneously investigate the treatments in six different schools. We restrict the analysis to wave 1 (pre treatment) and wave 2 (post treatment). The regression equation is:
@@ -88,7 +111,7 @@ where
 ## Fit
 
 ```{r, cache=TRUE}
-prior <- c(prior(normal(7, 2), class = Intercept),
+prior <- c(prior(normal(8, 2), class = Intercept),
            prior(normal(0, 1), class = b),
            prior(cauchy(0, 1), class = sd),
            prior(exponential(0.5), class = sigma))
@@ -96,10 +119,8 @@ m1 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 +
              female + migback + hob.mus.making +
              (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
            prior = prior, cores = 4, chains = 4, 
-           data = d, seed=123,
-           file = "../results/m1"
+           data = d, seed=123
            )
-print(m1)
 
 intercept <- ggplot(data = tibble(x = seq(from = 0, to = 15, by = .1)),
        aes(x=x, y = dnorm(x, mean = 8, sd = 2))) +
@@ -138,9 +159,23 @@ x_pred_avg <- tibble( treated = as.factor( rep(c(0, 1), 5)),
                   hob.mus.making = as.factor( rep("Ja", 10) ) )
 # Average school (and pupil)
 x_pred_avg
+
+x_pred_avg <- tibble( treated = as.factor( rep(c(0, 1), 5)),
+                  welle   = as.factor( c(1, 1, 2, 2, 3, 3, 4, 4, 5, 5) ),
+                  tXw2    = c(0,0,0,1,0,0,0,0,0,0),
+                  tXw3    = c(0,0,0,0,0,1,0,0,0,0),
+                  tXw4    = c(0,0,0,0,0,0,0,1,0,0),
+                  tXw5    = c(0,0,0,0,0,0,0,0,0,1),
+                  female  = as.factor( rep(1, 10) ),
+                  migback = as.factor( rep("Immigrant", 10) ),
+                  hob.mus.making = as.factor( rep("Ja", 10) ) )
+
+# Extract Model Fitted Values.
+# Fitted is a generic function which extracts fitted values from object returned by modelin functions. 
 y_pred <- fitted( m1, newdata = x_pred_avg, 
                   re_formula = NA,
                   probs = c(0.25, 0.75) )
+
 y_pred
 # Marginal of school
 #y_pred <- fitted( m2, newdata = x_pred,
@@ -162,7 +197,10 @@ gr_lsat_pred <-  ggplot( pred_df, aes( x = welle, y = Estimate, group = treated)
   ylab("Life satisfaction") +
   scale_x_discrete("Wave", limits = seq(1:5) ) +
   theme(legend.position="bottom") +
-  scale_color_brewer("treated", type = 'qual', palette = "Set1")
+  scale_color_brewer("treated", type = 'qual', palette = "Set1") +
+  theme(text = element_text(size = 16),
+        axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16))
 ggsave("../figures/lsat_pred.png", gr_lsat_pred, width = 7, height = 4, units = "in")
 gr_lsat_pred
 ```
@@ -171,7 +209,7 @@ gr_lsat_pred
 
 ```{r}
 # Export the posterior samples into a data frame
-post <- posterior_samples(m1, add_chain = T)
+post <- posterior_samples(m1, add_chain = T) # Extract posterior samples of specified parameters
 posterior_summary(m1, probs = c(0.1, 0.9))
 head(post)
 teff <- tibble( teff2 = post$`b_tXw2`,
@@ -204,7 +242,10 @@ gr_lsat_teff <- ggplot(data = su_teff,
   geom_pointrange(aes(ymin = Q10, ymax = Q90)) +
   scale_x_discrete("Wave", limits=c("2", "3", "4", "5")) +
   geom_hline(yintercept=0) +
-  ylab("Average treatment effect")
+  ylab("Average treatment effect") +
+  theme(text = element_text(size = 16),
+        axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16))
 ggsave("../figures/lsat_teff.png", gr_lsat_teff, width = 7, height = 4, units = "in")
 gr_lsat_teff
 ```
@@ -235,7 +276,10 @@ gr_lsat_pred_across_schools <-
   facet_wrap(vars(school), labeller = labeller(
     school = c("1" = "School: 1", "2" = "School: 2", "3" = "School: 3",
                "4" = "School: 4", "5" = "School: 5", "6" = "School: 6" ))) +
-  theme(legend.position="bottom")
+  theme(legend.position="bottom") +
+  theme(text = element_text(size = 16),
+        axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16))
 ggsave("../figures/lsat_pred_across_schools.png", gr_lsat_pred_across_schools, 
        width = 7, height = 4, units = "in")
 gr_lsat_pred_across_schools
@@ -305,10 +349,12 @@ gr_lsat_teff_across_schools <-
                   position=position_dodge(width=0.40)) +
   scale_x_discrete("Wave", limits=seq(2:6) )  +
   geom_hline(yintercept=0) + 
-  theme(legend.position="bottom")
+  theme(legend.position="bottom") +
+  theme(text = element_text(size = 16),
+        axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16))
 ggsave("../figures/lsat_teff_across_schools.png", gr_lsat_teff_across_schools, 
        width = 7, height = 4, units = "in")
-ggsave("../figures/lsat_teff_across_schools.png", gr_lsat_teff_across_schools, width = 7, height = 4)
 gr_lsat_teff_across_schools
 ```
 

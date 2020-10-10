@@ -179,6 +179,9 @@ University of Halle-Wittenberg \\[0.75cm]
 
 \end{titlepage}
 
+\pagenumbering{roman}
+\setcounter{page}{2}
+
 \renewcommand{\baselinestretch}{1}\normalsize
 
 \textbf{\normalsize Abstract}
@@ -197,22 +200,29 @@ documented elsewhere?
 \tableofcontents
 
 \clearpage
+\listoftables
+
+\clearpage
+\listoffigures
+
+\clearpage
 \doublespacing
 \pagestyle{plain}
+\pagenumbering{arabic}
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
 \label{introduction}
 
-In German schools, and music are often considered less important than the typical hard subjects like math and science. Due to a lack of teachers, many classes are cancelled, of which 80\% are in the subject of music. In Saxony we see ongoing efforts to eliminate the subject of music from the curriculum entirely. Furthermore, the quality of music lessons suffers from the fact that 80\% of its teaching staff are foreign to the subject (Möller, 2017).
+In German schools, and music are often considered less important than the typical hard subjects like math and science. Due to a lack of teachers, many classes are canceled, of which 80\% are in the subject of music. In Saxony we see ongoing efforts to eliminate the subject of music from the curriculum entirely. Furthermore, the quality of music lessons suffers from the fact that 80\% of its teaching staff are foreign to the subject (Möller, 2017).
 
 Music education experts are concerned about this development. According to them, music should not be regarded as a private matter. Regardless of their socioeconomic background, school children must have the opportunity to receive high level music education because it is as important for a proper education as literacy and mathematics (Gebert, 2018). Prof.~Höppner, the General Secretary of the German Music Council (Generalsekretär des Deutschen Musikrats), said in an interview that music education helps to build stable self-esteem by learning to access ones own emotions (Stoverock, n.d.). He points out that the phase where music can shape a young person explicitly well is completed by the age of 13. That stresses the importance of high quality music education for students in pre- and secondary school.
 
 The Federal Association of Music Education (Bundesverband Musikunterricht (BMU)) has set up the ``Agenda 2030'' to initiate an improvement in music education. Similar to Höppner (Stoverock, n.d.), they consider music education as valuable and essential for a social and cultural society. It encourages children to take responsibility and to increase their sense of self-determination (Bundesverband Musikunterricht (BMU), 2016, p. 2).
 
 In views of this broad societal debate, empirical research has concentrated on the effect of music education on cognitive abilities (school grades and IQ in particular). Not so much effort was spent on observing the connection of music and well-being. This seems surprising because life satisfaction and happiness have become central research areas in the social sciences. My thesis addresses this research gap and investigates the effects of music education on children's overall life satisfaction and on satisfaction in specific areas, namely satisfaction with the class, satisfaction with friends, and satisfaction with the situation at school. It analyzes music education in the classroom where fifth and sixth grade students have one additional hour of music education per week. The project is called ``klasse.im.puls'' and it promotes the establishment of musical training in secondary schools in Bavaria. The program was implemented with the intention to give every child the opportunity to learn how to play an instrument. Additional positive outcomes were expected: an increase in self-confidence and social competence, as well as a reduction in violent behavior.\footnote{For more information:} The project was supervised by the FAU Erlangen-Nuremberg Music Teaching Department in collaboration with the Bavarian Ministry of Education.
-My analysis focuses on the change in the overall life satisfaction and in satisfaction within specific areas reported by the students over the course of the project. The term of \emph{life satisfaction} refers to a cognitive evaluation of a person's reaction to his or her life in contrast to \emph{affect}, an ongoing emotional reaction. Combined, LS and affect yield subjective well-being (Diener, 2009, p. 71). I will approach the problem by using a multilevel model, that accounts for differences on the level of the individual student, on the level of the class and on the school level. I do this by using Bayesian inference\ldots{}
+My analysis focuses on the change in the overall life satisfaction as a consequence of participating in the music project. Further outcome variables are of interest: Satisfaction with friends, satisfaction with the class, and satisfaction with the school. I will approach the problem by using a multilevel model, that accounts for differences among students and differences among schools by introducing a hierarchical structure where students represent level 1 and schools level 2. Data are available for different points in time. Therefore a third level, time periods are included. I estimate my model using
 
 The interest in life satisfaction as an outcome of the music project stems from the idea that higher values of LS come with many benefits. Among other positive correlates, adolescents reporting very high levels of LS are less likely to be affected by depression, anxiety, negative affect and social stress compared to adolescents with very low life satisfaction. Also, they achieve higher SEAs and demonstrate higher mean scores of school satisfaction (Gilman \& Huebner, 2006, p. 316; Proctor, Linley, \& Maltby, 2009, p. 928). These results go in line with a study by Suldo \& Huebner (2004, p. 94) that shows that LS could be a moderating variable in predictions of the development of psycho-pathological behaviors. Low life satisfaction may be an indication for externalizing behavior problems in the future. When life satisfaction is on a higher level, those behavior problems are less likely to occur (Suldo \& Huebner, 2004, p. 100) The authors conclude that life satisfaction might operate as a buffer against the development of subsequent externalizing behavior problems ``in the face of stressful life events'' (Suldo \& Huebner, 2004. p.~101). Kim, Conger, Elder, \& Lorenz (2003) add to the discussion that externalizing behavior problems in turn lead to more stressful life events. That reciprocal interrelation of stressful life events and externalizing problems (reported as delinquent behaviors) leads to unhealthy dynamics of increasing stress and behavior problems. If higher LS leads better coping mechanisms with stressful life events, these dependencies could be reduced.
 LS is also positively correlated with children having higher measures of self-esteem, internal locus of control, and extraversion (Huebner, 1991a, p. 107). These features help in building a solid foundation for later life. On the other hand, dissatisfaction with life is associated with adolescents having poor mental health (like anxiety and neuroticism) and physical health and being exposed to a higher risk of considering or attempting suicide (Huebner, 1991a, p. 107; Valois, Zullig, Huebner, \& Drane, 2004, p. 94). Furthermore, Zullig, Valois, Huebner, Oeltmann, \& Drane (2001, pp. 284--185) show that adolescents reporting low levels of overall life satisfaction are more likely to use drugs and alcohol earlier in life and in higher amounts than adolescents with medium or high life satisfaction.
@@ -223,10 +233,10 @@ The structure of my thesis is as follows: At first there will be an overview of 
 
 \emph{Gute Einleitung bei Southgate \& Roscigno (2009)}
 
+\clearpage
+
 \hypertarget{the-role-of-music-in-childrens-lives}{%
 \section{The role of music in childrens' lives}\label{the-role-of-music-in-childrens-lives}}
-
-\clearpage
 
 \label{ch:roleofmusic}
 With regard to the effect of music on students' lives, most of the researchers are interested in academic outcomes and intelligence among students who are actively involved in music. Generally, there is the predominant perception of a positive link between music and cognitive abilities. Osborne, McPherson, Faulkner, Davidson, \& Barrett (2015, p. 14) observed improved math skills and higher subjective well-being scores in children that were part of a music project. He also found them to have a better self-control over impulsive behavior. Yang (2015) (p.~385),Wetter, Koerner, \& Schwaninger (2008) (p.~372) , Hille (2014) (p.~62), and Guhn, Emerson, \& Gouzouasis (2019) (p.~316) present evidence that children playing music have better grades at school. But this conclusion is not very meaningful as all of these studies follow a correlational design and do not allow for causal inference. Nonetheless, the very optimistic and as we will see not quite realistic belief has prevailed that playing music causes children to achieve better results at school. This conclusion needs to be \emph{revised}. In an extensive review of the available evidence concerning associations between music and cognitive abilities, the picture is not so clear any longer (Schellenberg \& Weiss, 2013). Small associations between music training and mathematical ability in correlational and quasi-experimental studies might result from individual differences in general intellectual ability (p.~527). The available evidence simply indicates that high-functioning children (i.e., higher IQ, better performance in school) are more likely than other children to take music lessons and to perform well in mathematics and other tests of cognitive ability (p.~534). This fits with the Hille (2014) study where the outcome difference in cognitive skills between musically active and inactive children reduces greatly when holding constant observable characteristics. An other plausible interpretation of study outcomes that fail to detect a causal relationship comes from Wetter et al. (2008). He points out the possibility that the relationship is explained by affluent parents being more likely to afford music lessons for their child and thus, the socio-economic background may be the cause of higher performance at school. Despite the weakness of the above studies to draw causal inference, there is slight evidence that there may be a causal direction \emph{from} music training \emph{to} cognitive abilities in a study by Schellenberg (2004). He compares two treatment groups who receive piano lesson and voice lesson respectively to a control group in which the children have drama lessons. Random assignment to the different conditions allowed for inference that music lessons caused small increases in cognitive abilities (namely larger increases in full-scale IQ). However, this does not preclude the possibility that high-functioning children are more likely driven to play music. The misconception of music being a predictor for academic achievement is also discussed by Southgate \& Roscigno (2009) (p.~17) who states that music is rather a mediator, to some degree, of family background and student status. Results from a meta-analysis, suggest that music training does not reliably enhance children and young adolescents' cognitive or academic skills, and that previous positive findings were probably due to confounding variables, such as placebo effects and lack of random allocation of participants (Sala \& Gobet, 2016, p. 64). The effect size was reduced in studies that applied a proper study design (random allocation of participants to the treatment group and comparison to an active control group). With respect to the mathematical outcomes, the only study comparing a music training to an active control group and with random allocation of the participants to the group (Mehr, Schachner, Katz, \& Spelke, 2013) found a negative effect size. These considerations are in clear contrast to the popular perception that music training enhances any non-music related cognitive skill.
@@ -266,27 +276,36 @@ The sample that is studied has a hierarchical structure with three levels: (Idea
 \hypertarget{satisfaction}{%
 \subsubsection{Satisfaction}\label{satisfaction}}
 
-To measure life satisfaction and any area of satisfaction, I use a 11-point scale, with responds on a scale from 0 to 10. Life satisfaction is the variable of interest in my thesis, alongside with \emph{Satisfaction with friends}, \emph{Satisfaction with class}, and \emph{Satisfaction with school}. An extract of the questionnaire can be found in the index. Measuring life satisfaction on a 0-10-scale is quite common in that field of literature {[}Mellor, Stokes, Firth, Hayashi, \& Cummins (2008) Cheung \& Lucas (2014)\} but also 7-point scales are found a lot (Diener, Emmons, Larsen, \& Griffin, 1985). For the model, the satisfaction measures are assumed to be cardinal comparable both across and within individuals across time. There is broad consensus in the literature to interpret satisfaction responds as cardinally scaled (Ferrer-i-Carbonell \& Frijters, 2004). Summary statistics about the different areas of satisfaction are presented in Table \ref{tab:mean}.
+The term of \emph{life satisfaction} refers to a cognitive evaluation of a person's reaction to his or her life in contrast to \emph{affect}, an ongoing emotional reaction. Combined, LS and affect yield subjective well-being (Diener, 2009, p. 71).
+
+To measure life satisfaction and any area of satisfaction, I use a 11-point scale, with responds on a scale from 0 to 10. Life satisfaction is the variable of interest in my thesis, alongside with \emph{Satisfaction with friends}, \emph{Satisfaction with class}, and \emph{Satisfaction with school}. An extract of the questionnaire can be found in the index. Measuring life satisfaction on a 0-10-scale is quite common in that field of literature {[}Mellor, Stokes, Firth, Hayashi, \& Cummins (2008) Cheung \& Lucas (2014)\} but also 7-point scales are found a lot (Diener, Emmons, Larsen, \& Griffin, 1985). For the model, the satisfaction measures are assumed to be cardinal comparable both across and within individuals across time. There is broad consensus in the literature to interpret satisfaction responds as cardinally scaled (Ferrer-i-Carbonell \& Frijters, 2004). Summary statistics about the different areas of satisfaction are presented in Table \ref{tab:mean-LS}.
 
 \begin{table}
 
-\caption{(\#tab:mean LS)Mean satisfaction}
+\caption{\label{tab:mean-LS}Mean satisfaction}
 \centering
 \begin{tabular}[t]{lrr}
 \toprule
 Variable & Mean & SD\\
 \midrule
 Life satisfaction & 7.30 & 2.56\\
-Satisfaction friends & 8.85 & 2.56\\
-Satisfaction class & 7.58 & 2.56\\
-Satisfaction school & 7.72 & 2.56\\
+Satisfaction friends & 8.86 & 2.56\\
+Satisfaction class & 7.56 & 2.56\\
+Satisfaction school & 7.73 & 2.56\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-As already cited above in Chambers \& Johnston (2002), children tend to give values at the extreme ends of a scale. This is also what happened in the KIP sample: The histogram in Figure \ref{fig:hist lsat} shows a striking portion of the students indicating to have a life satisfaction of 10. Also, 50\% of the students respond with a 5 on the scale. This might indicate the issue that children how did not understand what the question asked them to do or that were not able to make the transfer from their individual assessment of their life satisfaction to pair it with a number just chose 5 randomly, hoping that it was neither ``right or wrong''.
+As already cited above in Chambers \& Johnston (2002), children tend to give values at the extreme ends of a scale. This is also what happened in the KIP sample: The histogram in Figure @ref\{fig:hist-lsat\} shows a striking portion of the students indicating to have a life satisfaction of 10. Also, 50\% of the students respond with a 5 on the scale. This might indicate the issue that children how did not understand what the question asked them to do or that were not able to make the transfer from their individual assessment of their life satisfaction to pair it with a number just chose 5 randomly, hoping that it was neither ``right or wrong''.
 
-\includegraphics[width=1\linewidth]{../figures/lsat_bar}
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{../figures/lsat_bar} 
+
+}
+
+\caption{Distribution of life satisfaction in wave 1}\label{fig:hist-lsat}
+\end{figure}
 
 \hypertarget{treatment}{%
 \subsubsection{Treatment}\label{treatment}}
@@ -298,24 +317,24 @@ The treatment is represented by a binary variable, indicating whether a student 
 
 In the first wave, students were asked to state their gender (Tick either \emph{``Bist du ein Junge/ein Mädchen?''}). This question did not appear in subsequent waves which leads to the issue that children who were not in school on the day the first questionnaire was handed to them, appear as NAs in the sample. The same happened for migration background. To avoid drop out of too many observations in the estimation process, gender and migration background were manipulated as category variables and NAs were replaced by the category \emph{unknown} This leads to the following distribution of time-invariant individual characteristics: Both the gender and the migration background is not known for around 20\% of the total of 394 students.
 
-The fact that it is an unbalanced panel that is studied should be considered more thoroughly. In Table \ref{tab:N Obs per wave and school} shows that the number of students in each class is varying over time, most severely in class five. The number of participants of the questionnaire drops by more than a third in wave 5 compared to the first period. The overall effect of this decline on the whole sample is shown in table \ref{tab:n_Obs_treat}. In the treatment group, their number of students decreases from 163 to 146 and in the treatment group from 154 to 141. This could be a reason to exclude school five from the observation completely as the attrition rate in the remaining schools is not that alarming.
+The fact that it is an unbalanced panel that is studied should be considered more thoroughly. In Table \ref{tab:N-Obs-per-wave-school} , the number of students in each class and each wave is presented. It shows that the number of students is varying from one wave to another, most severely in class five. In that class, the number of participants of the questionnaire drops by a third in wave 5 compared to the first period. The overall effect of this decline on the whole sample is shown in table \ref{tab:N-Obs}. In the treatment group, the number of students decreases from --- to --- and in the treatment group from --- to ---. This could be a reason to exclude school five from the observation completely as the attrition rate in the remaining schools is not that alarming. In total there were 1500 students observed throughout the five waves, however I excluded the students that did not report their satisfaction. If I had left them in the sample, this would have lead to problems in the posterior predictive checks because when the `brmsfit' fits the model, any N/As are excluded automatically.
 
 \begin{table}
 
-\caption{(\#tab:N Obs per wave and school)Number of observations}
+\caption{\label{tab:N-Obs-per-wave-school}Number of observations}
 \centering
 \begin{tabular}[t]{lrrrrrr}
 \toprule
 School & Wave 1 & Wave 2 & Wave 3 & Wave 4 & Wave 5 & Sum\\
 \midrule
-1 & 49 & 43 & 47 & 50 & 53 & 242\\
-2 & 54 & 52 & 52 & 49 & 49 & 256\\
-3 & 52 & 49 & 51 & 55 & 53 & 260\\
-4 & 51 & 47 & 51 & 52 & 51 & 252\\
-5 & 63 & 60 & 61 & 46 & 40 & 270\\
+1 & 47 & 40 & 46 & 48 & 52 & 233\\
+2 & 53 & 49 & 52 & 48 & 49 & 251\\
+3 & 49 & 46 & 48 & 52 & 52 & 247\\
+4 & 47 & 45 & 47 & 50 & 49 & 238\\
+5 & 56 & 57 & 57 & 43 & 37 & 250\\
 \addlinespace
-6 & 48 & 43 & 46 & 42 & 41 & 220\\
-Sum & 317 & 294 & 308 & 294 & 287 & 1500\\
+6 & 46 & 42 & 44 & 38 & 40 & 210\\
+Sum & 298 & 279 & 294 & 279 & 279 & 1429\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -324,14 +343,14 @@ As a third individual background variable, I included if a student had some musi
 
 \begin{table}
 
-\caption{(\#tab:N Obs)Number of observations}
+\caption{\label{tab:N-Obs}Number of observations}
 \centering
 \begin{tabular}[t]{lrrrrr}
 \toprule
   & Wave 1 & Wave 2 & Wave 3 & Wave 4 & Wave 5\\
 \midrule
-Treatment group & 163 & 149 & 153 & 143 & 146\\
-Control group & 154 & 145 & 155 & 151 & 141\\
+Treatment group & 154 & 142 & 146 & 137 & 145\\
+Control group & 144 & 137 & 148 & 142 & 134\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -339,35 +358,36 @@ Control group & 154 & 145 & 155 & 151 & 141\\
 \hypertarget{pre-treatment-differences}{%
 \subsection{Pre-treatment differences}\label{pre-treatment-differences}}
 
-The decision who attended the treatment group was made before the entrance to grade 5. Parents could choose to put their child into a music class. Therefore, the experiment is not fully randomized. Children who were already into music in the first place might have been more likely to have chosen the music class. Also the decision can be a a consequence of parental and socio-economic background of the student. To have a better idea of possible differences between the treatment and the control group, I computed standardized mean differences:
+\label{sec:pre-treat-diff}
+The decision who attended the treatment group was made before the entrance to grade 5. Parents could choose to put their child into a music class. Therefore, the experiment is not fully randomized. Children who were already into music in the first place might have been more likely enter the music class. Also the decision can be a a consequence of parental and socio-economic background of the student. To have a better idea of possible differences between the treatment and the control group, I computed standardized mean differences:
 
-The standardized mean differences are not a reason of concern in this setting. For most of the observed variables, there are no notable differences between the treatment group and the control group. However, as already suspected, there are differences in prior musical knowledge. Among the treated, there are relatively more children who have music as a hobby before the project has even started. Of the 87 students who answered with ``yes'' to the question if music was their hobby, only 24 were assigned to the control group and the remaining 63 students attended the band classes. Also, the duration of making music is very different in the two subgroups. In the Treatment group, 56\% are practicing at least 30 min, while in the control group that share is only 35\%. However, the model addresses this issue by applying a difference-in-difference approach to estimate the causal effect of additional music lessons on students' well-being. Possible differences in the control group and the treatment group are not a problem for inference.
+The standardized mean differences are not a reason for concern in this setting. For most of the observed variables, there are no notable differences between the treatment group and the control group. However, as already suspected, there are differences in prior musical knowledge. Among the treated, there are relatively more children who have music as a hobby before the project has even started. Of the 87 students who answered with ``yes'' to the question if music was their hobby, only 24 were assigned to the control group and the remaining 63 students attended the band classes. Also, the duration of making music is very different in the two subgroups. In the Treatment group, 56\% are practicing at least 30 min, while in the control group that share is only 35\%. However, the model addresses this issue by applying a difference-in-difference approach to estimate the causal effect of additional music lessons on students' well-being. Possible differences in the control group and the treatment group are not a problem for inference.
 
 \begin{table}
 
-\caption{(\#tab:std mean diff)Standardized mean differences}
+\caption{\label{tab:std-mean-diff}Standardized mean differences}
 \centering
 \begin{tabular}[t]{lr}
 \toprule
   & treated = 1 vs 0\\
 \midrule
 lsat & 0.1547095\\
-female & 0.1589880\\
-sat\_friends & 0.1567294\\
-sat\_class & 0.1557517\\
-class.prob & 0.0449783\\
+female & 0.1549319\\
+sat\_friends & 0.1489728\\
+sat\_class & 0.1471566\\
+class.prob & 0.0661021\\
 \addlinespace
-class.excl & 0.1219881\\
-note.deu & 0.0970701\\
-note.mat & 0.1283257\\
-note.mus & 0.1918611\\
-hob.mus.making & 0.5372337\\
+class.excl & 0.0926433\\
+note.deu & 0.1046076\\
+note.mat & 0.1252235\\
+note.mus & 0.1723422\\
+hob.mus.making & 0.5096009\\
 \addlinespace
-dauer.mus.lis & 0.0966792\\
-dauer.mus.making & 0.4497456\\
-play.instr & 0.0961298\\
-mus.active & 0.1646539\\
-migback & 0.1511146\\
+dauer.mus.lis & 0.1199891\\
+dauer.mus.making & 0.4205142\\
+play.instr & 0.0506167\\
+mus.active & 0.1239240\\
+migback & 0.1394205\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -387,92 +407,119 @@ On the other hand, Tomyn et al. (2016) conducted a study with children aged 10-1
 
 In conclusion, measuring life satisfaction in children is more challenging than for adults and is still in progress. It is advisable to check the validity and reliability of their data when testing children. Considering, the majority of the children from the KIP project are 10 year sold in wave 1 (72\% of those participating in wave 1), they might be just too young to give valid responses when asked about their life satisfaction. This must be kept in mind when evaluating the significance of the results.
 
+\clearpage
+
 \hypertarget{identification-strategy}{%
 \section{Identification strategy}\label{identification-strategy}}
 
 \label{sec:identification}
 In the following, I will explain how hierarchical models are best to navigate between underfitting and overfitting (fit to sample always - not true of multilevel models - improves as we add parameters.
+Multilevel modeling works well for drawing causal inference but also for prediction and descriptive modeling (Andrew Gelman, 2013, p. 6). A multilevel model is a linear model in which parameters are given a probability model. Mcelreath (2020) (p.~14) suggests to think of parameters as a placeholder for a missing model. That probability model itself has parameters called hyperparameters which are also estimated from the data. In other words, they are parameters for parameters.Technically, there is no limit to the number of levels, however infeasible computation and ability to understand the model are in practice a restriction. Though multilevel models are more complicated, it is worth using them because they reduce overfit as new parameters are added.
 
 \hypertarget{multilevel-modeling}{%
 \subsection{Multilevel modeling}\label{multilevel-modeling}}
 
-To assess the effect of the music treatment on the student's life satisfaction, I make use of multilevel modeling. As mentioned in \ref{ch:data}, the sample is structured hierarchically with students, nested within schools, observed in several time periods wherefore using a simple nonhierarchical model would be inappropriate. It would tend to underfit when there are only few parameters and t overfit the data when too many parameters are included. Though the latter would fit the existing data well but it would be very poor in making predictions for new data Andrew Gelman (2013), 101 Multilevel models, also known as hierarchical models, involve predictors at different levels of variation. In the KIP setting that means that it is possible to measure different effect sizes throughout time in each of the schools. It is likely that schools differ from each other and so the way the students react to the treatment differs as well, depending on the school they are in. This helps finding out if the intervention was more effective in some schools than in others to learn what could be improved in the future. In a classical regression, assigning varying effects for each group is done using interaction terms or running separate regressions for each subgroup of the sample. However, this has the disadvantage that estimates can be very imprecise, in particular when there are only few observations in one group. Estimating parameters for each group separately is referred to as no-pooling because each group is observed independently without considering the rest of the sample. However ignoring the hierarchical structure, which is then called complete pooling, is also not recommended, because effects that are actually true might disappear. Both approaches have downsides for different reasons but they can be useful preliminary estimates, eventually leading up to what is known as partial pooling that comes out of a multilevel analysis. Therefore I will illustrate both the extremes, complete pooling and no pooling in the following before I get to the details of partial pooling.
+To assess the effect of the music treatment on the student's life satisfaction, I make use of multilevel modeling. As mentioned in Chapter \ref{ch:data}, the sample is structured hierarchically, with students nested within schools, observed in several time periods wherefore using a simple nonhierarchical model would be inappropriate. It would tend to underfit when there are only few parameters and to overfit the data when too many parameters are included. Though fitting the data well, often seems to be the goal of data analysis, these models are usually very poor in making predictions for new data (Andrew Gelman (2013), 101). Multilevel models, also known as hierarchical models, involve predictors at different levels of variation. In the KIP setting that means that it is possible to measure different effect sizes throughout time in each of the schools. It is likely to observe different response behaviors among the schools. Depending on the school, students might react differently to the project. This is an important investigation to find out if the intervention was more effective in some schools than in others. One school might have done something explicitly well or had to face challenges other schools did not. Learning from these findings could possibly help to improve the project in the students.
 
-\begin{itemize}
-\tightlist
-\item
-  \emph{Complete pooling:}
-  Figure \ref{fig:complete pooling} shows the estimated treatment effects in each wave when completely pooling the data. The population of schools is assumed to be invariant. This ignores the fact that schools are different and assigns the same intercept to each of the schools. If done like this, there is the risk of ignoring important variation in how schools correspond to the treatment (Mcelreath, 2020, p. 416). The total sample mean underfits the data, meaning that the model is insensitive to the details in the data and is learning too little from it. Ignoring the group-level variation is very likely misleading. \ref{fig:lsat_vs_time_school_treated} plots the dynamics of mean life satisfaction for each school individually and it becomes clear that the development of life satisfaction in the treatment group over time differs noticeably.
-\end{itemize}
+In a classical regression, assigning varying effects to each group is done using interaction terms or running separate regressions for each subgroup of the sample. However, this has the disadvantage that estimates can be very imprecise, in particular when there are only few observations in one group. Estimating parameters for each group separately is referred to as \emph{no-pooling} because each group is observed independently without considering the rest of the sample. However ignoring the hierarchical structure and \emph{completely pooling} the information, is also not recommended. Effects that are actually true might disappear in that case. Both approaches have downsides for different reasons but they can be useful preliminary estimates, eventually leading up to what is known as partial pooling that comes out of a multilevel analysis. Therefore I will illustrate both the extremes, the complete pooling and the no-pooling approach in the following before I get to the details of partial pooling. The complete pooling and no-pooling model in comparison to he partial pooling model will be presented in a very simplified way. Life satisfaction will be explained with a varying-intercept model without any predictors. The puprpose is to emphasize the characteristic features of the three approaches without unnecessary complexity in the model. In this example, \(\alpha\) and \(\sigma\) are given weakly informative priors and the models are estimated using rstanatrm functions `stan\_glm' abd `stan\_glmer'.
 
-\includegraphics[width=1\linewidth]{../figures/complete_pool}
+The simplest model is the pooled model, where life satisfaction is modeled as iid draws from a common distribution.
+\begin{align*}
+lsat_i & \sim {\sf Normal} (\alpha, \sigma) & \quad \text{for } i \in 1,...,n \\
+\alpha & \sim {\sf Normal} (0, 10) \\
+\sigma & \sim {\sf Exponential} (1)
+\end{align*}
+In the complete pooling approach, the population of schools is assumed to be invariant. This ignores the fact that schools are different and assigns the same intercept to each of the schools. If done like this, there is the risk of ignoring important variation in how schools correspond to the treatment (Mcelreath, 2020, p. 416). The total sample mean underfits the data, meaning that the model is insensitive to the details in the data and is learning too little from it. Ignoring the group-level variation is very likely misleading. \ref{fig:lsat-vs-time} plots the dynamics of mean life satisfaction for each school individually and it becomes clear that the development of life satisfaction in the treatment group over time differs noticeably.
 
-\includegraphics[width=1\linewidth]{../figures/lsat_vs_time_by_school_treated}
+\begin{figure}
 
-\begin{itemize}
-\tightlist
-\item
-  \emph{No-pooling:}
-  The opposite is true for no-pooling information. Then the model is very sensitive to the details in the data, it is learning too much from it. To visualize this, I run panel linear regressions for each school separately. The results are presented in \ref{fig:no_pool}.
-\end{itemize}
+{\centering \includegraphics[width=0.8\linewidth]{../figures/lsat_vs_time_by_school_treated} 
 
-\includegraphics[width=1\linewidth]{../figures/no_pool}
-The no-pooling approach includes the assumption that the schools are completely different and on school cannot tell anything about the other schools. This is equivalent to the variation among schools being infinite which is certainly not the case. Schools are different in some ways for sure but they are also very similar in in the way that each school helps to estimate the treatment effect in other schools. One should choose a model that this. This is exactly what partial pooling is attempting.
+}
 
-\begin{itemize}
-\tightlist
-\item
-  \emph{Partial pooling:}
-  Multilevel models can be a solution by representing a compromise between the two extremes of no-pooling - Running separate regressions for each group and complete pooling - ignoring variation between groups. When partially pooling information, both similarities and differences among groups are comprised. Partial pooling uses all the data available to perform inference for groups instead of just using local information which is especially useful when there is only a small number of observations in each group. The group estimates are supported to the extend of the whole data set and are not being limited to the number of observations per group. These estimates are less underfit than the grand mean and less overfit than the no-pooling estimates. As a consequence they tend to be better estimates of the true per-school means (mcelreath p423). This will be especially true when there are only few observations in one class (as for examples in school \ldots{} wave \ldots) because then the no-pooling estimate will be overfit significantly. The difference between no-pooling and partial pooling becomes smaller, the more observations there are per cluster. The partial pooling produces noticeably better estimates and therefore will be used for my estimation. There are different tools to create a model that partially pooles information. I will use a Bayesian framework Since multilevel models have natural Bayesian representation (elreath p143) (Gelman \& Hill p143)
-\end{itemize}
+\caption{Mean}\label{fig:lsat-vs-time}
+\end{figure}
 
-Multilevel modeling works well for drawing causal inference but also for prediction and descriptive modeling (Andrew Gelman, 2013, p. 6). A multilevel model is a linear model in which parameters are given a probability model. Mcelreath (2020) (p.~14) suggests to think of parameters as a placeholder for a missing model. That probability model itself has parameters called hyperparameters which are also estimated from the data. In other words, they are parameters for parameters.Technically, there is no limit to the number of levels, however infeasable computation and ability to understand the model are in practice a restriction. Though multilevel models are more complicated, it is worth using them because they reduce overfit as new parameters are added.
+Whereas complete pooling ignores variation between schools, the no-pooling analyses overstates it and gives a different mean to each school:
+\begin{align*}
+lsat_i & \sim {\sf Normal} (\alpha_{j[i]}, \sigma) & \quad \text{for } i \in 1,...,n \\
+\alpha_{j} & \sim {\sf Normal} (0, 10) & \quad \text{for } j \in 1,...,m,
+\end{align*}
+where \(j[i] \in 1,...,m\) is the school of student \(i\).
+Although the \(\alpha_j\) are drawn from the same prior distribution, it has fixed parameters and thus no information is shared between observations in different schools. This makes the model very sensitive to the details in the data, you could say it is learning too much from it. The no-pooling approach includes the assumption that the schools are completely different and on school cannot tell anything about the other schools. This is equivalent to the variation among schools being infinite. But in reality, though schools are different in some ways, they are also very similar in in the way that each school helps to estimate the treatment effect in other schools. One should choose a model that incorporates the idea of learning from other groups while still accounting for systematic differences among the groups. This is exactly what partial pooling is attempting.
+
+Partial pooling represents a compromise between the two extremes of excluding a categorical predictor from a model (complete pooling), or estimating separate models within each level of the categorical predictor (no pooling). In the partially pooled model, still each school has its own mean values but with the difference that now, these school-means share a prior which has its own parameters.
+\begin{align*}
+lsat_i & \sim {\sf Normal} (\alpha_{j[i]}, \sigma) & \quad \text{for } i \in 1,...,n \\
+\alpha_{j} & \sim {\sf Normal} (\mu, \tau) & \quad \text{for } j \in 1,...,m
+\end{align*}
+We could also write the model with the school-level average in the mean equation for \(y\), and the \(\alpha_j\) values distributed around the country level average, \(\gamma\).
+\begin{align*}
+lsat_i & \sim {\sf Normal} (\alpha_{j[i]}, \sigma) & \quad \text{for } i \in 1,...,n \\
+\alpha_{j} & \sim {\sf Normal} (\gamma, \tau) & \quad \text{for } j \in 1,...,m \\
+\tau & \sim {\sf Exponentional(1)}
+\end{align*}
+
+After fitting the above models, I extracted the estimates of each of them and plotted them in @(fig:compare-models). (\url{https://jrnold.github.io/bayesian_notes/multilevel-models.html})
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{../figures/compare_models} 
+
+}
+
+\caption{Mean}\label{fig:compare-models}
+\end{figure}
+
+It shows clearly that when partially pooling information, both similarities and differences among groups are comprised. Partial pooling uses all the data available to perform inference for groups instead of just using local information which is especially useful when there is only a small number of observations in each group. The group estimates are supported to the extend of the whole data set and are not being limited to the number of observations per group. These estimates are less underfit than the grand mean and less overfit than the no-pooling estimates. As a consequence they tend to be better estimates of the true per-school means (mcelreath p423). Visually, this is shown by the blue dots (partial pooling), always being somewhere between the no-pooling estimates and the partial pooling estimates, being pulled towards the grand mean. The difference between the classical no-pooling estimates and the results from partial pooling is not very drastic. The reason for that is that probably the group-level variation is relatively small and that makes the multilevel model reduce to a classical regression with no group indicators. Also, the number of groups (6) is quite small which might be a reason why group-level variation cannot be estimated accurately. Still, it is worth the effort of expanding a classical regression in this way when adding the third level for the time periods later in the estimation. Partial pooling will be especially helpful when there are only few observations in one school because then the no-pooling estimate will be overfit significantly. The difference between no-pooling and partial pooling becomes smaller, the more observations there are per cluster. The partial pooling produces noticeably better estimates and therefore will be used for my estimation. There are different tools to create a model that partially pooles information. I chose a Bayesian framework for my analysis since multilevel models, models with multiple levels of uncertainty, each feeding into the next, have natural Bayesian representation (elreath,14) (Gelman \& Hill p143). Also, in the context of the observed study, a multilevel model works extremely well because of several reasons (elreath 15):
+* Adjusting estimates for repeat sampling - having more than one observation arising from the same student, a traditional, single-level model may be misleading
+* Adjusting for imbalance in sampling - some students are sampled more than others, again, a single-level model could be misleading in this case
+* Studying variation - I am interested in the variation of the treatment effect among schools. Multilevel models are of big help in this case because the model variation explicitly.
 
 \hypertarget{bayesian-inference}{%
 \subsection{Bayesian inference}\label{bayesian-inference}}
 
 \emph{``Bayesian inference is the process of fitting a probability model to a set of data and summarizing the results by a probability distribution on the parameters of the model and on unobserved quantities such as predictions of new observations''} (gelman etal p1)
-To set up what will follow in the next chaper about the explicit estimation, general terms from Bayesian inference are explained and formally written down. The notation comes from Gelman etal(chapter 1).
-Unobservable vector quantities of population parameters of interest are denoted by \(\theta\), \(y\) is reffered to as the observed data, the life satisfaction so to speak, and \(\tilde{y}\) are the unknown quantities (a new school\ldots prediction.) Bayesian statistical conclusions about a parameter \(\theta\), or unobserved data \(\tilde{y}\) are not made in specifying point estimtaes but they are made in terms of probability statements, expressed as \(p(\theta|y)\) or \(p(\tilde y|y)\) to show that these probability statements are conditional on the observed values of \(y\).
+To set up what will follow in the next chapter about the explicit estimation, general terms from Bayesian inference are explained and formally written down. The notation comes from Gelman etal(chapter 1).
+Unobservable vector quantities of population parameters of interest are denoted by \(\theta\), \(y\) is referred to as the observed data, the life satisfaction so to speak, and \(\tilde{y}\) are the unknown quantities (the potential quantities one will observe tomorrow - predictions). Bayesian statistical conclusions about a parameter \(\theta\), or unobserved data \(\tilde{y}\) are not made as specifying point estimates but they are made in terms of probability statements, expressed as \(p(\theta|y)\) or \(p(\tilde y|y)\) to show that these probability statements are conditional on the observed values of \(y\).
 To make a probability statement about \(\theta\) given \(y\), a joint probability distribution for \(\theta\) and \(y\) is needed. The joint probability function is the product of two densities: the prior distribution \(p(\theta)\) and the sampling distribution \(p(y|\theta)\). Applying Bayes' rule yields the posterior density \(p(\theta|y)=\frac{p(\theta,y)}{p(y)}=\frac{p(\theta)p(y|\theta)}{p()y}\),
 where \(p(y)=\sum_\theta{p(\theta)p(y|\theta)}\), and the sum is over all possible values of \(\theta\) (or \(p(y)=\int p(\theta)p(y|\theta)d\theta\) in the case of continuous \(\theta\)).
 To make predictive inferences, a similar logic is applied:
 The distribution of the unknown but observable \(y\) is
 \[p(y)=\int p(y,\theta)d\theta=\int p(\theta)p(y|\theta)d\theta\], which is referred to as the prior predictive distribution. It is not conditional on previous observations of the process, and it is a distribution of some observable quantity.
 From the same process, \(\tilde{y}\) can be predicted after observing the data \(y\).
-The distribution of \(\tilde{y}\) for example of future measurements, is called the posterior predictive distribution. It describes a prediction for an observable \(\tilde{y}\) conditional on the observed \(y\):
+The distribution of \(\tilde{y}\), for example of future measurements, is called the posterior predictive distribution. It describes a prediction for an observable \(\tilde{y}\) conditional on the observed \(y\):
 \[p(\tilde{y}|y)=\int p(\tilde{y},\theta|y)d\theta \\
 = \int p(\tilde{y}|\theta,y)p(\theta|y)d\theta \\
 = \int p(\tilde{y}|\theta)p(\theta|y)d\theta.\]
 The equations express the posterior predictive distribution as an average of the conditional predictions over the posterior distribution of \(\theta\). Given \(\theta\), \(y\) and \(\tilde{y}\) are assumed to be conditional independent.
 Having decided on a specific probability model, the data \(y\) affect the posterior inference \emph{only} through \(p(y|\theta)\), the likelihood function.
-Bayesian inference refers to statistical procedures that model unknown parameters (and also missing and latent data) as random variables. It starts with a prior distribution (more on that point in \ref{subsec:priors}) on the unknown parameters and updates this with the likelihood of the data, yielding a posterior distribution which is used for inferences and predictions (gelman and hill p143) (To my proof reading boyfriend: wie könnte man den Absatz schön umformulieren?)
+Bayesian inference refers to statistical procedures that model unknown parameters (and also missing and latent data) as random variables. It starts with a prior distribution (more on that point in Section \ref{subsec:priors} on the unknown parameters and updates this with the likelihood of the data, yielding a posterior distribution which is used for inferences and predictions (gelman and hill p143) (To my proof reading boyfriend: wie könnte man den Absatz schön umformulieren?)
+
+\clearpage
 
 \hypertarget{estimation}{%
 \section{Estimation}\label{estimation}}
 
 \label{sec:estimation}
-For model estimation I decided to use the brms packageby Bürkner (Bürkner (2017)). It imlements Bayesian multilevel models in `R' using the probabilistic programming language `Stan'. It allows for individual prior specifications and facilitates incorporating prior distributions that reflect the users beliefs. The package is also suitable for assessing and comparing models with the Watanabe-Akaike information criterion and leave-one-out cross-validation
+For model estimation I decided to use the `brms' package by Bürkner (Bürkner (2017)). It implements Bayesian multilevel models in `R' using the probabilistic programming language `Stan'. It allows for individual prior specifications and facilitates incorporating prior distributions that reflect the users' beliefs. The package is also suitable for assessing and comparing models with the Watanabe-Akaike information criterion and leave-one-out cross-validation.
 
 \hypertarget{the-model}{%
 \subsection{The model}\label{the-model}}
 
 \label{subsec:model}
-(Gelman p13)
-In a first step, I will set up a full probability mode - a joint probability distribution for all observable and unobservable quantities in a problem. The model should be consistent with knowledge about the underlying scientific problem and the data collection process.
-After that I will calculate and interpret the appropriate posterior distribution - the conditional probability distribution of the unobserved quantities of ultimate interest, given the observed data.
-Finally, in a third step the fit of the model will be evaluated and the models' implications of the resulting posterior distribution is presented (how sensitive are the results to the modeling assumptions in step 1?)
+As mentioned above, the intervention under study is not a fully randomized experiment. To address the issue of potential differences between students from the control group and students from the treatment group, , I use difference-in-difference regressions to estimate the effect of additional music lessons on pupils' life satisfaction and three areas of satisfaction are also observed as a outcome variable. Using this method, systematic pre-treatment differences are no longer a threat to identification. There is the underlying common trend assumption that requires that if the treatment were not undertaken, both the control group and the treatment group would have experienced the same time trend.
+The model I am using to fit the data includes varying intercepts on the school level and on the student level and varying slopes for each school. This assumes that schools have similar features but also, the way the treatment was introduced in each class might have differed slightly in each school. The individual intercept for each student is included to account for any unobserved background characteristics. The model, including the structure of the model and the distribution of the hyper-parameters is as follows:
 
-\begin{align}
+\begin{align*}
 lsat & \sim {\sf Normal} (\mu_{ijt}, \sigma), \\
 \mu_{ijt} & = \beta_0 + \beta_{1j[i]} T_i + \sum\limits_{l=2}^5\delta_{lj[i]} (T_{i} \times \text{Period}_{t}) + \lambda_t + \mu_{j[i]} + \alpha_{i} + \epsilon_{ijt}, \\
 \beta_0 & \sim  {\sf Normal}(7,2), \\
 Population-level effects & \sim {\sf Normal}(0,5), \\
 Group-level effects & \sim {\sf Cauchy}(0,1), \\
 \sigma & \sim {\sf Exponential}(0,5)
-\end{align}
+\end{align*}
 
-We have repeat measures and heterogeneity across clusters (McElreath). After all, schools are different but each school does help estimating the treatment effect in other schools.
 The study of effectiveness of the music project, with the students in school \(j\) having a certain unknown parameter vector \(\theta_j\), it might be reasonable to expect that estimates \(\theta_j\), which represent a sample of schools, should be related to each other. This is achieved in a natural way by using a prior distribution in which life satisfaction is viewed as a sample from a common \emph{population distribution}. A key feature of such applications is that the observed data, \(y_{ij}\), with student index \(i\) within group indexed by \(j\), can be used to estimate aspects of the population distribution of the \(theta_j\)'s even though the values of \(\theta_j\) are not themselves observed. In contrast, hierarchical models can have enough parameters to fit the model well, while using a population distribution to structure some dependence into the parameters, thereby avoiding problems of overfitting.
 
 I simultaneously investigate the treatment in six different schools. The analysis is restricted to wave 1 (pre treatment) and wave 2 (post treatment). The regression equation is:
@@ -505,43 +552,140 @@ For doing \emph{blah} I use \emph{blub} {[}ref{]}
 \subsection{Prior distribution}\label{prior-distribution}}
 
 \label{subsec:priors}
-As stated above in \ref{sec:methodology} in a Bayesian framework parameters are not point estimates but they have distributions. The specification for these parameters are called prior distribution because they must be specified \emph{before} the model is fit to data and it assigns them a probability to every possible value of each parameter to be estimated. If the specification is done properly, for all parameters in the model, a Bayesian model yields a joint prior distribution on parameters and data, and hence a prior marginal distribution for the data (Gabry p5). This process can be described as the prior distributions and data interacting to finally produce the posterior distribution. The posterior can be seen as a compromise between the prior distribution and the likelihood function. Therefore, the choice of the prior should be done carefully since it can determine the outcome severely. After identifying the type of data being described, creating a descriptive model with meaningful parameters, and defining a likelihood function, the next step is to establish a prior distribution over the parameter values (kruschke 110). The prior distribution indicates the believes about the distribution of each parameter without knowing the specific data. Depending on the choice of prior and the respective data set, the ``compromise'' favors one of them over the other. Flat priors or super-vague priors (\(\sf {N}(0,1e6)\)) are usually not recommended. They lead to a posterior distribution that is mainly influenced by the data which means that though the data set is very well described by the model, predictions are very poor. The model only ``learned'' about the distribution from the data because the prior did not carry any information. However if the prior has strong believes about the distribution of the parameters, meaning the prior distribution is sharply peaked, and there are only relatively few data, the posterior distribution is more influenced by the prior. Generally, weakly informative priors (\(\sf{N}(0,10)\)) are recommended because they help by providing a very gentle nudge towards reasonable values of the parameter (mcelreath p 299). If there is a reasonable large amount of data, they will dominate while the prior becomes less important. In case of not very meaningful data though, the ``weakly informative prior'' make up for it by strongly influencing the posterior inference. This relation is illustrated in \ref{fig:flat_peaked}. The upper row shows the posterior that appears when having a prior distribution \(lsat \sim {\sf Normal}(5, 200)\). The standard deviation in this prior is huge and gives barely any useful information about the distribution of life satisfaction among the population. The shape of the posterior is almost identical to the one of the likelihood. The opposite is the case when the prior is highly informative. A normal distribution with parameters of \(\mu = 5\) and \(\sigma = 1\) suggests that life satisfaction is very narrow around the mean of 5. The prior is so sharp that the posterior distribution is noticeably influenced by the prior. Bayesian models with proper priors are generative models (Gabry p5)
+As stated above in @ref\{sec:methodology\} in a Bayesian framework parameters are not point estimates but they have distributions. The specification for these parameters are called prior distribution because they must be specified \emph{before} the model is fit to data and it assigns them a probability to every possible value of each parameter to be estimated. If the specification is done properly, for all parameters in the model, a Bayesian model yields a joint prior distribution on parameters and data, and hence a prior marginal distribution for the data (Gabry p5). This process can be described as the prior distributions and data interacting to finally produce the posterior distribution. The posterior can be seen as a compromise between the prior distribution and the likelihood function. Therefore, the choice of the prior should be done carefully since it can determine the outcome severely. After identifying the type of data being described, creating a descriptive model with meaningful parameters, and defining a likelihood function, the next step is to establish a prior distribution over the parameter values (kruschke 110). The prior distribution indicates the believes about the distribution of each parameter without knowing the specific data. Depending on the choice of prior and the respective data set, the ``compromise'' favors one of them over the other. Flat priors or super-vague priors (\(\sf {N}(0,1e6)\)) are usually not recommended. They lead to a posterior distribution that is mainly influenced by the data which means that though the data set is very well described by the model, predictions are very poor. The model only ``learned'' about the distribution from the data because the prior did not carry any information. However if the prior has strong believes about the distribution of the parameters, meaning the prior distribution is sharply peaked, and there are only relatively few data, the posterior distribution is more influenced by the prior. Generally, weakly informative priors (\(\sf{N}(0,10)\)) are recommended because they help by providing a very gentle nudge towards reasonable values of the parameter (mcelreath p 299). If there is a reasonable large amount of data, they will dominate while the prior becomes less important. In case of not very meaningful data though, the ``weakly informative prior'' make up for it by strongly influencing the posterior inference. This relation is illustrated in @ref\{fig:flat-peaked\}. The upper row shows the posterior that appears when having a prior distribution \(lsat \sim {\sf Normal}(5, 200)\). The standard deviation in this prior is huge and gives barely any useful information about the distribution of life satisfaction among the population. The shape of the posterior is almost identical to the one of the likelihood. The opposite is the case when the prior is highly informative. A normal distribution with parameters of \(\mu = 5\) and \(\sigma = 1\) suggests that life satisfaction is very narrow around the mean of 5. The prior is so sharp that the posterior distribution is noticeably influenced by the prior. Bayesian models with proper priors are generative models (Gabry p5)
 
-\includegraphics[width=1\linewidth]{../figures/flat_peaked}
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{../figures/flat_peaked} 
+
+}
+
+\caption{Flat vs peaked prior}\label{fig:flat-peaked}
+\end{figure}
+
 A good prior also tackles the problem of overfitting which was discussed above. By choosing a skeptical prior. The term skeptical refers to the prior being skeptical about values outside the range of parameter values that are not reasonable. The most common skeptical prior is the regularizing prior which effectively reduces overfitting whil still allowing the model to learn about the regular features of a sample.
 To decide on proper priors, I plottet the influence of different priors on the distribution of the outcome variable, life satisfaction. This helped me deciding on priors that influenced the oucome in a way that the largest part of the distribution was on a reasonable scale while extreme values are still possible. To begin with, the prior for the estimate is \(N(7,2)\) (Figure\ldots). Life satisfaction as it is measured in this setting spreads on a range from 0 to 10 with most of the responses in the upper third. For the standard deviation I chose \(\sf {Exp}(0.5)\) which is wide enough for all values on the satisfaction scale to remain possible. For the population-level and group-level effects, I came to the conclusion that a weakly-informative prior of \(\sf {N}(0,1)\) is best. To show this, I plotted predicted values from different prior predictive distributions:
 
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{../figures/lsat_predicted} 
+
+}
+
+\caption{Prior predictive distribution}\label{fig:lsat-predicted}
+\end{figure}
+
 made some prior predictive simulations as suggested by MacElreath. This method is useful for understanding the implication of a prior and is neatly executed by Gabry ( see full code\ldots). It simulates predictions from a model, using only the prior distribution instead of the posterior distribution. Once priors are chosen, they imply a joint prior distribution of individual life satisfaction (elreath p85). This procedure is based on choosing priors conditional on pre-data knowledge of the data, on general facts so to say (elreath, p100). Only when this step is done, the model is applied to the data.
 
-\includegraphics[width=1\linewidth]{../figures/lsat_predicted}
+\begin{figure}
 
-\includegraphics[width=1\linewidth]{../figures/plot_priors}
-\clearpage
-\#\# Posterior distribution
-\label{subsec:posterior}
-Using `posterior predict', I generate samples of predictions and compute standard deviations over those samples. This makes explicit the choice between predicting for the participants in the study (i.e.~using the data you used for fitting for predictions) and predicting for hypothetical new participants (the inference for those could - in general - differ)
+{\centering \includegraphics[width=0.8\linewidth]{../figures/plot_priors} 
 
-\includegraphics[width=1\linewidth]{../figures/post_dens_overlay}
+}
 
-\includegraphics[width=1\linewidth]{../figures/post_pred}
+\caption{Plots of chosen priors}\label{fig:chosen-priors}
+\end{figure}
+
+The assumption of a normally distributed effect is hard to justify, considering the distribution of life satisfaction as it is in wave 1 (Figure \ref{hist-lsat}). The peaks for values of life satisfaction at 5 and at 10 do not really represent a normal distribution. The main reason for the use of normal distributions is mainly mathematical tractability. However, if the family of Bayesian models is inapporpriate, Bayesian answers can be quite misleading (Rubin (1981) 394)
 
 \hypertarget{model-validation}{%
 \subsection{Model validation}\label{model-validation}}
 
-\hypertarget{graphical-mcmc-diagnostic}{%
-\subsubsection{Graphical MCMC diagnostic}\label{graphical-mcmc-diagnostic}}
+\label{subsec:validation}
+After fitting the model in the previous section, I will now check its fit to data. A basic approach to asses the models adequacy is what is described as ``phenomenological Bayesian monitoring'' in Rubin (1981) (394) also: Gelman Bayesian Data Analsis ch.~5.5. The method is as follows. The posterior distribution, the distribution of the model parameters conditional on the observed data, can be used to generate a posterior predictive distribution. The implied predictions come from sampling from the posterior distribution to simulate predictions. The idea behind this approach is then to compare the posterior predictive distribution to a) the actual data and b) scientific judgment about plausible values of such data. The idea behind this approach is that if the model fits well, there should not be any systematic differences between what the model predicts to what the real data show and they will not contradict with plausible values but will be typical of them. Again, I follow Gelmans notation (p 145) for more detailed description of the posterior predictive checking. The observed data are denoted as \(y\), \(\theta\) is the vector of parameters, including all the hyperparameters. The replicated data are defined as \(y^{\mathrm{rep}}\). Thinking predictively, these are data that would be observed in the future if the experiment were replicated with the same model and the same value of \(\theta\) that produced the observed data \(y\). The distribution of \(y^{\mathrm{rep}}\) given the stat of knowledge is the posterior predictive distribution:
+\[p(y^{\mathrm{rep}}|y)=\int p(y^{\mathrm{rep}}|\theta)p(\theta|y)d\theta.\]
+I chose a graphical representation of the PPCs. Instead of calculating posterior probability, simulated data are plotted, to be visually compared to observed data.
+Figure \ref{fig:post-dens-overlay} shows the distribution of many replicated datasets drawn from the posterior predictive distribution (thin light lines) compared to the empirical distribution of the observed outcome (thick dark line). It shows that the assumption of a normal distribution might have been too strong. Therefor the model does not perform very well in capturing the observed skewness which is shown in Figure \ref{fig:post-skew}.
+
+\begin{figure}
+\includegraphics[width=0.5\linewidth]{../figures/post_dens_overlay} \includegraphics[width=0.5\linewidth]{../figures/post_skew} \caption{Posterior predictive check}\label{fig:post-dens-overlay}
+\end{figure}
+
+Looking at the features of the data and the replicated data, which were not explicitly included in the model, indicates the need to extend or modify the model.
+
+\clearpage
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
 
 \label{sec:results}
+Below in Figure \ref{fig:m1-coef}, all of the parameter estimates from the MCMC draws are shown. It plots posterior intervals for the parameters where the thick lines are the 50\% intervals and the thinner outer lines the 90\% intervals. In this chapter I will focus on the explanation of treatment effects that can be observed in terms of life satisfaction. I will also bring in the results for the three areas of satisfaction for friends, class and school. Those results will be discussed in less detail, they serve to potentially suggest an explanation where the effects on life satisfaction stem from.
 
-\includegraphics[width=1\linewidth]{../figures/m1_coef}
+\begin{figure}
 
-\includegraphics[width=1\linewidth]{../figures/m1_coef}
+{\centering \includegraphics[width=0.8\linewidth]{../figures/m1_coef} 
 
-\includegraphics[width=1\linewidth]{../figures/lsat_teff_across_schools}
-CONLCUSION
+}
+
+\caption{Parameter estimates}\label{fig:m1-coef}
+\end{figure}
+
+\hypertarget{life-satisfaction}{%
+\subsection{Life satisfaction}\label{life-satisfaction}}
+
+\hypertarget{average-school}{%
+\subsubsection{Average school}\label{average-school}}
+
+Plotting life satisfaction throughout time for the treatment and the control group respectively gives the following picture:
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{../figures/lsat_pred} 
+
+}
+
+\caption{Predicted life satisfaction for average school}\label{fig:lsat-pred}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=0.5\linewidth]{../figures/lsat_pred} \includegraphics[width=0.5\linewidth]{../figures/sat_friends_pred} \includegraphics[width=0.5\linewidth]{../figures/sat_class_pred} \includegraphics[width=0.5\linewidth]{../figures/sat_school_pred} \caption{Predicted satisaction by area for average school}\label{fig:sat-pred}
+\end{figure}
+
+Overall, students from the treatment group do not show any large changes in their satisfaction level. After the first period, they become even slightly less satisfied and remain on the same level until the end of the project. The control group shows a different dynamic. Their satisfaction level drops by around 0.75 points on the satisfaction scale after wave 1. It then goes up to the initial level to drop again in level 4. From period 4 to period 5, life satisfaction jumps back and even exceeds the level of period 1. Evaluating the treatment effects in Figure \ref{fig:lsat-teff} in that light, it indicates that the treatment effect does not come from the treatment but from the varying differences in the level of life satisfaction between the treatment and the control group. In other words, the differences between the control group and the treatment group are resulting from the the control group being quite volatile in their life satisfaction while the treatment group is rather consistent and generally on a lowever level. The supposedly positive treatment effect that Figure @(fig:lsat-teff) indicates in waves 2 and 4 simply appear because the difference between the treatment group and the control group are shrinking, compared to the previous period. Not because the treatment class is actually becoming happier.
+
+\begin{figure}
+\includegraphics[width=0.5\linewidth]{../figures/lsat_teff} \includegraphics[width=0.5\linewidth]{../figures/sat_friends_teff} \includegraphics[width=0.5\linewidth]{../figures/sat_class_teff} \includegraphics[width=0.5\linewidth]{../figures/sat_school_teff} \caption{Treatment effects by area of satisfaction for average school}\label{fig:sat-teff}
+\end{figure}
+
+\hypertarget{across-schools}{%
+\subsubsection{Across schools}\label{across-schools}}
+
+The pattern from Figure \ref{fig:lsat-teff} also appears in Figure \ref{fig:lsat-teff-across-schools}: There is a tendency of the treatment effects alternating from positive to negative from one wave to another. The magnitude of the effects however is extremely small and the 90\% credibility intervals always cross the zero line. Wave 5 paints a diffuse picture where school five seems to be completely off. The problem of school five being not very trustworthy was already mentioned when the descriptive statistics were introduced in Section \ref{sec:variables}.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{../figures/lsat_pred_across_schools} 
+
+}
+
+\caption{Predicted life satisfaction across schools}\label{fig:lsat-pred-across-schools}
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{../figures/lsat_teff_across_schools} 
+
+}
+
+\caption{Treatment effects across schools}\label{fig:lsat-teff-across-schools}
+\end{figure}
+
+\hypertarget{satisfaction-with-friends}{%
+\subsection{Satisfaction with friends}\label{satisfaction-with-friends}}
+
+The area of satisfaction with friends is the only one, where clearly a negative effect was observed. In both of the groups, the students tend to become less satisfied with their friends. The control group becomes a little more satisfied in wave 2 compared to the previous wave but then drops by the same amount. It then stays on the same level of about 8.75. The treatment group drops consistently, being less satisfied with friends from period to period. The treatment group starts with a mean satisfaction at more than 9, which is the highest values observed in all of the areas, and reaches a level of even less than 8.25 in wave 5. The treatment effects are all below zero including the 90\% credibility intervals. Again, it is school 5 where the treatment group shows the most rapid drop in satisfaction with friends from 9 in wave 1 to 7.5 in wave 5. The other schools show also a decrease in their satisfaction levels but school 1 and school 3 show a tendency for increasing satisfaction to the end of the project.
+
+\hypertarget{satisfaction-with-the-class}{%
+\subsection{Satisfaction with the class}\label{satisfaction-with-the-class}}
+
+Averaging over all schools shows similar developments of the satisfaction with the class in the treatment and the control group. Both of them drop sharply in the first two periods and then remain on a level of around seven with the treatment group generally showing slightly lower satisfaction levels than the control group. Basically, the treatment effects are not significantly different from zero.
+When looking at each school separately, there is no feature worth mentioning with the exception that in school 1 and 2, it is the students in the treatment class that are happier than the one in the control group on average.
+
+\hypertarget{satisfaction-with-school}{%
+\subsection{Satisfaction with school}\label{satisfaction-with-school}}
+
+The level of satisfaction with school is quite volatile throughout the time of the project. There is a pattern observable in the control group which shows that students are more satisfied with school at the beginning and at the end of a school year and less satisfied in between. The students in the treatment group generally show a level of satisfaction of more than eight and around 7/7.25 in all the other periods. The drop from wave 1 to wave 2 can be seen in each of the observed schools. But while in the other schools, it goes up again after that initial drop and eventually levels, school 5 is the only school where it continues to drop for the treatment group and goes even down to below 6 which can be categorized as dissatisfied.
+
 \clearpage
 
 \hypertarget{conclusion}{%
@@ -672,6 +816,9 @@ Portowitz, A., Lichtenstein, O., Egorova, L., \& Brand, E. (2009). Underlying me
 \leavevmode\hypertarget{ref-Proctor2009a}{}%
 Proctor, C., Linley, P. A., \& Maltby, J. (2009). Very happy youths: Benefits of very high life satisfaction among adolescents. \emph{Social Indicators Research}, \emph{98}(3), 519--532. \url{https://doi.org/10.1007/s11205-009-9562-2}
 
+\leavevmode\hypertarget{ref-Rubin1981}{}%
+Rubin, D. B. (1981). Estimation in parallel randomized experiments. \emph{Journal of Educational Statistics}, \emph{6}(4), 377--401. \url{https://doi.org/10.3102/10769986006004377}
+
 \leavevmode\hypertarget{ref-Sala2016}{}%
 Sala, G., \& Gobet, F. (2016). When the musics over. Does music skill transfer to childrens and young adolescents cognitive and academic skills? A meta-analysis. \emph{Educational Research Review}, \emph{20}, 55--67. \url{https://doi.org/10.1016/j.edurev.2016.11.005}
 
@@ -723,12 +870,14 @@ Zullig, K. J., Valois, R. F., Huebner, E. S., Oeltmann, J. E., \& Drane, J. W. (
 \appendix}
 
 
-Example of nice appendix in Hille (2014)
-
 \hypertarget{figures}{%
 \section{Figures}\label{figures}}
 
-\includegraphics[width=1\linewidth]{../figures/Wie zufrieden bist du....pdf}
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/Wie zufrieden bist du....pdf} \caption{Excerpt from questionnaire}\label{fig:questionnaire}
+\end{figure}
+
+Example of nice appendix in Hille (2014)
 
 \clearpage
 

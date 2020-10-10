@@ -198,7 +198,8 @@ saveRDS(object = extract_smd, file = "../results/extract_smd.Rds")
 ```
 
 ```{r}
-d <- readRDS("../data/d_satisfaction.RDS")
+d <- readRDS("../data/d_sat.RDS")
+
 
 su_d <- d %>% group_by(school, welle) %>%
                       summarise( mean.lsat = mean(lsat, na.rm = TRUE))
@@ -319,8 +320,7 @@ n_obs <- tibble(School = c("1", "2", "3", "4", "5", "6", "Sum"),
                nrow(d)
               )
         )
-saveRDS(n_obs, "../results/n_obs.RDS")
-kable(n_obs)
+
 
 n_obs_treat <- tibble(
   " " = c("Treatment group", "Control group"),
@@ -335,12 +335,12 @@ n_obs_treat <- tibble(
   "Wave 5" = c(nrow(subset(welle5, treated==1)),
                nrow(subset(welle5, treated==0)))
 )
+
+saveRDS(n_obs, "../results/n_obs.RDS")
+kable(n_obs)
+
 saveRDS(n_obs_treat, "../results/n_obs_treat.RDS")
 kable(n_obs_treat)
-
-d %>% filter( welle==5 ) %>% select(school, treated) %>% group_by(treated) %>% table()
-
-kable(d %>% select(school, welle) %>% group_by(school) %>% table())
 ```
 
 

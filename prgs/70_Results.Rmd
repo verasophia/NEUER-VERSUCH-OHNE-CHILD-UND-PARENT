@@ -37,21 +37,62 @@ devtools::install_github("stan-dev/bayesplot")
 ```
 ```{r}
 m1 <- readRDS("../results/m1.rds")
-```
+m2 <- readRDS("../results/sat_friends.rds")
+m3 <- readRDS("../results/sat_class.rds")
+m4 <- readRDS("../results/sat_school.rds")
 
-```{r}
 post <- posterior_samples(m1)
 
 color_scheme_set("red")
-m1_coef <- mcmc_intervals(post[, 1:22],
+coef <- mcmc_intervals(post[, 1:22],
                prob = .5,
                point_est = "median") +
-  labs(title = "My fancy bayesplot-based coefficients plot") +
+  labs(title = "Coefficients lifes satisfaction") +
   theme(axis.text.y = element_text(hjust = 0),
         axis.line.x = element_line(size = 1/4),
         axis.line.y = element_blank(),
         axis.ticks = element_blank())
-ggsave("../figures/m1_coef.pdf", m1_coef, width = 7, height = 5, units = "in")
-```
+ggsave("../figures/m1_coef.png", coef, width = 7, height = 5, units = "in")
+coef
 
+post <- posterior_samples(m2)
+
+color_scheme_set("red")
+coef <- mcmc_intervals(post[, 1:22],
+               prob = .5,
+               point_est = "median") +
+  labs(title = "Coefficients friends") +
+  theme(axis.text.y = element_text(hjust = 0),
+        axis.line.x = element_line(size = 1/4),
+        axis.line.y = element_blank(),
+        axis.ticks = element_blank())
+ggsave("../figures/friends_coef.png", coef, width = 7, height = 5, units = "in")
+coef
+
+post <- posterior_samples(m3)
+
+color_scheme_set("red")
+coef <- mcmc_intervals(post[, 1:22],
+               prob = .5,
+               point_est = "median") +
+  labs(title = "Coefficients class") +
+  theme(axis.text.y = element_text(hjust = 0),
+        axis.line.x = element_line(size = 1/4),
+        axis.line.y = element_blank(),
+        axis.ticks = element_blank())
+ggsave("../figures/class_coef.png", coef, width = 7, height = 5, units = "in")
+
+post <- posterior_samples(m4)
+
+color_scheme_set("red")
+coef <- mcmc_intervals(post[, 1:22],
+               prob = .5,
+               point_est = "median") +
+  labs(title = "Coefficients school") +
+  theme(axis.text.y = element_text(hjust = 0),
+        axis.line.x = element_line(size = 1/4),
+        axis.line.y = element_blank(),
+        axis.ticks = element_blank())
+ggsave("../figures/school_coef.png", coef, width = 7, height = 5, units = "in")
+```
 
