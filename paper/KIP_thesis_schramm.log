@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.9.23)  10 OCT 2020 17:19
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.9.23)  11 OCT 2020 18:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1158,182 +1158,150 @@ File: ../figures/lsat_bar.png Graphic file (type png)
 <use ../figures/lsat_bar.png>
 Package pdftex.def Info: ../figures/lsat_bar.png  used on input line 303.
 (pdftex.def)             Requested size: 364.18777pt x 260.13412pt.
-[9 <../figures/lsat_bar.png>] [10] [11] [12] [13] [14] [15
+[9 <../figures/lsat_bar.png>] [10] [11] [12] [13] [14] [15] [16
 
 ]
-<../figures/lsat_vs_time_by_school_treated.png, id=291, 2107.875pt x 1505.625pt
+<../figures/lsat_vs_time_by_school_treated.png, id=295, 2107.875pt x 1505.625pt
 >
 File: ../figures/lsat_vs_time_by_school_treated.png Graphic file (type png)
 <use ../figures/lsat_vs_time_by_school_treated.png>
 Package pdftex.def Info: ../figures/lsat_vs_time_by_school_treated.png  used on
  input line 436.
 (pdftex.def)             Requested size: 364.18777pt x 260.13412pt.
-[16] [17 <../figures/lsat_vs_time_by_school_treated.png>]
-<../figures/compare_models.pdf, id=307, 505.89pt x 289.08pt>
-File: ../figures/compare_models.pdf Graphic file (type pdf)
-<use ../figures/compare_models.pdf>
-Package pdftex.def Info: ../figures/compare_models.pdf  used on input line 467.
+[17] [18 <../figures/lsat_vs_time_by_school_treated.png>]
+<../figures/compare_models.png, id=311, 2107.875pt x 1204.5pt>
+File: ../figures/compare_models.png Graphic file (type png)
+<use ../figures/compare_models.png>
+Package pdftex.def Info: ../figures/compare_models.png  used on input line 471.
 
-(pdftex.def)             Requested size: 364.20192pt x 208.11537pt.
-[18] [19 <../figures/compare_models.pdf>]
-Overfull \hbox (3.29062pt too wide) in paragraph at lines 482--489
+(pdftex.def)             Requested size: 364.18777pt x 208.1073pt.
+[19] [20 <../figures/compare_models.png>]
+Overfull \hbox (3.29062pt too wide) in paragraph at lines 486--493
 \T1/ptm/m/it/12 (-20) ``Bayesian inference is the process of fitting a probabil
 ity model to a set of data and summarizing the
  []
 
-[20] [21] [22
+[21] [22] [23
 
 ]
 LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 5
-34.
+38.
 (/usr/local/texlive/2020/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-) [23] [24]
+) [24] [25]
 <../figures/flat_peaked.png, id=348, 1806.75pt x 903.375pt>
 File: ../figures/flat_peaked.png Graphic file (type png)
 <use ../figures/flat_peaked.png>
-Package pdftex.def Info: ../figures/flat_peaked.png  used on input line 559.
+Package pdftex.def Info: ../figures/flat_peaked.png  used on input line 563.
 (pdftex.def)             Requested size: 364.18318pt x 182.09158pt.
-[25 <../figures/flat_peaked.png>]
-<../figures/lsat_predicted.png, id=354, 1505.625pt x 903.375pt>
-File: ../figures/lsat_predicted.png Graphic file (type png)
-<use ../figures/lsat_predicted.png>
-Package pdftex.def Info: ../figures/lsat_predicted.png  used on input line 571.
-
+[26 <../figures/flat_peaked.png>]
+<../figures/prior_predict.png, id=355, 1505.625pt x 903.375pt>
+File: ../figures/prior_predict.png Graphic file (type png)
+<use ../figures/prior_predict.png>
+Package pdftex.def Info: ../figures/prior_predict.png  used on input line 575.
 (pdftex.def)             Requested size: 364.18318pt x 218.5099pt.
-<../figures/plot_priors.png, id=355, 2107.875pt x 1204.5pt>
+<../figures/plot_priors.png, id=356, 2107.875pt x 1204.5pt>
 File: ../figures/plot_priors.png Graphic file (type png)
 <use ../figures/plot_priors.png>
-Package pdftex.def Info: ../figures/plot_priors.png  used on input line 582.
+Package pdftex.def Info: ../figures/plot_priors.png  used on input line 586.
 (pdftex.def)             Requested size: 364.18777pt x 208.1073pt.
+[27 <../figures/prior_predict.png>]
 
-LaTeX Warning: Reference `hist-lsat' on page 26 undefined on input line 589.
+LaTeX Warning: Reference `hist-lsat' on page 28 undefined on input line 593.
 
-[26 <../figures/lsat_predicted.png>] [27 <../figures/plot_priors.png>]
+[28 <../figures/plot_priors.png>]
 
-LaTeX Warning: Reference `fig:post-skew' on page 28 undefined on input line 598
+LaTeX Warning: Reference `fig:post-skew' on page 29 undefined on input line 602
 .
 
 <../figures/post_dens_overlay.png, id=369, 2107.875pt x 1505.625pt>
 File: ../figures/post_dens_overlay.png Graphic file (type png)
 <use ../figures/post_dens_overlay.png>
 Package pdftex.def Info: ../figures/post_dens_overlay.png  used on input line 6
-01.
+05.
 (pdftex.def)             Requested size: 227.62138pt x 162.5867pt.
 <../figures/post_skew.png, id=370, 2107.875pt x 1505.625pt>
 File: ../figures/post_skew.png Graphic file (type png)
 <use ../figures/post_skew.png>
-Package pdftex.def Info: ../figures/post_skew.png  used on input line 601.
+Package pdftex.def Info: ../figures/post_skew.png  used on input line 605.
 (pdftex.def)             Requested size: 227.62138pt x 162.5867pt.
 
-Overfull \hbox (2.27869pt too wide) in paragraph at lines 601--601
+Overfull \hbox (2.27869pt too wide) in paragraph at lines 605--605
 [][] [] 
  []
 
-[28 <../figures/post_dens_overlay.png> <../figures/post_skew.png>]
-<../figures/m1_coef.pdf, id=378, 505.89pt x 361.35pt>
-File: ../figures/m1_coef.pdf Graphic file (type pdf)
-<use ../figures/m1_coef.pdf>
-Package pdftex.def Info: ../figures/m1_coef.pdf  used on input line 616.
-(pdftex.def)             Requested size: 364.20192pt x 260.14423pt.
+[29 <../figures/post_dens_overlay.png> <../figures/post_skew.png>]
+<../figures/m1_coef.png, id=378, 2107.875pt x 1505.625pt>
+File: ../figures/m1_coef.png Graphic file (type png)
+<use ../figures/m1_coef.png>
+Package pdftex.def Info: ../figures/m1_coef.png  used on input line 620.
+(pdftex.def)             Requested size: 364.18777pt x 260.13412pt.
 <../figures/lsat_pred.png, id=379, 2107.875pt x 1204.5pt>
 File: ../figures/lsat_pred.png Graphic file (type png)
 <use ../figures/lsat_pred.png>
-Package pdftex.def Info: ../figures/lsat_pred.png  used on input line 633.
+Package pdftex.def Info: ../figures/lsat_pred.png  used on input line 637.
 (pdftex.def)             Requested size: 364.18777pt x 208.1073pt.
-File: ../figures/lsat_pred.png Graphic file (type png)
-<use ../figures/lsat_pred.png>
-Package pdftex.def Info: ../figures/lsat_pred.png  used on input line 641.
-(pdftex.def)             Requested size: 227.62138pt x 130.06935pt.
-<../figures/sat_friends_pred.pdf, id=380, 505.89pt x 289.08pt>
-File: ../figures/sat_friends_pred.pdf Graphic file (type pdf)
-<use ../figures/sat_friends_pred.pdf>
-Package pdftex.def Info: ../figures/sat_friends_pred.pdf  used on input line 64
-1.
-(pdftex.def)             Requested size: 227.62523pt x 130.07155pt.
-<../figures/sat_class_pred.pdf, id=381, 505.89pt x 289.08pt>
-File: ../figures/sat_class_pred.pdf Graphic file (type pdf)
-<use ../figures/sat_class_pred.pdf>
-Package pdftex.def Info: ../figures/sat_class_pred.pdf  used on input line 641.
+[30
 
-(pdftex.def)             Requested size: 227.62523pt x 130.07155pt.
-<../figures/sat_school_pred.pdf, id=382, 505.89pt x 289.08pt>
-File: ../figures/sat_school_pred.pdf Graphic file (type pdf)
-<use ../figures/sat_school_pred.pdf>
-Package pdftex.def Info: ../figures/sat_school_pred.pdf  used on input line 641
-.
-(pdftex.def)             Requested size: 227.62523pt x 130.07155pt.
+ <../figures/m1_coef.png>]
 
-Overfull \hbox (2.28253pt too wide) in paragraph at lines 641--641
-[][] []
- []
-
-
-Overfull \hbox (2.28638pt too wide) in paragraph at lines 641--641
-[] [] 
- []
-
-
-LaTeX Warning: Reference `fig:lsat-teff' on page 29 undefined on input line 644
+LaTeX Warning: Reference `fig:lsat-teff' on page 31 undefined on input line 644
 .
 
-[29
-
- <../figures/m1_coef.pdf>] [30 <../figures/lsat_pred.png> <../figures/sat_frien
-ds_pred.pdf> <../figures/sat_class_pred.pdf> <../figures/sat_school_pred.pdf>]
-<../figures/lsat_teff.png, id=418, 2107.875pt x 1204.5pt>
+<../figures/lsat_teff.png, id=388, 2107.875pt x 1204.5pt>
 File: ../figures/lsat_teff.png Graphic file (type png)
 <use ../figures/lsat_teff.png>
 Package pdftex.def Info: ../figures/lsat_teff.png  used on input line 647.
 (pdftex.def)             Requested size: 227.62138pt x 130.06935pt.
-<../figures/sat_friends_teff.pdf, id=419, 505.89pt x 289.08pt>
-File: ../figures/sat_friends_teff.pdf Graphic file (type pdf)
-<use ../figures/sat_friends_teff.pdf>
-Package pdftex.def Info: ../figures/sat_friends_teff.pdf  used on input line 64
+<../figures/sat_friends_teff.png, id=389, 2107.875pt x 1204.5pt>
+File: ../figures/sat_friends_teff.png Graphic file (type png)
+<use ../figures/sat_friends_teff.png>
+Package pdftex.def Info: ../figures/sat_friends_teff.png  used on input line 64
 7.
-(pdftex.def)             Requested size: 227.62523pt x 130.07155pt.
-<../figures/sat_class_teff.pdf, id=420, 505.89pt x 289.08pt>
-File: ../figures/sat_class_teff.pdf Graphic file (type pdf)
-<use ../figures/sat_class_teff.pdf>
-Package pdftex.def Info: ../figures/sat_class_teff.pdf  used on input line 647.
+(pdftex.def)             Requested size: 227.62138pt x 130.06935pt.
+<../figures/sat_class_teff.png, id=390, 2107.875pt x 1204.5pt>
+File: ../figures/sat_class_teff.png Graphic file (type png)
+<use ../figures/sat_class_teff.png>
+Package pdftex.def Info: ../figures/sat_class_teff.png  used on input line 647.
 
-(pdftex.def)             Requested size: 227.62523pt x 130.07155pt.
-<../figures/sat_school_teff.pdf, id=421, 505.89pt x 289.08pt>
-File: ../figures/sat_school_teff.pdf Graphic file (type pdf)
-<use ../figures/sat_school_teff.pdf>
-Package pdftex.def Info: ../figures/sat_school_teff.pdf  used on input line 647
+(pdftex.def)             Requested size: 227.62138pt x 130.06935pt.
+<../figures/sat_school_teff.png, id=391, 2107.875pt x 1204.5pt>
+File: ../figures/sat_school_teff.png Graphic file (type png)
+<use ../figures/sat_school_teff.png>
+Package pdftex.def Info: ../figures/sat_school_teff.png  used on input line 647
 .
-(pdftex.def)             Requested size: 227.62523pt x 130.07155pt.
+(pdftex.def)             Requested size: 227.62138pt x 130.06935pt.
 
-Overfull \hbox (2.28253pt too wide) in paragraph at lines 647--647
+Overfull \hbox (2.27869pt too wide) in paragraph at lines 647--647
 [][] []
  []
 
 
-Overfull \hbox (2.28638pt too wide) in paragraph at lines 647--647
+Overfull \hbox (2.27869pt too wide) in paragraph at lines 647--647
 [] [] 
  []
 
+[31 <../figures/lsat_pred.png>]
 
-LaTeX Warning: Reference `fig:lsat-teff' on page 31 undefined on input line 653
+LaTeX Warning: Reference `fig:lsat-teff' on page 32 undefined on input line 653
 .
 
-<../figures/lsat_pred_across_schools.png, id=424, 2107.875pt x 1204.5pt>
+<../figures/lsat_pred_across_schools.png, id=399, 2107.875pt x 1505.625pt>
 File: ../figures/lsat_pred_across_schools.png Graphic file (type png)
 <use ../figures/lsat_pred_across_schools.png>
 Package pdftex.def Info: ../figures/lsat_pred_across_schools.png  used on input
  line 657.
-(pdftex.def)             Requested size: 364.18777pt x 208.1073pt.
-[31 <../figures/lsat_teff.png> <../figures/sat_friends_teff.pdf> <../figures/sa
-t_class_teff.pdf> <../figures/sat_school_teff.pdf>]
-<../figures/lsat_teff_across_schools.png, id=447, 2107.875pt x 1204.5pt>
+(pdftex.def)             Requested size: 364.18777pt x 260.13412pt.
+[32 <../figures/lsat_teff.png> <../figures/sat_friends_teff.png> <../figures/sa
+t_class_teff.png> <../figures/sat_school_teff.png>]
+<../figures/lsat_teff_across_schools.png, id=410, 2107.875pt x 1204.5pt>
 File: ../figures/lsat_teff_across_schools.png Graphic file (type png)
 <use ../figures/lsat_teff_across_schools.png>
 Package pdftex.def Info: ../figures/lsat_teff_across_schools.png  used on input
  line 666.
 (pdftex.def)             Requested size: 364.18777pt x 208.1073pt.
-[32 <../figures/lsat_pred_across_schools.png> <../figures/lsat_teff_across_scho
-ols.png>] [33] [34
+[33 <../figures/lsat_pred_across_schools.png> <../figures/lsat_teff_across_scho
+ols.png>] [34] [35
 
 ]
 Underfull \hbox (badness 1194) in paragraph at lines 747--749
@@ -1348,9 +1316,9 @@ n-al-ity As-sess-ment\T1/ptm/m/n/12 (+20) , \T1/ptm/m/it/12 (+20) 49\T1/ptm/m/n
 /12 (+20) (1), 71--75. []$https :
  []
 
-[35
+[36
 
-] [36]
+] [37]
 Underfull \hbox (badness 1122) in paragraph at lines 801--803
  [][]\T1/ptm/m/n/12 (+20) Möller, T. (2017). \T1/ptm/m/it/12 (+20) Ausverkauf m
 usikalis-cher Bil-dung? \T1/ptm/m/n/12 (+20) Re-trieved from []$https : / / www
@@ -1363,7 +1331,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 801--803
 e-[]ausverkauf-[]musikalischer . 1992 . de .
  []
 
-[37]
+[38]
 Underfull \hbox (badness 1270) in paragraph at lines 858--860
  [][]\T1/ptm/m/n/12 (+20) Wetter, O. E., Ko-erner, F., & Schwaninger, A. (2008)
 . Does mu-si-cal train-ing im-
@@ -1376,26 +1344,45 @@ c-tional Sci-ence\T1/ptm/m/n/12 (+20) , \T1/ptm/m/it/12 (+20) 37\T1/ptm/m/n/12
 (+20) (4), 365--374. []$https :
  []
 
-[38]
-<../figures/Wie zufrieden bist du....pdf, id=605, 597.23125pt x 845.1575pt>
+[39]
+<../figures/Wie zufrieden bist du....pdf, id=568, 597.23125pt x 845.1575pt>
 File: ../figures/Wie zufrieden bist du....pdf Graphic file (type pdf)
 <use ../figures/Wie zufrieden bist du....pdf>
 Package pdftex.def Info: ../figures/Wie zufrieden bist du....pdf  used on input
  line 877.
 (pdftex.def)             Requested size: 455.24918pt x 644.235pt.
-[39
+<../figures/sat_friends_pred.png, id=569, 2107.875pt x 1204.5pt>
+File: ../figures/sat_friends_pred.png Graphic file (type png)
+<use ../figures/sat_friends_pred.png>
+Package pdftex.def Info: ../figures/sat_friends_pred.png  used on input line 88
+1.
+(pdftex.def)             Requested size: 295.90457pt x 169.08833pt.
+<../figures/sat_class_pred.png, id=570, 2107.875pt x 1204.5pt>
+File: ../figures/sat_class_pred.png Graphic file (type png)
+<use ../figures/sat_class_pred.png>
+Package pdftex.def Info: ../figures/sat_class_pred.png  used on input line 881.
 
-] [40 <../figures/Wie zufrieden bist du....pdf>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 886.
-[41
+(pdftex.def)             Requested size: 295.90457pt x 169.08833pt.
+<../figures/sat_school_pred.png, id=571, 2107.875pt x 1204.5pt>
+File: ../figures/sat_school_pred.png Graphic file (type png)
+<use ../figures/sat_school_pred.png>
+Package pdftex.def Info: ../figures/sat_school_pred.png  used on input line 881
+.
+(pdftex.def)             Requested size: 295.90457pt x 169.08833pt.
+[40
+
+ <../figures/Wie zufrieden bist du....pdf>] [41 <../figures/sat_friends_pred.pn
+g> <../figures/sat_class_pred.png> <../figures/sat_school_pred.png>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 894.
+[42
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 886.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 894.
 (./KIP_thesis_schramm.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 886.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 886.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 894.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 894.
 Package rerunfilecheck Info: File `KIP_thesis_schramm.out' has not changed.
-(rerunfilecheck)             Checksum: 72F3707DB89CB1940A90E73852BF29B6;3879.
+(rerunfilecheck)             Checksum: 797395A4B15D8B98BF6356A9AC828EA2;3920.
 
 LaTeX Warning: There were undefined references.
 
@@ -1407,11 +1394,11 @@ Package logreq Info: Writing requests to 'KIP_thesis_schramm.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 24589 strings out of 480608
- 400103 string characters out of 5903630
- 1197706 words of memory out of 5000000
- 39673 multiletter control sequences out of 15000+600000
- 588195 words of font info for 239 fonts, out of 8000000 for 9000
+ 24605 strings out of 480608
+ 400202 string characters out of 5903630
+ 1197731 words of memory out of 5000000
+ 39683 multiletter control sequences out of 15000+600000
+ 591398 words of font info for 244 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  52i,10n,55p,4129b,4720s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2020/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
@@ -1424,10 +1411,10 @@ live/2020/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></usr/local/texlive/2020/t
 exmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2020/texmf-dist/
 fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2020/texmf-dist/fonts/type
 1/urw/times/utmri8a.pfb>
-Output written on KIP_thesis_schramm.pdf (46 pages, 1536850 bytes).
+Output written on KIP_thesis_schramm.pdf (47 pages, 2119151 bytes).
 PDF statistics:
- 701 PDF objects out of 1000 (max. 8388607)
- 596 compressed objects within 6 object streams
- 175 named destinations out of 1000 (max. 500000)
+ 670 PDF objects out of 1000 (max. 8388607)
+ 564 compressed objects within 6 object streams
+ 176 named destinations out of 1000 (max. 500000)
  16709 words of extra memory for PDF output out of 17280 (max. 10000000)
 

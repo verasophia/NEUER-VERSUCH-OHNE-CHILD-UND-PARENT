@@ -12,7 +12,7 @@ mainfont: Arial
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, concordance = TRUE)
+knitr::opts_chunk$set(echo = TRUE, concordance = TRUE, fig.pos = "H", out.extra = "")
 library(summarytools)
 library(kableExtra)
 library(stargazer)
@@ -145,7 +145,8 @@ To measure life satisfaction and any area of satisfaction, I use a 11-point scal
 
 ```{r mean-LS, echo=FALSE}
 sum_satisfaction <- readRDS("../results/sum_satisfaction.RDS")
-knitr::kable(sum_satisfaction, digits = 2, booktabs = T, col.names = c("Variable", "Mean", "SD"), caption = "Mean satisfaction")
+knitr::kable(sum_satisfaction, digits = 2, booktabs = T, col.names = c("Variable", "Mean", "SD"), caption = "Mean satisfaction") %>%
+  kable_styling(latex_options = "HOLD_position")
 ```
 As already cited above in @Johnston2002, children tend to give values at the extreme ends of a scale. This is also what happened in the KIP sample: The histogram in Figure \@ref{fig:hist-lsat} shows a striking portion of the students indicating to have a life satisfaction of 10. Also, 50% of the students respond with a 5 on the scale. This might indicate the issue that children how did not understand what the question asked them to do or that were not able to make the transfer from their individual assessment of their life satisfaction to pair it with a number just chose 5 randomly, hoping that it was neither "right or wrong".
 ```{r hist-lsat, echo=FALSE, echo=FALSE, fig.cap="Distribution of life satisfaction in wave 1", out.width = "80%", fig.align='center'}
@@ -162,17 +163,15 @@ The fact that it is an unbalanced panel that is studied should be considered mor
 
 ```{r N-Obs-per-wave-school, echo=FALSE}
 n_obs <- readRDS("../results/n_obs.RDS")
-
-knitr::kable(n_obs, booktabs = T, caption = "Number of observations")
-
+knitr::kable(n_obs, booktabs = T, caption = "Number of observations") %>%
+  kable_styling(latex_options = "HOLD_position")
 ```
 As a third individual background variable, I included if a student had some musical experience before the project had started. I expected students who already played an instrument before or received private music lessons would be more drawn to the treatment class. Also, as I want to find out if the project made students more satisfied, any previous effects of music on satisfaction should be minimized.
 
 ```{r N-Obs, echo=FALSE}
 n_obs_treat <- readRDS("../results/n_obs_treat.RDS")
-
-knitr::kable(n_obs_treat, booktabs = T, caption = "Number of observations")
-
+knitr::kable(n_obs_treat, booktabs = T, caption = "Number of observations") %>%
+  kable_styling(latex_options = "HOLD_position")
 ```
 
 ## Pre-treatment differences
@@ -183,9 +182,8 @@ The standardized mean differences are not a reason for concern in this setting. 
 
 ```{r std-mean-diff, echo=FALSE}
 extract_smd <- readRDS("../results/extract_smd.Rds")
-
-knitr::kable(extract_smd, booktabs = T, caption = "Standardized mean differences", col.names = c("treated = 1 vs 0"))
-
+knitr::kable(extract_smd, booktabs = T, caption = "Standardized mean differences", col.names = c("treated = 1 vs 0")) %>%
+  kable_styling(latex_options = "HOLD_position")
 # https://cran.r-project.org/web/packages/tableone/vignettes/smd.html
 ```
 
@@ -221,7 +219,7 @@ lsat_i & \sim {\sf Normal} (\alpha, \sigma) & \quad \text{for } i \in 1,...,n \\
 \sigma & \sim {\sf Exponential} (1)
 \end{align*}
 In the complete pooling approach, the population of schools is assumed to be invariant. This ignores the fact that schools are different and assigns the same intercept to each of the schools. If done like this, there is the risk of ignoring important variation in how schools correspond to the treatment [@Mcelreath2020, 416]. The total sample mean underfits the data, meaning that the model is insensitive to the details in the data and is learning too little from it. Ignoring the group-level variation is very likely misleading. \@ref(fig:lsat-vs-time) plots the dynamics of mean life satisfaction for each school individually and it becomes clear that the development of life satisfaction in the treatment group over time differs noticeably.
-```{r lsat-vs-time, echo=FALSE, echo=FALSE, fig.cap="Mean", out.width = "80%", fig.align='center'}
+```{r lsat-vs-time, echo=FALSE, echo=FALSE, fig.cap="LS in treatment group", out.width = "80%", fig.align='center'}
 knitr::include_graphics("../figures/lsat_vs_time_by_school_treated.png")
 ```
 
@@ -327,7 +325,7 @@ knitr::include_graphics("../figures/flat_peaked.png")
 A good prior also tackles the problem of overfitting which was discussed above. By choosing a skeptical prior. The term skeptical refers to the prior being skeptical about values outside the range of parameter values that are not reasonable. The most common skeptical prior is the regularizing prior which effectively reduces overfitting whil still allowing the model to learn about the regular features of a sample.
 To decide on proper priors, I plottet the influence of different priors on the distribution of the outcome variable, life satisfaction. This helped me deciding on priors that influenced the oucome in a way that the largest part of the distribution was on a reasonable scale while extreme values are still possible. To begin with, the prior for the estimate is $N(7,2)$ (Figure...). Life satisfaction as it is measured in this setting spreads on a range from 0 to 10 with most of the responses in the upper third. For the standard deviation I chose $\sf {Exp}(0.5)$ which is wide enough for all values on the satisfaction scale to remain possible. For the population-level and group-level effects, I came to the conclusion that a weakly-informative prior of $\sf {N}(0,1)$ is best. To show this, I plotted predicted values from different prior predictive distributions:
 ```{r lsat-predicted, echo=FALSE, fig.cap="Prior predictive distribution", out.width = "80%", fig.align='center'}
-knitr::include_graphics("../figures/lsat_predicted.png")
+knitr::include_graphics("../figures/prior_predict.png")
 ```
 
 made some prior predictive simulations as suggested by MacElreath. This method is useful for understanding the implication of a prior and is neatly executed by Gabry ( see full code...). It simulates predictions from a model, using only the prior distribution instead of the posterior distribution. Once priors are chosen, they imply a joint prior distribution of individual life satisfaction (elreath p85). This procedure is based on choosing priors conditional on pre-data knowledge of the data, on general facts so to say (elreath, p100). Only when this step is done, the model is applied to the data.
@@ -365,21 +363,14 @@ Plotting life satisfaction throughout time for the treatment and the control gro
 knitr::include_graphics("../figures/lsat_pred.png")
 ```
 
-```{r sat-pred, echo=FALSE, fig.cap="Predicted satisaction by area for average school", fig.show = "hold", out.width = "50%", fig.align = "default"}
-knitr::include_graphics("../figures/lsat_pred.png")
-knitr::include_graphics("../figures/sat_friends_pred.pdf")
-knitr::include_graphics("../figures/sat_class_pred.pdf")
-knitr::include_graphics("../figures/sat_school_pred.pdf")
-```
-
 Overall, students from the treatment group do not show any large changes in their satisfaction level. After the first period, they become even slightly less satisfied and remain on the same level until the end of the project. The control group shows a different dynamic. Their satisfaction level drops by around 0.75 points on the satisfaction scale after wave 1. It then goes up to the initial level to drop again in level 4. From period 4 to period 5, life satisfaction jumps back and even exceeds the level of period 1. Evaluating the treatment effects in Figure \@ref(fig:lsat-teff) in that light, it indicates that the treatment effect does not come from the treatment but from the varying differences in the level of life satisfaction between the treatment and the control group. In other words, the differences between the control group and the treatment group are resulting from the the control group being quite volatile in their life satisfaction while the treatment group is rather consistent and generally on a lowever level. The supposedly positive treatment effect that Figure \@(fig:lsat-teff) indicates in waves 2 and 4 simply appear because the difference between the treatment group and the control group are shrinking, compared to the previous period. Not because the treatment class is actually becoming happier.
 
 
 ```{r sat-teff, echo=FALSE, fig.cap="Treatment effects by area of satisfaction for average school",  fig.show = "hold", out.width = "50%", fig.align = "default"}
 knitr::include_graphics("../figures/lsat_teff.png")
-knitr::include_graphics("../figures/sat_friends_teff.pdf")
-knitr::include_graphics("../figures/sat_class_teff.pdf")
-knitr::include_graphics("../figures/sat_school_teff.pdf")
+knitr::include_graphics("../figures/sat_friends_teff.png")
+knitr::include_graphics("../figures/sat_class_teff.png")
+knitr::include_graphics("../figures/sat_school_teff.png")
 ```
 
 ### Across schools
@@ -428,14 +419,19 @@ The level of satisfaction with school is quite volatile throughout the time of t
 
 # (APPENDIX) Appendix {-} 
 
-# Figures
+# Appendix A
 ```{r questionnaire, echo=FALSE, echo=FALSE, out.width = "100%", fig.cap="Excerpt from questionnaire"}
 knitr::include_graphics("../figures/Wie zufrieden bist du....pdf")
+```
+```{r sat-pred, echo=FALSE, fig.cap="Predicted satisaction by area for average school", fig.show = "hold", out.width = "65%", fig.align = "center", fig.pos="H"}
+knitr::include_graphics("../figures/sat_friends_pred.png")
+knitr::include_graphics("../figures/sat_class_pred.png")
+knitr::include_graphics("../figures/sat_school_pred.png")
 ```
 Example of nice appendix in @Hille2014
 
 \clearpage
-# Tables
+# Appendix B
 
 ```{r smdtab, echo=FALSE}
 # smdtab <- readRDS("../results/smdtab.Rds")

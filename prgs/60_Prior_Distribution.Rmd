@@ -6,7 +6,8 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment=NA)
+rm(list=ls())
 library(tidyverse)
 library(brms)
 library(sjlabelled)
@@ -28,7 +29,7 @@ theme_set(theme_bw(base_family = "Times New Roman")) # Set the gg-theme to use t
 ```
 
 ```{r}
-d <- readRDS("../data/d_satisfaction.RDS")
+d <- readRDS("../data/d_sat.RDS")
 ```
 
 ```{r}
@@ -98,84 +99,43 @@ p3 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migbac
                      prior(cauchy(0, 1), class = sd),
                      prior(exponential(0.5), class = sigma)),
            file = "../results/prior_p3")
-
-p4 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
-           sample_prior = "only", data = d,
-           prior = c(prior(normal(7, 2), class = Intercept),
-                     prior(normal(0, 0.5), class = b),
-                     prior(cauchy(0, 0.5), class = sd),
-                     prior(exponential(0.5), class = sigma)),
-           file = "../results/prior_p4")
-```
-
-```{r}
-p1 <- readRDS("../resuls/prior_p1.rds")
-p2 <- readRDS("../resuls/prior_p2.rds")
-p3 <- readRDS("../resuls/prior_p3.rds")
-p4 <- readRDS("../resuls/prior_p4.rds")
-
 ```
 
 ```{r}
 p1_predict <- posterior_epred(object = p1, nsamples = 100)
 p1_long <- gather(data.frame(p1_predict))
 p1_long
-plotp1 <- ggplot(p1_long, aes(x=value, group=key)) +
-  geom_histogram(alpha=.2, bins = 200, fill = "#011f4b") +
-  xlim(-40,40) +
-  xlab("Predicted life satisfaction") + 
-  ylab("Density") +
-  labs(title = "N(0,10)") +
-  theme(axis.text.y = element_blank())
+p1_long$prior <- rep("3",145500)
 plotp1
 ```
 ```{r}
 p2_predict <- posterior_epred(object = p2, nsamples = 100)
 p2_long <- gather(data.frame(p2_predict))
 p2_long
-plotp2 <- ggplot(p2_long, aes(x=value, group=key)) +
-  geom_histogram(alpha=.2, bins = 200, fill = "#011f4b") +
-  xlim(-40,40) +
-  xlab("Predicted life satisfaction") + 
-  ylab("Density") +
-  labs(title = "N(0,5)") +
-  theme(axis.text.y = element_blank())
-plotp2
+p2_long$prior <- rep("2",145500)
 ```
 ```{r}
 p3_predict <- posterior_epred(object = p3, nsamples = 100)
 p3_long <- gather(data.frame(p3_predict))
 p3_long
-plotp3 <- ggplot(p3_long, aes(x=value, group=key)) +
-  geom_histogram(alpha=.2, bins = 200, fill = "#011f4b") +
-  xlim(-40,40) +
-  xlab("Predicted life satisfaction") + 
-  ylab("Density") +
-  labs(title = "N(0,1)") +
-  theme(axis.text.y = element_blank())
-plotp3
-```
-```{r}
-p4_predict <- posterior_epred(object = p4, nsamples = 100)
-p4_long <- gather(data.frame(p4_predict))
-p4_long
-plotp4 <- ggplot(p4_long, aes(x=value, group=key)) +
-  geom_histogram(alpha=.2, bins = 200, fill = "#011f4b") +
-  xlim(-40,40) +
-  xlab("Predicted life satisfaction") + 
-  ylab("Density") +
-  labs(title = "N(0,0.5)") +
-  theme(axis.text.y = element_blank())
-plotp4
-```
-```{r}
-lsat_predicted <- grid.arrange(plotp1, plotp2, plotp3, plotp4, ncol = 2)
-ggsave("../figures/lsat_predicted.png", lsat_predicted, width = 5, height = 3, units = "in")
+p3_long$prior <- rep("1",145500)
 ```
 
 ```{r}
-lsat_predicted <- grid.arrange(plotp1, plotp2, plotp3, ncol = 3)
-ggsave("../figures/lsat_predicted.png", lsat_predicted, width = 5, height = 3, units = "in")
+all <- bind_rows(p3_long, p2_long, p1_long)
+
+prior_predict <- ggplot(all, aes(x=value, y=..density..)) +
+  geom_histogram(bins = 200, fill = "#6497b1") +
+  xlab("Predicted life satisfaction") + 
+  ylab("Density") +
+  xlim(-30,30) +
+  facet_wrap(vars(prior), labeller = labeller(
+  prior = c("1" = "N(0,10)", "2" = "N(0,5)", "3" = "N(0,1)"))) +
+  geom_vline(xintercept = 0, color ="#9400d3") +
+  geom_vline(xintercept = 10, color ="#9400d3")
+  theme(text = element_text(size = 16)) +
+  theme(axis.text.y=element_blank())
+ggsave("../figures/prior_predict.png", prior_predict, width = 5, height = 3, units = "in")
 ```
 
 ```{r}
@@ -320,22 +280,22 @@ grid.arrange(prior31, prior32, prior33, prior34, ncol = 2)
                            
 intercept <- ggplot(data = tibble(x = seq(from = 0, to = 15, by = .1)),
        aes(x=x, y = dnorm(x, mean = 8, sd = 2))) +
-  geom_line() +
+  geom_line(colour = "#6497b1", size = 1.5) +
   ylab("density")
 
 b <- ggplot(data = tibble(x = seq(from = -5, to = 5, by = .1)),
        aes(x=x, y = dnorm(x, mean = 0, sd = 0.75))) +
-  geom_line() +
+  geom_line(colour = "#6497b1", size = 1.5) +
   ylab("density")
 
 sd <- ggplot(data = tibble(x = seq(from = -5, to = 5, by = .1)),
        aes(x=x, y = dcauchy(x, location = 0, scale = 1))) +
-  geom_line() +
+  geom_line(colour = "#6497b1", size = 1.5) +
   ylab("density")
 
 sigma <- ggplot(data = tibble(x = seq(from = -5, to = 5, by = .1)),
        aes(x=x, y = dexp(x, rate = 1))) +
-  geom_line() +
+  geom_line(colour = "#6497b1", size = 1.5) +
   ylab("density")
 
 chosen_priors <- plot_grid(intercept, b, sd, sigma, labels = c("Intercept", "b", "sd", "sigma"))
