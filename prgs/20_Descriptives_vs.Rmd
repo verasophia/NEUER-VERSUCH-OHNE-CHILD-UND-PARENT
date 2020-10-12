@@ -72,9 +72,9 @@ sum_satisfaction <-
                   mean(welle1$sat_class, na.rm=T),
                   mean(welle1$sat_school, na.rm=T)),
     sd = c(sd(welle1$lsat, na.rm=T),
-           sd(welle1$lsat, na.rm=T),
-           sd(welle1$lsat, na.rm=T),
-           sd(welle1$lsat, na.rm=T))
+           sd(welle1$sat_friends, na.rm=T),
+           sd(welle1$sat_class, na.rm=T),
+           sd(welle1$sat_school, na.rm=T))
     )
     
 saveRDS(sum_satisfaction, file = "../results/sum_satisfaction.RDS")
@@ -235,6 +235,7 @@ summary(d$female, factor(d$pid))
 
 df <- unique(d[c("pid", "female", "migback")])
 table(df$female)
+table(df$migback)
 as.data.frame(table(df$pid))
 
 nrow(subset(welle1, school ==1))

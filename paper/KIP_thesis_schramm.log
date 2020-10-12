@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.9.23)  11 OCT 2020 18:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.9.23)  12 OCT 2020 17:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -586,7 +586,7 @@ File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package color Info: Driver file: pdftex.def on input line 147.
 )
-Package color Info: Redefining color red on input line 33.
+Package color Info: Redefining color red on input line 35.
 (/usr/local/texlive/2020/texmf-dist/tex/latex/titlesec/titlesec.sty
 Package: titlesec 2019/10/16 v2.13 Sectioning titles
 \ttl@box=\box56
@@ -877,13 +877,13 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip93
 )
-Package hyperref Info: Option `unicode' set `true' on input line 88.
+Package hyperref Info: Option `unicode' set `true' on input line 90.
 (/usr/local/texlive/2020/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2020/01/14 v7.00d Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
 ... no UTF-8 mapping file for font encoding PU
 )
-Package hyperref Info: Option `breaklinks' set `true' on input line 88.
+Package hyperref Info: Option `breaklinks' set `true' on input line 90.
 (/usr/local/texlive/2020/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
 Package: fancyvrb 2020/01/13 v3.5 verbatim text (tvz,hv)
 \FV@CodeLineNo=\count442
@@ -929,29 +929,29 @@ LaTeX Warning: Label `introduction' multiply defined.
 )
 \openout1 = `KIP_thesis_schramm.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 162.
-LaTeX Font Info:    ... okay on input line 162.
-LaTeX Font Info:    Checking defaults for OMS/pzccm/m/n on input line 162.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 164.
+LaTeX Font Info:    ... okay on input line 164.
+LaTeX Font Info:    Checking defaults for OMS/pzccm/m/n on input line 164.
 LaTeX Font Info:    Trying to load font information for OMS+pzccm on input line
- 162.
+ 164.
 (/usr/local/texlive/2020/texmf-dist/tex/latex/psnfss/omspzccm.fd
 File: omspzccm.fd 2000/01/03 Fontinst v1.801 font definitions for OMS/pzccm.
 )
-LaTeX Font Info:    ... okay on input line 162.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 162.
-LaTeX Font Info:    ... okay on input line 162.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 162.
-LaTeX Font Info:    ... okay on input line 162.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 162.
-LaTeX Font Info:    ... okay on input line 162.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 162.
-LaTeX Font Info:    ... okay on input line 162.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 162.
-LaTeX Font Info:    ... okay on input line 162.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 162.
-LaTeX Font Info:    ... okay on input line 162.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 162.
-LaTeX Font Info:    ... okay on input line 162.
+LaTeX Font Info:    ... okay on input line 164.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 164.
+LaTeX Font Info:    ... okay on input line 164.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 164.
+LaTeX Font Info:    ... okay on input line 164.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 164.
+LaTeX Font Info:    ... okay on input line 164.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 164.
+LaTeX Font Info:    ... okay on input line 164.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 164.
+LaTeX Font Info:    ... okay on input line 164.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 164.
+LaTeX Font Info:    ... okay on input line 164.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 164.
+LaTeX Font Info:    ... okay on input line 164.
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -1037,21 +1037,21 @@ Package biblatex Info: Automatic encoding selection.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'KIP_thesis_schramm.bbl' not found.
 No file KIP_thesis_schramm.bbl.
-Package biblatex Info: Reference section=0 on input line 162.
-Package biblatex Info: Reference segment=0 on input line 162.
+Package biblatex Info: Reference section=0 on input line 164.
+Package biblatex Info: Reference segment=0 on input line 164.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: hyperref package is loaded.
 Package caption Info: threeparttable package is loaded.
 Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Info: Redefining \microtypecontext on input line 162.
+LaTeX Info: Redefining \microtypecontext on input line 164.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `basictext'.
-LaTeX Info: Redefining \showhyphens on input line 162.
+LaTeX Info: Redefining \showhyphens on input line 164.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -1059,7 +1059,7 @@ Package microtype Info: No adjustment of character kerning.
 File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 )
 \AtBeginShipoutBox=\box116
-Package hyperref Info: Link coloring OFF on input line 162.
+Package hyperref Info: Link coloring OFF on input line 164.
 (/usr/local/texlive/2020/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
 (/usr/local/texlive/2020/texmf-dist/tex/latex/refcount/refcount.sty
@@ -1071,9 +1071,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count454
 )
-LaTeX Info: Redefining \ref on input line 162.
-LaTeX Info: Redefining \pageref on input line 162.
-LaTeX Info: Redefining \nameref on input line 162.
+LaTeX Info: Redefining \ref on input line 164.
+LaTeX Info: Redefining \pageref on input line 164.
+LaTeX Info: Redefining \nameref on input line 164.
 (./KIP_thesis_schramm.out) (./KIP_thesis_schramm.out)
 \@outlinefile=\write5
 \openout5 = `KIP_thesis_schramm.out'.
@@ -1136,172 +1136,181 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 
 ]
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 224.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 220.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 224.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 220.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 224.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 220.
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.226 
+l.222 
        [1
 
-] [2] [3] [4
+] [2] [3] [4] [5
 
-] [5] [6] [7
-
-] [8]
-<../figures/lsat_bar.png, id=246, 2107.875pt x 1505.625pt>
-File: ../figures/lsat_bar.png Graphic file (type png)
-<use ../figures/lsat_bar.png>
-Package pdftex.def Info: ../figures/lsat_bar.png  used on input line 303.
-(pdftex.def)             Requested size: 364.18777pt x 260.13412pt.
-[9 <../figures/lsat_bar.png>] [10] [11] [12] [13] [14] [15] [16
+] [6] [7] [8
 
 ]
-<../figures/lsat_vs_time_by_school_treated.png, id=295, 2107.875pt x 1505.625pt
+
+LaTeX Warning: Reference `(' on page 9 undefined on input line 278.
+
+[9]
+<../figures/lsat_bar.png, id=258, 2107.875pt x 1505.625pt>
+File: ../figures/lsat_bar.png Graphic file (type png)
+<use ../figures/lsat_bar.png>
+Package pdftex.def Info: ../figures/lsat_bar.png  used on input line 300.
+(pdftex.def)             Requested size: 364.18777pt x 260.13412pt.
+[10] [11 <../figures/lsat_bar.png>] [12] [13] [14] [15] [16] [17
+
+] [18]
+<../figures/lsat_vs_time_by_school_treated.png, id=316, 2107.875pt x 1505.625pt
 >
 File: ../figures/lsat_vs_time_by_school_treated.png Graphic file (type png)
 <use ../figures/lsat_vs_time_by_school_treated.png>
 Package pdftex.def Info: ../figures/lsat_vs_time_by_school_treated.png  used on
- input line 436.
+ input line 431.
 (pdftex.def)             Requested size: 364.18777pt x 260.13412pt.
-[17] [18 <../figures/lsat_vs_time_by_school_treated.png>]
-<../figures/compare_models.png, id=311, 2107.875pt x 1204.5pt>
+[19 <../figures/lsat_vs_time_by_school_treated.png>]
+<../figures/compare_models.png, id=323, 2107.875pt x 1204.5pt>
 File: ../figures/compare_models.png Graphic file (type png)
 <use ../figures/compare_models.png>
-Package pdftex.def Info: ../figures/compare_models.png  used on input line 471.
+Package pdftex.def Info: ../figures/compare_models.png  used on input line 466.
 
 (pdftex.def)             Requested size: 364.18777pt x 208.1073pt.
-[19] [20 <../figures/compare_models.png>]
-Overfull \hbox (3.29062pt too wide) in paragraph at lines 486--493
+[20] [21 <../figures/compare_models.png>]
+Overfull \hbox (3.29062pt too wide) in paragraph at lines 481--488
 \T1/ptm/m/it/12 (-20) ``Bayesian inference is the process of fitting a probabil
 ity model to a set of data and summarizing the
  []
 
-[21] [22] [23
+[22]
+
+LaTeX Warning: Reference `subsec:priors' on page 23 undefined on input line 496
+.
+
+[23] [24
 
 ]
 LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 5
-38.
+33.
 (/usr/local/texlive/2020/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-) [24] [25]
-<../figures/flat_peaked.png, id=348, 1806.75pt x 903.375pt>
+) [25] [26]
+<../figures/flat_peaked.png, id=360, 1806.75pt x 903.375pt>
 File: ../figures/flat_peaked.png Graphic file (type png)
 <use ../figures/flat_peaked.png>
-Package pdftex.def Info: ../figures/flat_peaked.png  used on input line 563.
+Package pdftex.def Info: ../figures/flat_peaked.png  used on input line 558.
 (pdftex.def)             Requested size: 364.18318pt x 182.09158pt.
-[26 <../figures/flat_peaked.png>]
-<../figures/prior_predict.png, id=355, 1505.625pt x 903.375pt>
+[27 <../figures/flat_peaked.png>]
+<../figures/prior_predict.png, id=366, 1505.625pt x 903.375pt>
 File: ../figures/prior_predict.png Graphic file (type png)
 <use ../figures/prior_predict.png>
-Package pdftex.def Info: ../figures/prior_predict.png  used on input line 575.
+Package pdftex.def Info: ../figures/prior_predict.png  used on input line 570.
 (pdftex.def)             Requested size: 364.18318pt x 218.5099pt.
-<../figures/plot_priors.png, id=356, 2107.875pt x 1204.5pt>
+<../figures/plot_priors.png, id=367, 2107.875pt x 1204.5pt>
 File: ../figures/plot_priors.png Graphic file (type png)
 <use ../figures/plot_priors.png>
-Package pdftex.def Info: ../figures/plot_priors.png  used on input line 586.
+Package pdftex.def Info: ../figures/plot_priors.png  used on input line 581.
 (pdftex.def)             Requested size: 364.18777pt x 208.1073pt.
-[27 <../figures/prior_predict.png>]
+[28 <../figures/prior_predict.png>]
 
-LaTeX Warning: Reference `hist-lsat' on page 28 undefined on input line 593.
+LaTeX Warning: Reference `hist-lsat' on page 29 undefined on input line 588.
 
-[28 <../figures/plot_priors.png>]
+[29 <../figures/plot_priors.png>]
 
-LaTeX Warning: Reference `fig:post-skew' on page 29 undefined on input line 602
+LaTeX Warning: Reference `fig:post-skew' on page 30 undefined on input line 597
 .
 
-<../figures/post_dens_overlay.png, id=369, 2107.875pt x 1505.625pt>
+<../figures/post_dens_overlay.png, id=380, 2107.875pt x 1505.625pt>
 File: ../figures/post_dens_overlay.png Graphic file (type png)
 <use ../figures/post_dens_overlay.png>
 Package pdftex.def Info: ../figures/post_dens_overlay.png  used on input line 6
-05.
+00.
 (pdftex.def)             Requested size: 227.62138pt x 162.5867pt.
-<../figures/post_skew.png, id=370, 2107.875pt x 1505.625pt>
+<../figures/post_skew.png, id=381, 2107.875pt x 1505.625pt>
 File: ../figures/post_skew.png Graphic file (type png)
 <use ../figures/post_skew.png>
-Package pdftex.def Info: ../figures/post_skew.png  used on input line 605.
+Package pdftex.def Info: ../figures/post_skew.png  used on input line 600.
 (pdftex.def)             Requested size: 227.62138pt x 162.5867pt.
 
-Overfull \hbox (2.27869pt too wide) in paragraph at lines 605--605
+Overfull \hbox (2.27869pt too wide) in paragraph at lines 600--600
 [][] [] 
  []
 
-[29 <../figures/post_dens_overlay.png> <../figures/post_skew.png>]
-<../figures/m1_coef.png, id=378, 2107.875pt x 1505.625pt>
+[30 <../figures/post_dens_overlay.png> <../figures/post_skew.png>]
+<../figures/m1_coef.png, id=389, 2107.875pt x 1505.625pt>
 File: ../figures/m1_coef.png Graphic file (type png)
 <use ../figures/m1_coef.png>
-Package pdftex.def Info: ../figures/m1_coef.png  used on input line 620.
+Package pdftex.def Info: ../figures/m1_coef.png  used on input line 615.
 (pdftex.def)             Requested size: 364.18777pt x 260.13412pt.
-<../figures/lsat_pred.png, id=379, 2107.875pt x 1204.5pt>
+<../figures/lsat_pred.png, id=390, 2107.875pt x 1204.5pt>
 File: ../figures/lsat_pred.png Graphic file (type png)
 <use ../figures/lsat_pred.png>
-Package pdftex.def Info: ../figures/lsat_pred.png  used on input line 637.
+Package pdftex.def Info: ../figures/lsat_pred.png  used on input line 634.
 (pdftex.def)             Requested size: 364.18777pt x 208.1073pt.
-[30
+[31
 
  <../figures/m1_coef.png>]
 
-LaTeX Warning: Reference `fig:lsat-teff' on page 31 undefined on input line 644
+LaTeX Warning: Reference `fig:lsat-teff' on page 32 undefined on input line 641
 .
 
-<../figures/lsat_teff.png, id=388, 2107.875pt x 1204.5pt>
+<../figures/lsat_teff.png, id=399, 2107.875pt x 1204.5pt>
 File: ../figures/lsat_teff.png Graphic file (type png)
 <use ../figures/lsat_teff.png>
-Package pdftex.def Info: ../figures/lsat_teff.png  used on input line 647.
+Package pdftex.def Info: ../figures/lsat_teff.png  used on input line 644.
 (pdftex.def)             Requested size: 227.62138pt x 130.06935pt.
-<../figures/sat_friends_teff.png, id=389, 2107.875pt x 1204.5pt>
+<../figures/sat_friends_teff.png, id=400, 2107.875pt x 1204.5pt>
 File: ../figures/sat_friends_teff.png Graphic file (type png)
 <use ../figures/sat_friends_teff.png>
 Package pdftex.def Info: ../figures/sat_friends_teff.png  used on input line 64
-7.
+4.
 (pdftex.def)             Requested size: 227.62138pt x 130.06935pt.
-<../figures/sat_class_teff.png, id=390, 2107.875pt x 1204.5pt>
+<../figures/sat_class_teff.png, id=401, 2107.875pt x 1204.5pt>
 File: ../figures/sat_class_teff.png Graphic file (type png)
 <use ../figures/sat_class_teff.png>
-Package pdftex.def Info: ../figures/sat_class_teff.png  used on input line 647.
+Package pdftex.def Info: ../figures/sat_class_teff.png  used on input line 644.
 
 (pdftex.def)             Requested size: 227.62138pt x 130.06935pt.
-<../figures/sat_school_teff.png, id=391, 2107.875pt x 1204.5pt>
+<../figures/sat_school_teff.png, id=402, 2107.875pt x 1204.5pt>
 File: ../figures/sat_school_teff.png Graphic file (type png)
 <use ../figures/sat_school_teff.png>
-Package pdftex.def Info: ../figures/sat_school_teff.png  used on input line 647
+Package pdftex.def Info: ../figures/sat_school_teff.png  used on input line 644
 .
 (pdftex.def)             Requested size: 227.62138pt x 130.06935pt.
 
-Overfull \hbox (2.27869pt too wide) in paragraph at lines 647--647
+Overfull \hbox (2.27869pt too wide) in paragraph at lines 644--644
 [][] []
  []
 
 
-Overfull \hbox (2.27869pt too wide) in paragraph at lines 647--647
+Overfull \hbox (2.27869pt too wide) in paragraph at lines 644--644
 [] [] 
  []
 
-[31 <../figures/lsat_pred.png>]
+[32 <../figures/lsat_pred.png>]
 
-LaTeX Warning: Reference `fig:lsat-teff' on page 32 undefined on input line 653
+LaTeX Warning: Reference `fig:lsat-teff' on page 33 undefined on input line 650
 .
 
-<../figures/lsat_pred_across_schools.png, id=399, 2107.875pt x 1505.625pt>
+<../figures/lsat_pred_across_schools.png, id=411, 2107.875pt x 1505.625pt>
 File: ../figures/lsat_pred_across_schools.png Graphic file (type png)
 <use ../figures/lsat_pred_across_schools.png>
 Package pdftex.def Info: ../figures/lsat_pred_across_schools.png  used on input
- line 657.
+ line 654.
 (pdftex.def)             Requested size: 364.18777pt x 260.13412pt.
-[32 <../figures/lsat_teff.png> <../figures/sat_friends_teff.png> <../figures/sa
+[33 <../figures/lsat_teff.png> <../figures/sat_friends_teff.png> <../figures/sa
 t_class_teff.png> <../figures/sat_school_teff.png>]
-<../figures/lsat_teff_across_schools.png, id=410, 2107.875pt x 1204.5pt>
+<../figures/lsat_teff_across_schools.png, id=421, 2107.875pt x 1204.5pt>
 File: ../figures/lsat_teff_across_schools.png Graphic file (type png)
 <use ../figures/lsat_teff_across_schools.png>
 Package pdftex.def Info: ../figures/lsat_teff_across_schools.png  used on input
- line 666.
+ line 663.
 (pdftex.def)             Requested size: 364.18777pt x 208.1073pt.
-[33 <../figures/lsat_pred_across_schools.png> <../figures/lsat_teff_across_scho
-ols.png>] [34] [35
+[34 <../figures/lsat_pred_across_schools.png> <../figures/lsat_teff_across_scho
+ols.png>] [35] [36
 
 ]
 Underfull \hbox (badness 1194) in paragraph at lines 747--749
@@ -1316,9 +1325,9 @@ n-al-ity As-sess-ment\T1/ptm/m/n/12 (+20) , \T1/ptm/m/it/12 (+20) 49\T1/ptm/m/n
 /12 (+20) (1), 71--75. []$https :
  []
 
-[36
+[37
 
-] [37]
+] [38]
 Underfull \hbox (badness 1122) in paragraph at lines 801--803
  [][]\T1/ptm/m/n/12 (+20) Möller, T. (2017). \T1/ptm/m/it/12 (+20) Ausverkauf m
 usikalis-cher Bil-dung? \T1/ptm/m/n/12 (+20) Re-trieved from []$https : / / www
@@ -1331,7 +1340,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 801--803
 e-[]ausverkauf-[]musikalischer . 1992 . de .
  []
 
-[38]
+[39]
 Underfull \hbox (badness 1270) in paragraph at lines 858--860
  [][]\T1/ptm/m/n/12 (+20) Wetter, O. E., Ko-erner, F., & Schwaninger, A. (2008)
 . Does mu-si-cal train-ing im-
@@ -1344,37 +1353,37 @@ c-tional Sci-ence\T1/ptm/m/n/12 (+20) , \T1/ptm/m/it/12 (+20) 37\T1/ptm/m/n/12
 (+20) (4), 365--374. []$https :
  []
 
-[39]
-<../figures/Wie zufrieden bist du....pdf, id=568, 597.23125pt x 845.1575pt>
+[40]
+<../figures/Wie zufrieden bist du....pdf, id=579, 597.23125pt x 845.1575pt>
 File: ../figures/Wie zufrieden bist du....pdf Graphic file (type pdf)
 <use ../figures/Wie zufrieden bist du....pdf>
 Package pdftex.def Info: ../figures/Wie zufrieden bist du....pdf  used on input
  line 877.
 (pdftex.def)             Requested size: 455.24918pt x 644.235pt.
-<../figures/sat_friends_pred.png, id=569, 2107.875pt x 1204.5pt>
+<../figures/sat_friends_pred.png, id=580, 2107.875pt x 1204.5pt>
 File: ../figures/sat_friends_pred.png Graphic file (type png)
 <use ../figures/sat_friends_pred.png>
 Package pdftex.def Info: ../figures/sat_friends_pred.png  used on input line 88
 1.
 (pdftex.def)             Requested size: 295.90457pt x 169.08833pt.
-<../figures/sat_class_pred.png, id=570, 2107.875pt x 1204.5pt>
+<../figures/sat_class_pred.png, id=581, 2107.875pt x 1204.5pt>
 File: ../figures/sat_class_pred.png Graphic file (type png)
 <use ../figures/sat_class_pred.png>
 Package pdftex.def Info: ../figures/sat_class_pred.png  used on input line 881.
 
 (pdftex.def)             Requested size: 295.90457pt x 169.08833pt.
-<../figures/sat_school_pred.png, id=571, 2107.875pt x 1204.5pt>
+<../figures/sat_school_pred.png, id=582, 2107.875pt x 1204.5pt>
 File: ../figures/sat_school_pred.png Graphic file (type png)
 <use ../figures/sat_school_pred.png>
 Package pdftex.def Info: ../figures/sat_school_pred.png  used on input line 881
 .
 (pdftex.def)             Requested size: 295.90457pt x 169.08833pt.
-[40
+[41
 
- <../figures/Wie zufrieden bist du....pdf>] [41 <../figures/sat_friends_pred.pn
+ <../figures/Wie zufrieden bist du....pdf>] [42 <../figures/sat_friends_pred.pn
 g> <../figures/sat_class_pred.png> <../figures/sat_school_pred.png>]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 894.
-[42
+[43
 
 ]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 894.
@@ -1394,13 +1403,13 @@ Package logreq Info: Writing requests to 'KIP_thesis_schramm.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 24605 strings out of 480608
- 400202 string characters out of 5903630
- 1197731 words of memory out of 5000000
- 39683 multiletter control sequences out of 15000+600000
- 591398 words of font info for 244 fonts, out of 8000000 for 9000
+ 24621 strings out of 480608
+ 400414 string characters out of 5903630
+ 1197995 words of memory out of 5000000
+ 39692 multiletter control sequences out of 15000+600000
+ 591848 words of font info for 248 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 52i,10n,55p,4129b,4720s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 52i,10n,55p,4122b,4720s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2020/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2020/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex9.pfb></usr/loca
 l/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local
@@ -1411,10 +1420,10 @@ live/2020/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></usr/local/texlive/2020/t
 exmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2020/texmf-dist/
 fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2020/texmf-dist/fonts/type
 1/urw/times/utmri8a.pfb>
-Output written on KIP_thesis_schramm.pdf (47 pages, 2119151 bytes).
+Output written on KIP_thesis_schramm.pdf (48 pages, 2121697 bytes).
 PDF statistics:
- 670 PDF objects out of 1000 (max. 8388607)
- 564 compressed objects within 6 object streams
- 176 named destinations out of 1000 (max. 500000)
+ 681 PDF objects out of 1000 (max. 8388607)
+ 574 compressed objects within 6 object streams
+ 177 named destinations out of 1000 (max. 500000)
  16709 words of extra memory for PDF output out of 17280 (max. 10000000)
 
