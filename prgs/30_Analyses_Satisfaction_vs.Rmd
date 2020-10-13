@@ -44,6 +44,53 @@ theme_set(theme_bw(base_family = "Times New Roman"))
 ```{r}
 d <- readRDS("../data/d_sat.RDS")
 welle1 <- readRDS("../data/welle1.RDS")
+schnulli <- read_dta("../data/master_kip+netwerk_Stata12.dta")
+```
+
+
+
+
+```{r}
+
+schnullifax <- schnulli %>%
+  select("welle", "pid", "v07a")
+
+pid20 <- (schnullifax %>% filter(pid <= 10 | pid >= 385))
+welle1 <- d_sat %>% filter(welle==1)
+
+ggplot(
+  pid20, aes(y= v07a, x= welle, group = pid)) +
+  geom_smooth(aes(color=pid), method = "loess", se = F, size = .4, linetype = "twodash") +
+
+
+
+std <- schnullifax %>% group_by(pid) %>%
+                      summarise( mean.sat.pid = mean(v07a, na.rm = TRUE), 
+                                 sd.sat.pid=sd(v07a, na.rm=TRUE) )
+
+merge(schnullifax, std, by = 'pid')
+
+std <- std[!(std$sd.sat.pid >= 2.5),]
+
+left_join(std, schnullifax, by = pid)
+  
+
+plot(std)
+
+ggplot(data = std, aes(x=sd.sat.pid, y=..density..)) +
+  geom_histogram(bins = 100, fill = "#6497b1")
+  
+ prior_predict <- ggplot(all, aes(x=value, y=..density..)) +
+  geom_histogram(bins = 200, fill = "#6497b1")  
+  
+  
+lsat_vs_time_by_school_treated <- ggplot(
+  data = subset(d, treated == 1),
+  aes(y = lsat, x = welle, group = school)) +
+
+plot(pid20)
+
+plot(schnullifax)
 ```
 
 ```{r}

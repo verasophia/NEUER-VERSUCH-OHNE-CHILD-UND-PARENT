@@ -405,26 +405,19 @@ In conclusion, measuring life satisfaction in children is more challenging than 
 \section{Identification strategy}\label{identification-strategy}}
 
 \label{sec:identification}
-As I already mentioned in the introduction, I will make use of a multilevel model, precisely a varying-intercept and varying-slope multilevel model. A multilevel model is a good choixe for drawing causal inference but also for prediction and descriptive modeling (Andrew Gelman, 2013, p. 6).
+As I already mentioned in the introduction, I will make use of a multilevel model, precisely a varying-intercept and varying-slope multilevel model. A multilevel model is a good choice for drawing causal inference but also for prediction and descriptive modeling (Andrew Gelman, 2013, p. 6).
 In the following, I will summarize important aspects of the methodology of those models and explain how multilevel models are best to navigate between underfitting (too few parameters included in the model) and overfitting (too many parameters included in the model). In the second part, I will give an introduction to Bayesian analysis that is ideal for multilevel modeling because of its underlying assumption that all parameters are random quantities.
-
-(fit to sample always - not true of multilevel models - improves as we add parameters.
-A multilevel model is a linear model in which parameters are given a probability model. Mcelreath (2020) (p.~14) suggests to think of parameters as a placeholder for a missing model. That probability model itself has parameters called hyperparameters which are also estimated from the data. In other words, they are parameters for parameters. Technically, there is no limit to the number of levels, however infeasible computation and ability to understand the model are in practice a restriction. Though multilevel models are more complicated, it is worth using them because they reduce overfit as new parameters are added.
 
 \hypertarget{multilevel-modeling}{%
 \subsection{Multilevel modeling}\label{multilevel-modeling}}
 
-As mentioned in Chapter \ref{ch:data}, the sample is structured hierarchically, with students nested within schools, observed in several time periods wherefore using a simple nonhierarchical model would be inappropriate. It would tend to underfit when there are only few parameters and to overfit the data when too many parameters are included. Though fitting the data well, often seems to be the goal of data analysis, these models are usually very poor in making predictions for new data (Andrew Gelman (2013), 101). Multilevel models, also known as hierarchical models, involve predictors at different levels of variation. In the KIP setting that means that it is possible to measure different effect sizes throughout time in each of the schools. It is likely to observe different response behaviors among the schools. Depending on the school, students might react differently to the project. This is an important investigation to find out if the intervention was more effective in some schools than in others. One school might have done something explicitly well or had to face challenges other schools did not. Learning from these findings could possibly help to improve the project in the students.
+Since the sample is structured hierarchically, with students nested within schools, observed in several time periods, using a simple nonhierarchical model would be inappropriate. It would tend to underfit when there are only few parameters and to overfit the data when too many parameters are included. Though fitting the data well, often seems to be the goal of data analysis, these models are usually very poor in making predictions for new data (Andrew Gelman (2013), 101). (fit to sample always - not true of multilevel models - improves as we add parameters.
 
-In a classical regression, assigning varying effects to each group is done using interaction terms or running separate regressions for each subgroup of the sample. However, this has the disadvantage that estimates can be very imprecise, in particular when there are only few observations in one group. Estimating parameters for each group separately is referred to as \emph{no-pooling} because each group is observed independently without considering the rest of the sample. However ignoring the hierarchical structure and \emph{completely pooling} the information, is also not recommended. Effects that are actually true might disappear in that case. Both approaches have downsides for different reasons but they can be useful preliminary estimates, eventually leading up to what is known as partial pooling that comes out of a multilevel analysis. Therefore I will illustrate both the extremes, the complete pooling and the no-pooling approach in the following before I get to the details of partial pooling. The complete pooling and no-pooling model in comparison to he partial pooling model will be presented in a very simplified way. Life satisfaction will be explained with a varying-intercept model without any predictors. The puprpose is to emphasize the characteristic features of the three approaches without unnecessary complexity in the model. In this example, \(\alpha\) and \(\sigma\) are given weakly informative priors and the models are estimated using rstanatrm functions `stan\_glm' abd `stan\_glmer'.
+A multilevel model is a linear model in which parameters are given a probability model. Mcelreath (2020) (p.~14) suggests to think of parameters as a placeholder for a missing model. That probability model itself has parameters called hyperparameters which are also estimated from the data. In other words, they are parameters for parameters. Technically, there is no limit to the number of levels, however infeasible computation and ability to understand the model are in practice a restriction. Though multilevel models are more complicated, it is worth using them because they produce better estimates.
 
-The simplest model is the pooled model, where life satisfaction is modeled as iid draws from a common distribution.
-\begin{align*}
-lsat_i & \sim {\sf Normal} (\alpha, \sigma) & \quad \text{for } i \in 1,...,n \\
-\alpha & \sim {\sf Normal} (0, 10) \\
-\sigma & \sim {\sf Exponential} (1)
-\end{align*}
-In the complete pooling approach, the population of schools is assumed to be invariant. This ignores the fact that schools are different and assigns the same intercept to each of the schools. If done like this, there is the risk of ignoring important variation in how schools correspond to the treatment (Mcelreath, 2020, p. 416). The total sample mean underfits the data, meaning that the model is insensitive to the details in the data and is learning too little from it. Ignoring the group-level variation is very likely misleading. \ref{fig:lsat-vs-time} plots the dynamics of mean life satisfaction for each school individually and it becomes clear that the development of life satisfaction in the treatment group over time differs noticeably.
+Multilevel models involve predictors at different levels of variation. In the KIP setting that means that it is possible to measure different effect sizes throughout time in each of the schools. It is likely to observe different response behaviors among the schools. Depending on the school, students might react differently to the project. This is an important investigation to find out if the intervention was more effective in some schools than in others. One school might have done something explicitly well or had to face challenges other schools did not. Learning from these findings could possibly help to improve the project in the future.
+
+In a classical regression, assigning varying effects to each group is done by using interaction terms or running separate regressions for each subgroup of the sample. However, this has the disadvantage that estimates can be very imprecise, in particular when there are only few observations per group. Estimating parameters for each group separately is referred to as \emph{no-pooling} because each group is observed independently without considering the rest of the sample. On the other hand, ignoring the hierarchical structure and \emph{completely pooling} the information is also not recommended, because existing effects might disappear as illustrated in @(fig:lsat-vs-time). If solely taking the mean over all schools (solid purple line), there is almost no change in life satisfaction through time. But when each school taken separately, there are clear dynamics that substantially differ from each other. While in some schools, average life satisfaction is decreasing with different rates, in other school opposite trends are visible.
 
 \begin{figure}[H]
 
@@ -434,6 +427,16 @@ In the complete pooling approach, the population of schools is assumed to be inv
 
 \caption{LS in treatment group}\label{fig:lsat-vs-time}
 \end{figure}
+
+Both approaches, no-pooling and complete pooling, have downsides for different reasons but they can be useful preliminary estimates, eventually leading up to what is known as partial pooling that comes out of a multilevel analysis. Therefore I will illustrate both the extremes, the complete pooling and the no-pooling approach in the following before I get to the details of partial pooling. The complete pooling and no-pooling model in comparison to the partial pooling model will be presented in a very simplified way. Life satisfaction will be explained with a varying-intercept model without any predictors. The purpose is to emphasize the characteristic features of the three approaches without unnecessary complexity in the model. In this example, \(\alpha\) and \(\sigma\) are given weakly informative priors and the models are estimated using rstanatrm functions `stan\_glm' abd `stan\_glmer'.
+
+The simplest model is the pooled model, where life satisfaction is modeled as independent and identically distributed draws from a common distribution.
+\begin{align*}
+lsat_i & \sim {\mathrm {Normal}} (\alpha, \sigma) & \quad \text{for } i \in 1,...,n \\
+\alpha & \sim {\sf Normal} (0, 10) \\
+\sigma & \sim {\sf Exponential} (1)
+\end{align*}
+In the complete pooling approach, the population of schools is assumed to be invariant. This ignores the fact that schools are different and assigns the same intercept to each of the schools. If done like this, there is the risk of ignoring important variation in how schools correspond to the treatment (Mcelreath, 2020, p. 416). The total sample mean underfits the data, meaning that the model is insensitive to the details in the data and is learning too little from it. Ignoring the group-level variation is very likely misleading.
 
 Whereas complete pooling ignores variation between schools, the no-pooling analyses overstates it and gives a different mean to each school:
 \begin{align*}
@@ -692,6 +695,15 @@ The level of satisfaction with school is quite volatile throughout the time of t
 \section{Conclusion}\label{conclusion}}
 
 \label{ch:conclusion}
+
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.8\linewidth,]{../figures/random_lsat} 
+
+}
+
+\caption{Excerpt from questionnaire}\label{fig:random-pid}
+\end{figure}
 
 \clearpage
 

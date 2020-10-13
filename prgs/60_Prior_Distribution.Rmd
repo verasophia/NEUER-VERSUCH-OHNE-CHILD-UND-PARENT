@@ -35,9 +35,9 @@ d <- readRDS("../data/d_sat.RDS")
 ```{r}
 test <-
   tibble(lsat = seq(from = 0, to = 10, length.out = 1000)) %>% 
-  expand(lsat, row = c("flat", "peaked")) %>% 
+  tidyr::expand(lsat, row = c("flat", "peaked")) %>% 
   arrange(row, lsat) %>% 
-  mutate(prior = ifelse(row == "flat", dnorm(lsat, 7, 2000), dnorm(lsat, 7, 1)),
+  mutate(prior = ifelse(row == "flat", dunif(lsat, -100, 100), dnorm(lsat, 7, 1)),
          likelihood = dnorm(lsat, 7, 2))  %>% 
   group_by(row) %>% 
   mutate(posterior = prior * likelihood / sum(prior * likelihood)) %>% 
@@ -50,25 +50,36 @@ flat <-
   test %>%
   filter(row == "flat") %>% 
   ggplot(aes(x = lsat, y = value)) +
-  geom_line() +
-  scale_x_continuous(NULL, breaks = NULL) +
-  scale_y_continuous(NULL, breaks = NULL) +
-  theme(panel.grid = element_blank()) +
-  facet_wrap(~name, scales = "free_y")
+  geom_line(color='#6497b1') +
+  scale_x_continuous(breaks = seq(from = -10, to = 10, by = 2)) +
+  scale_y_continuous(breaks = NULL, limits = NULL) +
+  facet_wrap(~name, scales = "free_y") +
+  labs(x="", y="") +
+  theme(text = element_text(size=14))
 flat
 
 peaked <-
   test %>%
   filter(row == "peaked") %>% 
   ggplot(aes(x = lsat, y = value)) +
-  geom_line() +
-  scale_x_continuous(NULL, breaks = NULL) +
-  scale_y_continuous(NULL, breaks = NULL) +
-  theme(panel.grid = element_blank()) +
-  facet_wrap(~name, scales = "free_y")
-flat_peaked <- flat / peaked
+  geom_line(color='#6497b1') +
+  scale_x_continuous(breaks = seq(from = -10, to = 10, by = 2)) +
+  scale_y_continuous(breaks = NULL, limits = NULL) +
+  facet_wrap(~name, scales = "free_y") +
+  labs(x="", y="") +
+  theme(text = element_text(size=14))
+flat_peaked <- flat / peaked + ylab(Density)
 ggsave("../figures/flat_peaked.png", flat_peaked, width = 6, height = 3, units = "in")
 flat_peaked
+
+p_intercept_sim <-
+  tibble(x = seq(from = -10, to = 10, by = 0.1)) %>%
+  
+  ggplot(aes(x = x, y = dnorm(x, mean = 7, sd = 2))) +
+  geom_line(color='#6497b1') +
+  scale_x_continuous(breaks = seq(from = -10, to = 10, by = 2)) +
+  labs(title = "intercept ~ dnorm(7,2)", x="", y="")
+p_intercept_sim
 ```
 ```{r}
 get_prior(lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid), data = d)
@@ -106,7 +117,6 @@ p1_predict <- posterior_epred(object = p1, nsamples = 100)
 p1_long <- gather(data.frame(p1_predict))
 p1_long
 p1_long$prior <- rep("3",145500)
-plotp1
 ```
 ```{r}
 p2_predict <- posterior_epred(object = p2, nsamples = 100)
@@ -144,41 +154,50 @@ p_intercept_sim <-
   tibble(x = seq(from = -10, to = 10, by = 0.1)) %>%
   
   ggplot(aes(x = x, y = dnorm(x, mean = 7, sd = 2))) +
-  geom_line() +
-  scale_x_continuous(breaks = seq(from = -10, to = 10, by = 1)) +
-  labs(title = "intercept ~ dnorm(7,2)", y = "density")
+  geom_line(color='#6497b1') +
+  scale_x_continuous(breaks = seq(from = -10, to = 10, by = 2)) +
+  labs(title = "intercept ~ dnorm(7,2)", x="", y="") +
+  theme(text = element_text(size=14))
 p_intercept_sim
 
 p_b_sim <-
   tibble(x = seq(from = -10, to = 10, by = 0.1)) %>%
   
   ggplot(aes(x = x, y = dnorm(x, mean = 0, sd = 1))) +
-  geom_line() +
-  scale_x_continuous(breaks = seq(from = -10, to = 10, by = 1)) +
-  labs(title = "b ~ dnorm(0, 1)", y = "density")
+  geom_line(color='#6497b1') +
+  scale_x_continuous(breaks = seq(from = -10, to = 10, by = 2)) +
+  labs(title = "b ~ dnorm(0, 1)", x="", y="") +
+  theme(text = element_text(size=14))
 p_b_sim
 
 p_sd_sim <-
   tibble(x = seq(from = -10, to = 10, by = 0.1)) %>%
   
   ggplot(aes(x = x, y = dcauchy(x, location = 0, scale = 1))) +
-  geom_line() +
-  scale_x_continuous(breaks = seq(from = -10, to = 10, by = 1)) +
-  labs(title = "sd ~ dcauchy(0, 1)", y = "density")
+  geom_line(color='#6497b1') +
+  scale_x_continuous(breaks = seq(from = -10, to = 10, by = 2)) +
+  labs(title = "sd ~ dcauchy(0, 1)", x="", y="") +
+  theme(text = element_text(size=14))
 p_sd_sim
 
 p_sigma_sim <-
   tibble(x = seq(from = -10, to = 10, by = 0.1)) %>%
   
   ggplot(aes(x = x, y = dexp(x, rate = 0.5))) +
-  geom_line() +
-  scale_x_continuous(breaks = seq(from = -10, to = 10, by = 1)) +
-  labs(title = "sigma ~ dexp(0.5)", y = "density")
+  geom_line(color='#6497b1') +
+  scale_x_continuous(breaks = seq(from = -10, to = 10, by = 2)) +
+  labs(title = "sigma ~ dexp(0.5)", x="", y="") +
+  theme(text = element_text(size=14))
 p_sigma_sim
 
-plot_priors <- grid.arrange(p_intercept_sim, p_b_sim, p_sd_sim, p_sigma_sim)
+plot_priors <- grid.arrange(p_intercept_sim, p_b_sim, p_sd_sim, p_sigma_sim, left="Density", bottom="x")
 ggsave("../figures/plot_priors.png", plot_priors, width = 7, height = 4, units = "in")
 plot_priors
+
+test <- ggarrange(p_intercept_sim, p_b_sim, p_sd_sim, p_sigma_sim)
+annotate_figure(test,
+                bottom = "x",
+                left = "Density")
 ```
 
 ```{r}
