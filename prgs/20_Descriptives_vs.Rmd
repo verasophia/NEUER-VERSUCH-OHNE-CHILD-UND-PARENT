@@ -181,7 +181,25 @@ grid.arrange(lsat_pre_treat, sat_friends_pre_treat, sat_class_pre_treat, sat_sch
 
 
 ```{r}
-vars <- c("lsat","female", "sat_friends", "sat_class", "class.prob", "class.excl", "note.deu", "note.mat", "note.mus", "hob.mus.making", "dauer.mus.lis", "dauer.mus.making", "play.instr", "mus.active", "migback")
+vars <- c("lsat","female", "sat_friends", "sat_class", "class.prob", "class.excl", "note.deu", "note.mat", "note.mus", "hob.mus.making", "dauer.mus.making", "play.instr", "mus.active", "migback")
+
+names(welle1)[names(welle1) == 'lsat'] <- 'Life satisfaction'
+names(welle1)[names(welle1) == 'female'] <- 'Female'
+names(welle1)[names(welle1) == 'sat_friends'] <- 'Satisfaction friends'
+names(welle1)[names(welle1) == 'sat_class'] <- 'Satisfaction class'
+names(welle1)[names(welle1) == 'class.prob'] <- 'Problems in class'
+names(welle1)[names(welle1) == 'class.excl'] <- 'Exclusion in class'
+names(welle1)[names(welle1) == 'note.deu'] <- 'Grade german'
+names(welle1)[names(welle1) == 'note.mat'] <- 'Grade math'
+names(welle1)[names(welle1) == 'note.mus'] <- 'Grade music'
+names(welle1)[names(welle1) == 'hob.mus.making'] <- 'Hobby music'
+names(welle1)[names(welle1) == 'dauer.mus.making'] <- 'Duration music'
+names(welle1)[names(welle1) == 'play.instr'] <- 'Instrument'
+names(welle1)[names(welle1) == 'mus.active'] <- 'Musically active'
+names(welle1)[names(welle1) == 'migback'] <- 'Migration background'
+
+vars <- c("Life satisfaction","Female", "Satisfaction friends", "Satisfaction class", "Problems in class", "Exclusion in class", "Grade german", "Grade math", "Grade music", "Hobby music", "Duration music", "Instrument", "Musically active", "Migration background")
+
 smd <- CreateTableOne(vars = vars, strata = "treated", data = welle1, test = FALSE, includeNA = F, smd = TRUE)
 
 # rownames(smd) <- c("N", "Life satisfaction", "Sex", "male", "female", "unknown", "Satisfaction with friends", "Satisfaction with class", "Grade german", "Grade maths", "Grade music", "Hobby music 'yes' (%)", "Duration music listening", "Duration music making", "not at all", "ca 30 min", "ca 1-2 hours", "ca 3-4 hours", "more than 4 hours", "Playing instrument 'yes' (%)", "Musically active", "Migration background", "  native", "  immigrant", "  unknown" )

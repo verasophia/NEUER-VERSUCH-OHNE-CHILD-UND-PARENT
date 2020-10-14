@@ -168,7 +168,7 @@
 \begin{center}
 \renewcommand{\baselinestretch}{1.0}\normalsize %
 \textbf{
-The effect of music education on students' well-being. Empirical evidence from a field experiment}\\[1cm]
+The effects of music education on students' well-being. Empirical evidence from a field experiment}\\[1cm]
 Preliminary - work in progress \\[1cm]
 This draft: \today \\[1cm]
 % Comments welcome \\[0.25cm]
@@ -190,10 +190,28 @@ University of Halle-Wittenberg \\[0.75cm]
 \renewcommand{\baselinestretch}{1}\normalsize
 
 \textbf{\normalsize Abstract}
-\emph{Objective.} This thesis examines the effect of a music project which was carried out parallel at different middle schools in Bavaria on life satisfaction and on certain areas of satisfaction. \emph{Methods.} I review prior work pertaining to music's impact mainly on cognitive outcomes. My analysis applies Bayesian inference and multilevel modeling on a longitudinal data set to asses music involvement and possible effects on life satisfaction, satisfaction with friends, satisfaction with the class and satisfaction with the school. A difference-in-difference framework allows to draw causal conclusion even despite the fact that the treatment group and the control group differ in some aspects \emph{Results.} The students from the treatment group tend to have a more \_\_\_\_\_\_\_\_\_\_ Although \_\_\_\_\_\_\_\_\_, this effect is only minimal\ldots{} \emph{Conclusion.} Music participation in form of the studied music project cuased little changes\ldots{}
+\emph{Objective.} This thesis examines the effect of a music project which was carried out parallel at different middle schools in Bavaria on life satisfaction and on certain areas of satisfaction. \emph{Methods.} I review prior work pertaining to music's impact mainly on cognitive outcomes. My analysis applies Bayesian inference and multilevel modeling on a longitudinal data set to asses music involvement and possible effects on life satisfaction, satisfaction with friends, satisfaction with the class and satisfaction with the school. A difference-in-difference framework allows to draw causal conclusion even despite the fact that the treatment group and the control group differ in some aspects \emph{Results.} The students from the treatment group tend to have a more \_\_\_\_\_\_\_\_\_\_ Although \_\_\_\_\_\_\_\_\_, this effect is only minimal\ldots{} \emph{Conclusion.} Music participation in form of the studied music project caused little changes\ldots{}
 
 \clearpage
 \tableofcontents
+
+\clearpage
+\doublespacing
+
+\hypertarget{list-of-abbreviations}{%
+\section*{List of Abbreviations}\label{list-of-abbreviations}}
+\addcontentsline{toc}{section}{List of Abbreviations}
+
+\begin{tabular}{rp{0.2cm}lp{1cm}}
+    BMU     & &  Bundesverband für Musikunterricht   \\
+    IQ     & &  Intelligence Quotient  \\
+    KIP    & &  klasse.im.puls  \\
+    FAU     & &  Friedrich-Alexander-Universität  \\
+    LS     & &  Life satisfaction  \\
+    SEA     & &  ... Average  \\
+    SD     & &  Standard Deviation  \\
+    PWI-SC     & &  Personal Wellbeing Index -- School Children  \\
+\end{tabular}
 
 \clearpage
 \listoftables
@@ -202,7 +220,6 @@ University of Halle-Wittenberg \\[0.75cm]
 \listoffigures
 
 \clearpage
-\doublespacing
 \pagestyle{plain}
 \pagenumbering{arabic}
 
@@ -285,10 +302,10 @@ To measure life satisfaction and any area of satisfaction, I use an 11-point sca
 \toprule
 Variable & Mean & SD\\
 \midrule
-Life satisfaction & 7.29 & 2.56\\
-Satisfaction friends & 8.86 & 1.82\\
-Satisfaction class & 7.58 & 2.05\\
-Satisfaction school & 7.74 & 2.20\\
+Life satisfaction & 7.30 & 2.56\\
+Satisfaction friends & 8.85 & 1.82\\
+Satisfaction class & 7.58 & 2.03\\
+Satisfaction school & 7.72 & 2.19\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -365,23 +382,22 @@ The treatment groups were not randomized, but formed by choice. This makes it a 
 \toprule
   & treated = 1 vs 0\\
 \midrule
-lsat & 0.15\\
-female & 0.15\\
-sat\_friends & 0.15\\
-sat\_class & 0.15\\
-class.prob & 0.07\\
+Life satisfaction & 0.15\\
+Female & 0.16\\
+Satisfaction friends & 0.16\\
+Satisfaction class & 0.16\\
+Problems in class & 0.04\\
 \addlinespace
-class.excl & 0.09\\
-note.deu & 0.10\\
-note.mat & 0.13\\
-note.mus & 0.17\\
-\cellcolor[HTML]{b3cde0}{hob.mus.making} & \cellcolor[HTML]{b3cde0}{0.51}\\
+Exclusion in class & 0.12\\
+Grade german & 0.10\\
+Grade math & 0.13\\
+Grade music & 0.19\\
+\cellcolor[HTML]{b3cde0}{Hobby music} & \cellcolor[HTML]{b3cde0}{0.54}\\
 \addlinespace
-dauer.mus.lis & 0.12\\
-\cellcolor[HTML]{b3cde0}{dauer.mus.making} & \cellcolor[HTML]{b3cde0}{0.42}\\
-play.instr & 0.05\\
-mus.active & 0.12\\
-migback & 0.14\\
+\cellcolor[HTML]{b3cde0}{Duration music} & \cellcolor[HTML]{b3cde0}{0.45}\\
+Instrument & 0.10\\
+Musically active & 0.16\\
+Migration background & 0.15\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -392,7 +408,7 @@ The standardized mean differences are not a reason for concern in this setting. 
 \subsection{Measuring LS in children}\label{measuring-ls-in-children}}
 
 \label{sec:measurement}
-To investigate ones quality of life, research uses both objective and subjective indicators. Typical objective indicators are the income levels, crime rates, and access to medical services -- measures that are external and quantifiable. Subjective indicators on the other hand comprise subjective evaluations of ones' individual life circumstances (Gilman \& Huebner, 2000, p. 178). Only a modest relation between both measures was found which indicates that each approach carries unique information that are relevant for a comprehensive understanding of overall life quality (Veenhofen, 1996). Over time, measurement methods for subjective indicators have evolved, leading to substantial growth in the life satisfaction research. However, for a long time, most of the measurements were designed to assess adults' life satisfaction. Only recently, investigating correlates of life satisfaction in adolescents has begun. One reason why life satisfaction research in children was put off for a long time is probably that measuring life satisfaction in children is more challenging than for adults. Instruments for assessing children's subjective life satisfaction reports have been less intensively developed which is probably due to the fact that a Likert-type ratings scale is more difficult to use for younger children than for adolescents (Chambers \& Johnston, 2002, p. 28). For example, younger children or children with poorer readings skills are less able to respond appropriately to negative items on questionnaires and this effect biases the interpretation of children's responses (Marsh, 1986, p. 45). It is also common for children rating their subjective life satisfaction to show elevated extreme scores. As children become older, this tendency subsides and they are more capable of providing graded ratings in between the two extremes. These results have potentially substantial implications for the interpretation of self-report ratings form children \emph{this tendency might have an erroneous and invalid impact on the interpretation of children's self-reports}(Chambers \& Johnston, 2002, pp. 33--34). When dealing with self-reported life satisfaction in children, it is crucial that the respective child fully understands the question in order to give a valid response (Gluskie, 2012; Tomyn, Fuller-Tyszkiewicz, Cummins, \& Norrish, 2016). One must make sure that a child is old enough to know how to use a satisfaction scale. This requires children to distance themselves from the current situation, cognitively evaluate their life satisfaction (considering all relevant areas of life) and rate the degree to which certain items on the scale apply to them. This requires abstract thinking, which children develop in early adolescent years (10-14 years) (Gluskie, 2012; Piaget, 1955, 1969). Gilman \& Huebner (2000) have reviewed five different (both unidimensional and multidimensional) measurements explicitly developed to asses adolescents' life satisfaction.\footnote{The Students' Life Satisfaction Scale (Huebner, 1991b), the Satisfaction With Life Scale (Diener et al., 1985), the Perceived Life Satisfaction Scale (Adelman, Taylor, \& Nelson, 1989), the Comprehensive Quality of Life Scale - School Version (Cummins, 1997; Gullone \& Cummins, 1999), and the Multidimensional Student's Life Satisfaction Scale (Huebner, 1994)} The authors evaluated those measures in terms of validity and reliability and found all of the scales to be appropriate for research with adolescents {[}181-188{]}. The demographic characteristics of the available samples show that all of the adolescents observed were older than 12 years. Therefor it remains unclear if children younger than that age are able to report valid satisfaction.
+To investigate ones quality of life, research uses both objective and subjective indicators. Typical objective indicators are the income levels, crime rates, and access to medical services -- measures that are external and quantifiable. Subjective indicators on the other hand comprise subjective evaluations of ones' individual life circumstances (Gilman \& Huebner, 2000, p. 178). Only a modest relation between both measures was found which indicates that each approach carries unique information that are relevant for a comprehensive understanding of overall life quality (Veenhofen, 1996). Over time, measurement methods for subjective indicators have evolved, leading to substantial growth in the life satisfaction research. However, for a long time, most of the measurements were designed to assess adults' life satisfaction. Only recently, investigating correlates of life satisfaction in adolescents has begun. One reason why life satisfaction research in children was put off for a long time is probably that measuring life satisfaction in children is more challenging than for adults. Instruments for assessing children's subjective life satisfaction reports have been less intensively developed which is probably due to the fact that a Likert-type ratings scale is more difficult to use for younger children than for adolescents (Chambers \& Johnston, 2002, p. 28). For example, younger children or children with poorer readings skills are less able to respond appropriately to negative items on questionnaires and this effect biases the interpretation of children's responses (Marsh, 1986, p. 45). It is also common for children rating their subjective life satisfaction to show elevated extreme scores. As children become older, this tendency subsides and they are more capable of providing graded ratings in between the two extremes. These results have potentially substantial implications for the interpretation of self-report ratings form children \emph{this tendency might have an erroneous and invalid impact on the interpretation of children's self-reports}(Chambers \& Johnston, 2002, pp. 33--34). When dealing with self-reported life satisfaction in children, it is crucial that the respective child fully understands the question in order to give a valid response (Gluskie, 2012; Tomyn, Fuller-Tyszkiewicz, Cummins, \& Norrish, 2016). One must make sure that a child is old enough to know how to use a satisfaction scale. This requires children to distance themselves from the current situation, cognitively evaluate their life satisfaction (considering all relevant areas of life) and rate the degree to which certain items on the scale apply to them. This requires abstract thinking, which children develop in early adolescent years (10-14 years) (Gluskie, 2012; Piaget, 1955, 1969). Gilman \& Huebner (2000) have reviewed five different (both unidimensional and multidimensional) measurements explicitly developed to asses adolescents' life satisfaction.\footnote{The Students' Life Satisfaction Scale (Huebner, 1991b), the Satisfaction With Life Scale (Diener et al., 1985), the Perceived Life Satisfaction Scale (Adelman, Taylor, \& Nelson, 1989), the Comprehensive Quality of Life Scale -- School Version (Cummins, 1997; Gullone \& Cummins, 1999), and the Multidimensional Student's Life Satisfaction Scale (Huebner, 1994)} The authors evaluated those measures in terms of validity and reliability and found all of the scales to be appropriate for research with adolescents {[}181-188{]}. The demographic characteristics of the available samples show that all of the adolescents observed were older than 12 years. Therefor it remains unclear if children younger than that age are able to report valid satisfaction.
 An other instrument was developed by (Cummins \& Lau, 2005), the Personal Well-being Index (PWI-SC). Again, studies demonstrated reliability for this instrument as well (Casas \& Rees, 2015; Casas et al., 2011; Tomyn \& Cummins, 2011; Tomyn, Stokes, Cummins, \& Dias, 2019). But also in those studies, all of the adolescents were at least 12 years of age, mostly even older. There is only very little evidence on the psychometric properties of the PWI-SC for children below the age of 12.
 One of them is González-Carrasco, Casas, Malo, Viñas, \& Dinisman (2016, p. 70) who applied the instrument for children as young as only 9 years and also found adequate fit of the data.
 On the other hand, Tomyn et al. (2016) conducted a study with children aged 10-12 and concluded that subjective well-being data of children must be interpreted with caution. They also show that response bias towards the extreme positive end of a scale is higher with decreasing age. The authors do not recommend using the PWI-SC for children younger than 12 years. As for the specific sample, the PWI-SC did not serve as a valid instrument for measuring the SWB.
@@ -406,18 +422,24 @@ In conclusion, measuring life satisfaction in children is more challenging than 
 
 \label{sec:identification}
 As I already mentioned in the introduction, I will make use of a multilevel model, precisely a varying-intercept and varying-slope multilevel model. A multilevel model is a good choice for drawing causal inference but also for prediction and descriptive modeling (Andrew Gelman, 2013, p. 6).
-In the following, I will summarize important aspects of the methodology of those models and explain how multilevel models are best to navigate between underfitting (too few parameters included in the model) and overfitting (too many parameters included in the model). In the second part, I will give an introduction to Bayesian analysis that is ideal for multilevel modeling because of its underlying assumption that all parameters are random quantities.
+In the following, I will summarize important aspects of the methodology of those models and explain how multilevel models are best to navigate between underfitting (too few parameters included in the model) and overfitting (too many parameters included in the model). In the second part, I will give an introduction to Bayesian analysis that is the ideal method for multilevel modeling because of its underlying assumption that all parameters are random quantities.
 
 \hypertarget{multilevel-modeling}{%
 \subsection{Multilevel modeling}\label{multilevel-modeling}}
 
-Since the sample is structured hierarchically, with students nested within schools, observed in several time periods, using a simple nonhierarchical model would be inappropriate. It would tend to underfit when there are only few parameters and to overfit the data when too many parameters are included. Though fitting the data well, often seems to be the goal of data analysis, these models are usually very poor in making predictions for new data (Andrew Gelman (2013), 101). (fit to sample always - not true of multilevel models - improves as we add parameters.
+Since the sample is structured hierarchically, with students nested within schools, observed in several time periods, using a simple nonhierarchical model would be inappropriate. It would tend to underfit when there are only few parameters and to overfit the data when too many parameters are included. Though fitting the data well, often seems to be the goal of data analysis, these models are usually very poor in making predictions for new data (Andrew Gelman (2013), 101). (fit to sample always -- not true of multilevel models -- improves as we add parameters.)
 
-A multilevel model is a linear model in which parameters are given a probability model. Mcelreath (2020) (p.~14) suggests to think of parameters as a placeholder for a missing model. That probability model itself has parameters called hyperparameters which are also estimated from the data. In other words, they are parameters for parameters. Technically, there is no limit to the number of levels, however infeasible computation and ability to understand the model are in practice a restriction. Though multilevel models are more complicated, it is worth using them because they produce better estimates.
+A multilevel model is a linear model in which parameters are given a probability model. Mcelreath (2020) (p.~14) suggests to think of parameters as placeholders for a missing model. That probability model itself has parameters called hyperparameters which are also estimated from the data. In other words, there are parameters for parameters for parameter and so on. Technically, there is no limit to the number of levels, however infeasible computation and ability to understand the model are in practice a restriction. Though multilevel models are more complicated, it is worth using them because they produce better estimates. In the context of the observed study, a multilevel model works extremely well because of several reasons (elreath 15):
+
+\begin{itemize}
+\item Adjusting estimates for repeat sampling -- having more than one observation arising from the same student, a traditional, single-level model may be misleading
+\item Adjusting for imbalance in sampling -- some students are sampled more than others, again, a single-level model could be misleading in this case
+\item Studying variation -- I am interested in the variation of the treatment effect among schools. Multilevel models are of big help in this case because the model variation explicitly.
+\end{itemize}
 
 Multilevel models involve predictors at different levels of variation. In the KIP setting that means that it is possible to measure different effect sizes throughout time in each of the schools. It is likely to observe different response behaviors among the schools. Depending on the school, students might react differently to the project. This is an important investigation to find out if the intervention was more effective in some schools than in others. One school might have done something explicitly well or had to face challenges other schools did not. Learning from these findings could possibly help to improve the project in the future.
 
-In a classical regression, assigning varying effects to each group is done by using interaction terms or running separate regressions for each subgroup of the sample. However, this has the disadvantage that estimates can be very imprecise, in particular when there are only few observations per group. Estimating parameters for each group separately is referred to as \emph{no-pooling} because each group is observed independently without considering the rest of the sample. On the other hand, ignoring the hierarchical structure and \emph{completely pooling} the information is also not recommended, because existing effects might disappear as illustrated in @(fig:lsat-vs-time). If solely taking the mean over all schools (solid purple line), there is almost no change in life satisfaction through time. But when each school taken separately, there are clear dynamics that substantially differ from each other. While in some schools, average life satisfaction is decreasing with different rates, in other school opposite trends are visible.
+In a classical regression, assigning varying effects to each group is done by using interaction terms or running separate regressions for each subgroup of the sample. However, this has the disadvantage that estimates can be very imprecise, in particular when there are only few observations per group. Estimating parameters for each group separately is referred to as \emph{no-pooling} because each group is observed independently without considering the rest of the sample. On the other hand, ignoring the hierarchical structure and \emph{completely pooling} the information is also not recommended, because existing effects might disappear as illustrated in @(fig:lsat-vs-time): if solely taking the mean over all schools (solid purple line), there is almost no change in life satisfaction through time. But when each school taken separately (dashed blue lines), there are clear dynamics that substantially differ from each other. While in some schools average life satisfaction is decreasing with different rates, in other school opposite trends are visible.
 
 \begin{figure}[H]
 
@@ -428,33 +450,42 @@ In a classical regression, assigning varying effects to each group is done by us
 \caption{LS in treatment group}\label{fig:lsat-vs-time}
 \end{figure}
 
-Both approaches, no-pooling and complete pooling, have downsides for different reasons but they can be useful preliminary estimates, eventually leading up to what is known as partial pooling that comes out of a multilevel analysis. Therefore I will illustrate both the extremes, the complete pooling and the no-pooling approach in the following before I get to the details of partial pooling. The complete pooling and no-pooling model in comparison to the partial pooling model will be presented in a very simplified way. Life satisfaction will be explained with a varying-intercept model without any predictors. The purpose is to emphasize the characteristic features of the three approaches without unnecessary complexity in the model. In this example, \(\alpha\) and \(\sigma\) are given weakly informative priors and the models are estimated using rstanatrm functions `stan\_glm' abd `stan\_glmer'.
+Both approaches, no-pooling and complete pooling, have downsides for different reasons but they can be useful preliminary estimates, eventually leading up to what is known as partial pooling that comes out of a multilevel analysis. Therefore I will illustrate both the extremes, the complete pooling and the no-pooling approach in the following, before I get to the details of partial pooling. The complete pooling and no-pooling model in comparison to the partial pooling model will be presented in a very simplified way. Life satisfaction will be explained with a varying-intercept model without any predictors. The purpose is to emphasize the characteristic features of the three approaches without unnecessary complexity in the model. In this example, \(\alpha\) and \(\sigma\) are given weakly informative priors and the models are estimated using \texttt{rstanatrm} functions \texttt{stan\_glm} and \texttt{stan\_glmer}.
 
-The simplest model is the pooled model, where life satisfaction is modeled as independent and identically distributed draws from a common distribution.
+The simplest approach of the three is the pooled model, where life satisfaction is modeled as independent and identically distributed draws from a common distribution. The intercept \(\alpha\), the average life satisfaction in this case, is the same for each school.
 \begin{align*}
-lsat_i & \sim {\mathrm {Normal}} (\alpha, \sigma) & \quad \text{for } i \in 1,...,n \\
+LS_i & \sim {\sf {Normal}} (\alpha, \sigma) & \quad \text{for } i \in 1,...,n \\
 \alpha & \sim {\sf Normal} (0, 10) \\
 \sigma & \sim {\sf Exponential} (1)
 \end{align*}
 In the complete pooling approach, the population of schools is assumed to be invariant. This ignores the fact that schools are different and assigns the same intercept to each of the schools. If done like this, there is the risk of ignoring important variation in how schools correspond to the treatment (Mcelreath, 2020, p. 416). The total sample mean underfits the data, meaning that the model is insensitive to the details in the data and is learning too little from it. Ignoring the group-level variation is very likely misleading.
 
-Whereas complete pooling ignores variation between schools, the no-pooling analyses overstates it and gives a different mean to each school:
+Whereas complete pooling ignores variation between schools, the no-pooling analysis overstates it and gives a different mean to each school:
 \begin{align*}
-lsat_i & \sim {\sf Normal} (\alpha_{j[i]}, \sigma) & \quad \text{for } i \in 1,...,n \\
+LS_i & \sim {\sf Normal} (\alpha_{j[i]}, \sigma) & \quad \text{for } i \in 1,...,n \\
 \alpha_{j} & \sim {\sf Normal} (0, 10) & \quad \text{for } j \in 1,...,m,
 \end{align*}
 where \(j[i] \in 1,...,m\) is the school of student \(i\).
-Although the \(\alpha_j\) are drawn from the same prior distribution, it has fixed parameters and thus no information is shared between observations in different schools. This makes the model very sensitive to the details in the data, you could say it is learning too much from it. The no-pooling approach includes the assumption that the schools are completely different and on school cannot tell anything about the other schools. This is equivalent to the variation among schools being infinite. But in reality, though schools are different in some ways, they are also very similar in in the way that each school helps to estimate the treatment effect in other schools. One should choose a model that incorporates the idea of learning from other groups while still accounting for systematic differences among the groups. This is exactly what partial pooling is attempting.
+Although the \(\alpha_j\) is drawn from the same prior distribution, it has fixed parameters and thus no information is shared between observations in different schools. This makes the model very sensitive to the details in the data, you could say it is learning too much from it. The no-pooling approach includes the assumption that the schools are completely different and one school cannot tell anything about the other schools. This is equivalent to the variation among schools being infinite. But in reality, though schools are different in some ways, they are also very similar so that each school helps to estimate the treatment effect in other schools. One should choose a model that incorporates the idea of learning from other groups while still accounting for systematic differences among the groups. This is exactly what partial pooling is attempting.
 
-Partial pooling represents a compromise between the two extremes of excluding a categorical predictor from a model (complete pooling), or estimating separate models within each level of the categorical predictor (no pooling). For this simplified model with no predictors, the multilevel estimate for a given school \(j\) can be approciamted as a weighted average of the mean of the observations in the school (the unpooled estimate, \(\bar{y}_j\)) and the mean over all schools (the completely pooled estimate, \(\bar{y}_{\mathrm {all}}\)):
+Partial pooling represents a compromise between the two extremes of excluding a categorical predictor from a model (complete pooling), or estimating separate models within each level of the categorical predictor (no pooling). For this simplified model with no predictors, the multilevel estimate for a given school \(j\) can be approximated as a weighted average of the mean of the observations in the school (the unpooled estimate, \(\bar{y}_j\)) and the mean over all schools (the completely pooled estimate, \(\bar{y}_{\mathrm {all}}\)):
 \begin{align*}
-\hat{\alpha}_j^{\mathrm {multilevel}} \approx \frac {\frac{n_j}{\sigma_y^2}\bar y_j + \frac {1}{\sigma_{\alpha}^2}\bar y_{\mathrm {all}}}{\frac {n_j}{\sigma_y^2} + \frac {1}{\sigma_{\alpha}^2}}.
+\hat{\alpha}_j^{\mathrm {multilevel}} \approx \frac {\frac{n_j}{\sigma_y^2}\bar y_j + \frac {1}{\sigma_{\alpha}^2}\bar y_{\mathrm {all}}}{\frac {n_j}{\sigma_y^2} + \frac {1}{\sigma_{\alpha}^2}},
 \end{align*}
-In the partially pooled model, still each school has its own mean values but with the difference that now, these school-means share a prior which has its own parameters.
+where \(n_j\) is the number of students in school \(j\), \(\sigma^2_y\) is the within-school variance in LS, and \(\sigma^2_j\) is the variance among the average LS levels in the different schools. For keeping the example simple, I assume the within-school variance to be constant among the schools (gelman hill 254).
+The weighted average describes the ratio of information available about the individual school and the average of all the schools. Depending on that ratio, the weighted averag converges to one of the two extremes, either no-pooling or complete pooling.
+
+\begin{itemize}
+\item A school with only few students carries less information, and the weighting pulls the multilevel estimate closer to the overall state average. If $n_j=0$, the multilevel estimate is simply the average, $\bar y_{\mathrm {all}}$.
+\item Averages from larger schools carry more information, and the corresponding multilevel estimates are close to the school average. If $n \rightarrow \infty$, the multilevel estimate is simply the country average, $\bar y_j$
+\item In intermediate cases, the multilevel estimate lies between the no-pooling and the complete pooling estimate.
+\end{itemize}
+
+This means that in the partially pooled model, still each school has its own mean values but with the difference that these school-means share a prior which has its own parameters.
 \begin{align*}
 lsat_i & \sim {\sf Normal} (\alpha_{j[i]}, \sigma) & \quad \text{for } i \in 1,...,n \\
 \alpha_{j} & \sim {\sf Normal} (\mu, \tau) & \quad \text{for } j \in 1,...,m
-\end{align*} gelman hill p 253
+\end{align*} gelman hill p 253/254
 We could also write the model with the school-level average in the mean equation for \(y\), and the \(\alpha_j\) values distributed around the country level average, \(\gamma\).
 \begin{align*}
 lsat_i & \sim {\sf Normal} (\alpha_{j[i]}, \sigma) & \quad \text{for } i \in 1,...,n \\
@@ -473,17 +504,14 @@ After fitting the above models, I extracted the estimates of each of them and pl
 \caption{Mean}\label{fig:compare-models}
 \end{figure}
 
-It shows clearly that when partially pooling information, both similarities and differences among groups are comprised. Partial pooling uses all the data available to perform inference for groups instead of just using local information which is especially useful when there is only a small number of observations in each group. The group estimates are supported to the extend of the whole data set and are not being limited to the number of observations per group. These estimates are less underfit than the grand mean and less overfit than the no-pooling estimates. As a consequence they tend to be better estimates of the true per-school means (mcelreath p423). Visually, this is shown by the blue dots (partial pooling), always being somewhere between the no-pooling estimates and the partial pooling estimates, being pulled towards the grand mean. The difference between the classical no-pooling estimates and the results from partial pooling is not very drastic. This is probably because the group-level variation is relatively small and that makes the multilevel model reduce to a classical regression with no group indicators. Also, the number of groups (6) is quite small which might be a reason why group-level variation cannot be estimated accurately. Still, it is worth the effort of expanding a classical regression in this way when adding the third level for the time periods later in the estimation. Generally, partial pooling will be especially helpful when there are only few observations in one school because then the no-pooling estimate will be overfit significantly. The difference between no-pooling and partial pooling becomes smaller, the more observations there are per cluster. The partial pooling produces noticeably better estimates and therefore will be used for my estimation. There are different tools to create a model that partially pooles information. I chose a Bayesian framework for my analysis since multilevel models, models with multiple levels of uncertainty, each feeding into the next, have natural Bayesian representation (elreath,14) (Gelman \& Hill p143). Also, in the context of the observed study, a multilevel model works extremely well because of several reasons (elreath 15):
-* Adjusting estimates for repeat sampling - having more than one observation arising from the same student, a traditional, single-level model may be misleading
-* Adjusting for imbalance in sampling - some students are sampled more than others, again, a single-level model could be misleading in this case
-* Studying variation - I am interested in the variation of the treatment effect among schools. Multilevel models are of big help in this case because the model variation explicitly.
+It shows clearly that when partially pooling information, both similarities and differences among groups are comprised. Partial pooling uses all the data available to perform inference for groups instead of just using local information which is especially useful when there is only a small number of observations in each group. The group estimates are supported to the extend of the whole data set and are not being limited to the number of observations per group. These estimates are less underfit than the grand mean and less overfit than the no-pooling estimates. As a consequence they tend to be better estimates of the true per-school means (mcelreath p423). Visually, this is shown by the purple dots (partial pooling), always being somewhere between the no-pooling estimates and the partial pooling estimates and being pulled towards the grand mean. The difference between the classical no-pooling estimates and the results from partial pooling is not very drastic. This is probably because the group-level variation is relatively small and that makes the multilevel model reduce to a classical regression with no group indicators. Also, the number of groups (6) is quite small which might be a reason why group-level variation cannot be estimated accurately. Still, it is worth the effort of expanding a classical regression in this way when adding the third level for the time periods later in the estimation. Generally, partial pooling will be especially helpful when there are only few observations in one school because then the no-pooling estimate will be overfit significantly. The difference between no-pooling and partial pooling becomes smaller, the more observations there are per cluster. The partial pooling produces noticeably better estimates and therefore will be used for my estimation. There are different tools to create a model that partially pooles information. In practice the variance parameters together with the \(\alpha_j\)'s are either estimated with an approximated program such as \texttt{lmer()?} or using fully Bayesian inference.
 
 \hypertarget{bayesian-inference}{%
 \subsection{Bayesian inference}\label{bayesian-inference}}
 
 \emph{``Bayesian inference is the process of fitting a probability model to a set of data and summarizing the results by a probability distribution on the parameters of the model and on unobserved quantities such as predictions of new observations''} (gelman etal p1)
-To set up what will follow in the next chapter about the explicit estimation, general terms from Bayesian inference are explained and formally written down. The notation comes from Gelman etal(chapter 1).
-Unobservable vector quantities of population parameters of interest are denoted by \(\theta\), \(y\) is referred to as the observed data, the life satisfaction so to speak, and \(\tilde{y}\) are the unknown quantities (the potential quantities one will observe tomorrow - predictions). Bayesian statistical conclusions about a parameter \(\theta\), or unobserved data \(\tilde{y}\) are not made as specifying point estimates but they are made in terms of probability statements, expressed as \(p(\theta|y)\) or \(p(\tilde y|y)\) to show that these probability statements are conditional on the observed values of \(y\).
+To set up what will follow in \ref{ch:estimation} which is on the explicit estimation, general terms from Bayesian inference are explained and formally written down. The notation comes from Gelman etal(chapter 1).
+Unobservable vector quantities of population parameters of interest are denoted by \(\theta\), \(y\) is referred to as the observed data, the life satisfaction so to speak, and \(\tilde{y}\) are the unknown quantities (the potential quantities one will observe tomorrow -- predictions). Bayesian statistical conclusions about a parameter \(\theta\), or unobserved data \(\tilde{y}\) are not made as specifying point estimates but they are made in terms of probability statements, expressed as \(p(\theta|y)\) or \(p(\tilde y|y)\) to show that these probability statements are conditional on the observed values of \(y\).
 To make a probability statement about \(\theta\) given \(y\), a joint probability distribution for \(\theta\) and \(y\) is needed. The joint probability function is the product of two densities: the prior distribution \(p(\theta)\) and the sampling distribution \(p(y|\theta)\). Applying Bayes' rule yields the posterior density \(p(\theta|y)=\frac{p(\theta,y)}{p(y)}=\frac{p(\theta)p(y|\theta)}{p()y}\),
 where \(p(y)=\sum_\theta{p(\theta)p(y|\theta)}\), and the sum is over all possible values of \(\theta\) (or \(p(y)=\int p(\theta)p(y|\theta)d\theta\) in the case of continuous \(\theta\)).
 To make predictive inferences, a similar logic is applied:
@@ -504,6 +532,8 @@ Bayesian inference refers to statistical procedures that model unknown parameter
 \section{Estimation}\label{estimation}}
 
 \label{ch:estimation}
+I chose a Bayesian framework for my analysis since multilevel models, models with multiple levels of uncertainty, each feeding into the next, have natural Bayesian representation (elreath,14) (Gelman \& Hill p143).
+
 For model estimation I decided to use the `brms' package by Bürkner (Bürkner (2017)). It implements Bayesian multilevel models in `R' using the probabilistic programming language `Stan'. It allows for individual prior specifications and facilitates incorporating prior distributions that reflect the users' beliefs. The package is also suitable for assessing and comparing models with the Watanabe-Akaike information criterion and leave-one-out cross-validation.
 
 \hypertarget{the-model}{%
@@ -566,7 +596,7 @@ As stated above in @ref\{sec:methodology\} in a Bayesian framework parameters ar
 \end{figure}
 
 A good prior also tackles the problem of overfitting which was discussed above. By choosing a skeptical prior. The term skeptical refers to the prior being skeptical about values outside the range of parameter values that are not reasonable. The most common skeptical prior is the regularizing prior which effectively reduces overfitting whil still allowing the model to learn about the regular features of a sample.
-To decide on proper priors, I plottet the influence of different priors on the distribution of the outcome variable, life satisfaction. This helped me deciding on priors that influenced the oucome in a way that the largest part of the distribution was on a reasonable scale while extreme values are still possible. To begin with, the prior for the estimate is \(N(7,2)\) (Figure\ldots). Life satisfaction as it is measured in this setting spreads on a range from 0 to 10 with most of the responses in the upper third. For the standard deviation I chose \(\sf {Exp}(0.5)\) which is wide enough for all values on the satisfaction scale to remain possible. For the population-level and group-level effects, I came to the conclusion that a weakly-informative prior of \(\sf {N}(0,1)\) is best. To show this, I plotted predicted values from different prior predictive distributions:
+To decide on proper priors, I plottet the influence of different priors on the distribution of the outcome variable, life satisfaction. This helped me deciding on priors that influenced the outcome in a way that the largest part of the distribution was on a reasonable scale while extreme values are still possible. To begin with, the prior for the estimate is \(N(7,2)\) (Figure\ldots). Life satisfaction as it is measured in this setting spreads on a range from 0 to 10 with most of the responses in the upper third. For the standard deviation I chose \(\sf {Exp}(0.5)\) which is wide enough for all values on the satisfaction scale to remain possible. For the population-level and group-level effects, I came to the conclusion that a weakly-informative prior of \(\sf {N}(0,1)\) is best. To show this, I plotted predicted values from different prior predictive distributions:
 
 \begin{figure}[H]
 
@@ -603,7 +633,16 @@ Figure \ref{fig:post-dens-overlay} shows the distribution of many replicated dat
 \includegraphics[width=0.5\linewidth,]{../figures/post_dens_overlay} \includegraphics[width=0.5\linewidth,]{../figures/post_skew} \caption{Posterior predictive check}\label{fig:post-dens-overlay}
 \end{figure}
 
-Looking at the features of the data and the replicated data, which were not explicitly included in the model, indicates the need to extend or modify the model.
+Looking at the features of the data and the replicated data, which were not explicitly included in the model, indicates the need to extend or modify the model.\\
+
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.3\linewidth,]{../figures/post_dens_overlay_friends} \includegraphics[width=0.3\linewidth,]{../figures/post_dens_overlay_class} \includegraphics[width=0.3\linewidth,]{../figures/post_dens_overlay_school} \includegraphics[width=0.3\linewidth,]{../figures/post_skew_friends} \includegraphics[width=0.3\linewidth,]{../figures/post_skew_class} \includegraphics[width=0.3\linewidth,]{../figures/post_skew_school} 
+
+}
+
+\caption{Posterior predictive check}\label{fig:post-dens-overlay2}
+\end{figure}
 
 \clearpage
 

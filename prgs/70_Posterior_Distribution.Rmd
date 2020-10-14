@@ -7,10 +7,9 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(comment=NA)
-rm(list=ls())
+# rm(list=ls())
 ```
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(brms)
 library(sjlabelled)
@@ -42,9 +41,16 @@ m1 <- readRDS("../results/m1.rds")
 m2 <- readRDS("../results/sat_friends.rds")
 m3 <- readRDS("../results/sat_class.rds")
 m4 <- readRDS("../results/sat_school.rds")
+```
 
+# Life satisfaction
+
+```{r}
+color_scheme_set("brightblue")
 post_dens_overlay_lsat <- ppc_dens_overlay(y = d$lsat,
-                 yrep = posterior_predict(m1, draws = 50))
+                 yrep = posterior_predict(m1, draws = 50)) +
+  theme(text = element_text(size = 18))
+ggsave("../figures/post_dens_overlay.png", post_dens_overlay_lsat, width = 7, height = 5, units = "in")
 
 # fitted(m1) %>%
 #   as_tibble() %>%
@@ -58,7 +64,6 @@ post_dens_overlay_lsat <- ppc_dens_overlay(y = d$lsat,
 #                      ymax = Estimate + Est.Error),
 #                  size = 1/2, color = "firebrick4")
 
-color_scheme_set("brightblue")
 # m1 %>%
 #   posterior_predict(draws = 500) %>%
 #   ppc_stat_grouped(y = d$lsat,
@@ -73,128 +78,110 @@ color_scheme_set("brightblue")
 post_skew_lsat <- m1 %>%
   posterior_predict(draws = 500) %>%
   ppc_stat(y = d$lsat,
-                   stat = "median")
+                   stat = "mean") +
+  theme(text = element_text(size = 18))
+post_skew_lsat
+ggsave("../figures/post_skew.png", post_skew_lsat, width = 7, height = 5, units = "in")
+
 
 post <- posterior_samples(m1)
 
-color_scheme_set("red")
-mcmc_intervals(post[, 1:22],
+m1_coef <-
+  mcmc_intervals(post[, 1:22],
                prob = .5,
-               point_est = "median") +
-  labs(title = "My fancy bayesplot-based coefficients plot") +
+               point_est = "mean") +
+  labs(title = "Coefficients of ...") +
   theme(axis.text.y = element_text(hjust = 0),
         axis.line.x = element_line(size = 1/4),
         axis.line.y = element_blank(),
         axis.ticks = element_blank())
+ggsave("../figures/m1_coef.png", m1_coef, width = 7, height = 5, units = "in")
 
 # 'posterior_predict': Draw from posterior predictive distribution. The posterior predictive disribution is the distribution of the outcome implied by the model after using the observed data to update our beliefs about the unknown parameters in the mode. Simulating data grom the posterior predictive distribution using the observed predictors is useful for checking the fit of the model. Drawing from the posterior predictive distribution at interesting values of predictors also lets us visualize how a manipulation of a predictor affects (a function of) the outcome(s). With new observations of predictor variables we can use posterior predictive distribution to generate predicted outcomes
 
-## Satisfaction Friends
 
+```
+
+# Satisfaction Friends
+
+```{r}
 post_dens_overlay_friends <- ppc_dens_overlay(y = d$sat_friends,
-                 yrep = posterior_predict(m2, draws = 50))
+                 yrep = posterior_predict(m2, draws = 50)) +
+  legend_none() +
+  theme(text = element_text(size = 22))
+ggsave("../figures/post_dens_overlay_friends.png", post_dens_overlay_friends, width = 7, height = 5, units = "in")
 
-fitted(m2) %>%
-  as_tibble() %>%
-  bind_cols(d) %>%
-  ggplot(aes(x = sat_friends, y = Estimate)) +
-  geom_abline(linetype = 2, color = "grey50", size = .5) +
-  geom_point(size = 1.5, color = "firebrick4", alpha = 3/4) +
-  geom_linerange(aes(ymin = Q2.5, ymax = Q97.5),
-                 size = 1/4, color = "firebrick4") +
-  geom_linerange(aes(ymin = Estimate - Est.Error,
-                     ymax = Estimate + Est.Error),
-                 size = 1/2, color = "firebrick4")
+# fitted(m2) %>%
+#   as_tibble() %>%
+#   bind_cols(d) %>%
+#   ggplot(aes(x = sat_friends, y = Estimate)) +
+#   geom_abline(linetype = 2, color = "grey50", size = .5) +
+#   geom_point(size = 1.5, color = "firebrick4", alpha = 3/4) +
+#   geom_linerange(aes(ymin = Q2.5, ymax = Q97.5),
+#                  size = 1/4, color = "firebrick4") +
+#   geom_linerange(aes(ymin = Estimate - Est.Error,
+#                      ymax = Estimate + Est.Error),
+#                  size = 1/2, color = "firebrick4")
 
-color_scheme_set("brightblue")
-m2 %>%
-  posterior_predict(draws = 500) %>%
-  ppc_stat_grouped(y = d$sat_friends,
-                   group = d$treated,
-                   stat = "median")
-
-
-m2 %>%
-  posterior_predict(draws = 500) %>%
-  ppc_stat_grouped(y = d$sat_friends,
-                   group = d$school,
-                   stat = "median")
 
 post_skew_friends <- m2 %>%
   posterior_predict(draws = 500) %>%
   ppc_stat(y = d$sat_friends,
-                   stat = "median")
+                   stat = "mean") +
+  legend_none() +
+  xlab("Friends") +
+  theme(text = element_text(size = 22))
+post_skew_friends
+ggsave("../figures/post_skew_friends.png", post_skew_friends, width = 7, height = 5, units = "in")
 
-## Satisfaction class
 
-post_dens_overlay_class <- ppc_dens_overlay(y = d$sat_class,
-                 yrep = posterior_predict(m3, draws = 50))
-
-fitted(m3) %>%
-  as_tibble() %>%
-  bind_cols(d) %>%
-  ggplot(aes(x = sat_class, y = Estimate)) +
-  geom_abline(linetype = 2, color = "grey50", size = .5) +
-  geom_point(size = 1.5, color = "firebrick4", alpha = 3/4) +
-  geom_linerange(aes(ymin = Q2.5, ymax = Q97.5),
-                 size = 1/4, color = "firebrick4") +
-  geom_linerange(aes(ymin = Estimate - Est.Error,
-                     ymax = Estimate + Est.Error),
-                 size = 1/2, color = "firebrick4")
-
-color_scheme_set("brightblue")
-m3 %>%
+m2 %>%
   posterior_predict(draws = 500) %>%
-  ppc_stat_grouped(y = d$sat_class,
-                   group = d$treated,
-                   stat = "median")
-
-m3 %>%
-  posterior_predict(draws = 500) %>%
-  ppc_stat_grouped(y = d$sat_class,
+  ppc_stat_grouped(y = d$sat_friends,
                    group = d$school,
-                   stat = "median")
+                   stat = "mean")
+```
+
+# Satisfaction class
+
+```{r}
+post_dens_overlay_class <- ppc_dens_overlay(y = d$sat_class,
+                 yrep = posterior_predict(m3, draws = 50)) +
+  legend_none() +
+  theme(text = element_text(size = 22))
+post_dens_overlay_class
+ggsave("../figures/post_dens_overlay_class.png", post_dens_overlay_class, width = 7, height = 5, units = "in")
 
 post_skew_class <- m3 %>%
   posterior_predict(draws = 500) %>%
   ppc_stat(y = d$sat_class,
-                   stat = "median")
+           stat = "mean") +
+  legend_none() +
+  xlab("Class") +
+  theme(text = element_text(size = 22))
+post_skew_class
+ggsave("../figures/post_skew_class.png", post_skew_class, width = 7, height = 5, units = "in")
+```
 
 # Satiscation School
 
+```{r}
 post_dens_overlay_school <- ppc_dens_overlay(y = d$sat_school,
-                 yrep = posterior_predict(m4, draws = 50))
-
-fitted(m4) %>%
-  as_tibble() %>%
-  bind_cols(d) %>%
-  ggplot(aes(x = sat_school, y = Estimate)) +
-  geom_abline(linetype = 2, color = "grey50", size = .5) +
-  geom_point(size = 1.5, color = "firebrick4", alpha = 3/4) +
-  geom_linerange(aes(ymin = Q2.5, ymax = Q97.5),
-                 size = 1/4, color = "firebrick4") +
-  geom_linerange(aes(ymin = Estimate - Est.Error,
-                     ymax = Estimate + Est.Error),
-                 size = 1/2, color = "firebrick4")
-
-color_scheme_set("brightblue")
-m4 %>%
-  posterior_predict(draws = 500) %>%
-  ppc_stat_grouped(y = d$sat_school,
-                   group = d$treated,
-                   stat = "median")
-
-m4 %>%
-  posterior_predict(draws = 500) %>%
-  ppc_stat_grouped(y = d$sat_class,
-                   group = d$school,
-                   stat = "median")
+                 yrep = posterior_predict(m4, draws = 50)) +
+  legend_none() +
+  theme(text = element_text(size = 22))
+post_dens_overlay_school
+ggsave("../figures/post_dens_overlay_school.png", post_dens_overlay_school, width = 7, height = 5, units = "in")
 
 post_skew_school <- m4 %>%
   posterior_predict(draws = 500) %>%
   ppc_stat(y = d$sat_school,
-                   stat = "median")
-
+           stat = "mean") +
+  legend_none() +
+  xlab("School") +
+  theme(text = element_text(size = 22))
+post_skew_school
+ggsave("../figures/post_skew_school.png", post_skew_school, width = 7, height = 5, units = "in")
 
 post_check_all <- grid.arrange(post_dens_overlay_lsat, post_skew_lsat, post_dens_overlay_friends, post_skew_friends, post_dens_overlay_class, post_skew_class, post_dens_overlay_school, post_skew_school, nrow=4)
 ggsave("../figures/post_check_all.png", post_check_all, width = 7, height = 5, units = "in")
