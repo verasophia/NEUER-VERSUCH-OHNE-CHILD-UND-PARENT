@@ -9,8 +9,7 @@ output: html_document
 knitr::opts_chunk$set(comment=NA)
 rm(list=ls())
 ```
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, include=TRUE, message = FALSE}
 library(tidyverse)
 library(brms)
 library(sjlabelled)
@@ -42,6 +41,30 @@ m3 <- readRDS("../results/sat_class.rds")
 m4 <- readRDS("../results/sat_school.rds")
 
 post <- posterior_samples(m1)
+
+sum(post$b_tXw21 < 0.2 & post$b_tXw21 > -0.2) / 4000
+quantile(post$b_Intercept, c(0.1, 0.9))
+PI(post$b_Intercept, prob=0.8)
+ggplot(data = post, mapping = aes(x = b_Intercept)) +
+  geom_histogram()
+
+median(post$b_tXw21)
+mean(post$b_tXw21)
+
+m1_results <- posterior_samples(m1) %>% 
+  summarize(" " = "Averages" ,
+            "Mean" = mean(b_tXw21),
+            "SD" = round(sd(soep_mzkr_lsat),2),
+            "Min" = round(min(soep_mzkr_lsat),2),
+            "Max" = round(max(soep_mzkr_lsat),2))
+
+color_scheme_set("brightblue")
+mcmc_intervals(post[, 2:15],
+               prob = .5,
+               point_est = "median")
+mcmc_intervals(post[, 17:22],
+               prob = .5,
+               point_est = "median")
 
 coef <- mcmc_intervals(post[, 1:22],
                prob = .5,

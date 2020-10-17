@@ -785,7 +785,7 @@ gr_sat_school_teff <- ggplot(data = su_teff,
   geom_hline(yintercept=0, colour = "#6497b1") +
   ylab("Average treatment effect") +
   theme(text = element_text(size = 16))
-ggsave("../figures/sat_school_teff.png", gr_lsat_teff, width = 7, height = 4, units = "in")
+ggsave("../figures/sat_school_teff.png", gr_sat_school_teff, width = 7, height = 4, units = "in")
 gr_sat_school_teff
 ```
 
@@ -800,7 +800,7 @@ pred_df <- cbind.data.frame( y_pred, x_pred_school )
 gr_sat_school_pred_across_schools <- 
   ggplot( pred_df, aes( x = welle, y = Estimate, group = treated) ) + 
   geom_line( aes(color=treated) ) +
-  ylab("Life satisfaction") +
+  ylab("Satisfaction with school") +
   scale_x_discrete("Wave", limits = seq(1:5) ) +
   facet_wrap(vars(school), labeller = labeller(
     school = c("1" = "School: 1", "2" = "School: 2", "3" = "School: 3",
@@ -814,6 +814,7 @@ gr_sat_school_pred_across_schools <-
         axis.text.y = element_text(size = 14))
 ggsave("../figures/sat_school_pred_across_schools.png", gr_sat_school_pred_across_schools, 
        width = 7, height = 4, units = "in")
+gr_sat_school_pred_across_schools
 ```
 
 ## Treatment effect heterogeneity across schools

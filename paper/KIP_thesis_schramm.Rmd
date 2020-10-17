@@ -112,7 +112,6 @@ Considering the statement of Höppner, one would expect the project to positivel
 The structure of my thesis is as follows: At first there will be an overview of the current literature on music effecting students' lives in Chapter&nbsp;\@ref(ch:roleofmusic). Next, in Chapter&nbsp;\@ref(ch:data) the project and the data set will be explained along with descriptive statistics and a detailed diagnostic on pre-treatment differences in the treatment group compared to the control group. The data section also critically discusses challenges arising with measuring self reported life satisfaction in children. The identification strategy is presented in Chapter&nbsp;\@ref(sec:identification), following the estimation in the \@ref(ch:estimation)th chapter. Finally, Chapter&nbsp;\@ref(ch:results) shows the results and Chapter&nbsp;\@ref(ch:conclusion) concludes and discusses.
 <!-- LITERATURE REVIEW -->
 
-\clearpage
 # The role of music in childrens' lives
 \label{ch:roleofmusic}
 With regard to the effect of music on students' lives, most of the researchers are interested in academic outcomes and intelligence among students who are actively involved in music. Generally, there is the predominant perception of a positive link between music and cognitive abilities. @Osborne2015 [14] observed improved math skills and higher subjective well-being scores in children that were part of a music project. He also found them to have a better self-control over impulsive behavior. @Yang2015 (p. 385),@Wetter2008 (p. 372) , @Hille2014 (p. 62), and @Guhn2019 (p. 316) present evidence that children playing music have better grades at school. But this conclusion is not very meaningful as all of these studies follow a correlational design and do not allow for causal inference.  Nonetheless, the very optimistic and as we will see not quite realistic belief has prevailed that playing music causes children to achieve better results at school. This conclusion needs to be revised. In an extensive review of the available evidence concerning associations between music and cognitive abilities, the picture is not so clear any longer [@Schellenberg2013]. Small associations between music training and mathematical ability in correlational and quasi-experimental studies might result from individual differences in general intellectual ability (p. 527). The available evidence simply indicates that high-functioning children (i.e., higher IQ, better performance in school) are more likely than other children to take music lessons and to perform well in mathematics and other tests of cognitive ability (p. 534). This fits with the @Hille2014 study where the outcome difference in cognitive skills between musically active and inactive children reduces greatly when holding constant observable characteristics. An other plausible interpretation of study outcomes that fail to detect a causal relationship comes from @Wetter2008. He points out the possibility that the relationship is explained by affluent parents being more likely to afford music lessons for their child and thus, the socio-economic background may be the cause of higher performance at school. Despite the weakness of the above studies to draw causal inference, there is slight evidence that there may be a causal direction *from* music training *to* cognitive abilities in a study by @Schellenberg2004. He compares two treatment groups who receive piano lesson and voice lesson respectively to a control group in which the children have drama lessons. Random assignment to the different conditions allowed for inference that music lessons caused small increases in cognitive abilities (namely larger increases in full-scale IQ). However, this does not preclude the possibility that high-functioning children are more likely driven to play music. The misconception of music being a predictor for academic achievement is also discussed by @Southgate2009 (p. 17) who states that music is rather a mediator, to some degree, of family background and student status. Results from a meta-analysis, suggest that music training does not reliably enhance children and young adolescents' cognitive or academic skills, and that previous positive findings were probably due to confounding variables, such as placebo effects and lack of random allocation of participants [@Sala2016, p. 64]. The effect size was reduced in studies that applied a proper study design (random allocation of participants to the treatment group and comparison to an active control group). With respect to the mathematical outcomes, the only study comparing a music training to an active control group and with random allocation of the participants to the group [@Mehr2013] found a negative effect size. These considerations are in clear contrast to the popular perception that music training enhances any non-music related cognitive skill.
@@ -203,19 +202,20 @@ On the other hand, @Tomyn2016 conducted a study with children aged 10-12 and con
 
 In conclusion, measuring life satisfaction in children is more challenging than for adults and is still in progress. It is advisable to check the validity and reliability of their data when testing children. Considering, the majority of the children from the KIP project are 10 year sold in wave 1 (72% of those participating in wave 1), they might be just too young to give valid responses when asked about their life satisfaction. This must be kept in mind when evaluating the results.
 
-\clearpage
 # Identification strategy
 \label{ch:identification}
 As I already mentioned in the introduction, I will make use of a multilevel model, precisely a varying-intercept and varying-slope multilevel model. A multilevel model is a good choice for drawing causal inference but also for prediction and descriptive modeling [@AndrewGelman2013, 6].
 In the following, I will summarize important aspects of the methodology of those models and explain how multilevel models are best to navigate between underfitting (too few parameters included in the model) and overfitting (too many parameters included in the model). In the second part, I will give an introduction to Bayesian analysis that is the ideal method for multilevel modeling because of its underlying assumption that all parameters are random quantities.
 
 ## Multilevel modeling
-Since the sample is structured hierarchically, with students nested within schools, observed in several time periods, using a simple nonhierarchical model would be inappropriate. Each school may well have a different average life satisfaction tendency of or respond differently to the treatment, the data should benefit from a model that expects such variation. A classical model model would tend to underfit when there are only few parameters and to overfit, a problem that is common the more complex a model is, when too many parameters are included. Though fitting the data well, often seems to be the goal of data analysis, these models are usually very poor in making predictions for new data (@AndrewGelman2013, 101). (fit to sample always -- not true of multilevel models -- improves as we add parameters.)
+Since the sample is structured hierarchically, with students nested within schools, observed in several time periods, using a simple nonhierarchical model would be inappropriate. In practice, simple nonhierarchical models with few parameters generally cannot fit large data sets accurately, whereas with many parameters, they tend to overfit such data gelman 101. Though fitting the data well, often seems to be the goal of data analysis, these models are usually very poor in making predictions for new data (@AndrewGelman2013, 101). (fit to sample always -- not true of multilevel models -- improves as we add parameters.) In the context of the intervention under study, each school may well have a different average life satisfaction tendency or respond differently to the treatment. The data should benefit from a model that expects such variation.
 
 A multilevel model is a linear model in which parameters are given a probability model. @Mcelreath2020 (p. 14) suggests to think of parameters as placeholders for a missing model. That probability model itself has parameters called hyperparameters which are also estimated from the data. In other words, there are parameters for parameters for parameter and so on. Technically, there is no limit to the number of levels, however infeasible computation and ability to understand the model are in practice a restriction. Though multilevel models are more complicated, it is worth using them because they produce better estimates mcelreath, 15. In the context of the observed study, a multilevel model works extremely well because of several reasons (elreath 15):
-* Adjusting estimates for repeat sampling -- having more than one observation arising from the same student, a traditional, single-level model may be misleading
-* Adjusting for imbalance in sampling -- some students are sampled more than others, again, a single-level model could be misleading in this case
-* Studying variation -- I am interested in the variation of the treatment effect among schools. Multilevel models are of big help in this case because the model variation explicitly.
+\begin{itemize}
+\item Adjusting estimates for repeat sampling -- having more than one observation arising from the same student, a traditional, single-level model may be misleading
+\item Adjusting for imbalance in sampling -- some students are sampled more than others, again, a single-level model could be misleading in this case
+\item Studying variation -- I am interested in the variation of the treatment effect among schools. Multilevel models are of big help in this case because the model variation explicitly.
+\end{itemize}
 Multilevel models involve predictors at different levels of variation. In the KIP setting that means that it is possible to measure different effect sizes throughout time in each of the schools. It is likely to observe different response behaviors among the schools. Depending on the school, students might react differently to the project. This is an important investigation to find out if the intervention was more effective in some schools than in others. One school might have done something explicitly well or had to face challenges other schools did not. Learning from these findings could possibly help to improve the project in the future.
 
 In a classical regression, assigning varying effects to each group is done by using interaction terms or running separate regressions for each subgroup of the sample. However, this has the disadvantage that estimates can be very imprecise, in particular when there are only few observations per group. Estimating parameters for each group separately is referred to as *no-pooling* because each group is observed independently without considering the rest of the sample. On the other hand, ignoring the hierarchical structure and *completely pooling* the information is also not recommended, because existing effects might disappear as illustrated in Figure&nbsp;\@(fig:lsat-vs-time): if solely taking the mean over all schools (solid purple line), there is almost no change in life satisfaction through time. But when each school taken separately (dashed blue lines), there are clear dynamics that substantially differ from each other. While in some schools average life satisfaction is decreasing with different rates, in other school opposite trends are visible.
@@ -301,21 +301,20 @@ p(\tilde{y}|y) & =\int p(\tilde{y},\theta|y)d\theta \\
 \end{align*}
 \end{itemize}
 The equations express the posterior predictive distribution as an average of the conditional predictions over the posterior distribution of $\theta$. Given $\theta$, $y$ and $\tilde{y}$ are assumed to be conditional independent.
-Having decided on a specific probability model, the data $y$ affect the posterior inference *only* through $p(y|\theta)$, the likelihood function.
+Having decided on a specific probability model, the data $y$ affect the posterior inference \emph{only} through $p(y|\theta)$, the likelihood function.
 \end{itemize}
 To wrap up the above: Bayesian inference refers to statistical procedures that model unknown parameters (and also missing and latent data) as random variables. It starts with a prior distribution, beliefs about the parameter before having examined the new data, and updates it with the likelihood of the data, yielding a posterior distribution which is used for inferences and predictions (gelman and hill p143) (--> der absatz ist kopiert, aber ich finde keine guten Worte. Kannst du da ein bisschen umformulieren?)
 
-\clearpage
 # Estimation
 \label{ch:estimation}
-For model estimation I decided to use the `brms` package by Bürkner (@Buerkner2017). It implements Bayesian multilevel models in `R` using the probabilistic programming language `Stan`. It allows for individual prior specifications and facilitates incorporating prior distributions that reflect the users' beliefs. Different numerical techniques for computing the posterior distribution. In the `brms` package, Markov chain Monte Carlo (MCMC) is the technique used to fit the data. MCMC does not approximate the posterior distribution directly but draws samples from the posterior. This leads to a collection of parameters values of which the frequencies correspond to the posterior plausibilities (elreath, 45). 
+For model estimation I decided to use the `brms` package by Bürkner (@Buerkner2017). It implements Bayesian multilevel models in `R` using the probabilistic programming language `Stan`. It allows for individual prior specifications and facilitates incorporating prior distributions that reflect the users' beliefs. Different numerical techniques for computing the posterior distribution. In the `brms` package, Markov chain Monte Carlo (MCMC) is the technique used to fit the data. MCMC does not approximate the posterior distribution directly but draws samples from the posterior. This leads to a collection of parameter values of which the frequencies correspond to the posterior plausibilities (elreath, 45). 
 
 ## The model
 \label{sec:model}
-As mentioned above, the intervention under study is not a fully randomized experiment. To address the issue of potential differences between students from the control group and students from the treatment group, I use difference-in-difference regressions to estimate the effect of additional music lessons on pupils' life satisfaction. Three areas of satisfaction are also observed as a outcome variable. Using this method, systematic pre-treatment differences are no longer a threat to identification. There is the underlying common trend assumption that requires that if the treatment were not undertaken, both the control group and the treatment group would have experienced the same time trend.
-The study of effectiveness of the music project, with the students in school $j$ having a certain unknown parameter vector $\theta_j$, it might be reasonable to expect that estimates $\theta_j$, which represent a sample of schools, should be related to each other. This is achieved in a natural way by using a prior distribution in which life satisfaction is viewed as a sample from a common *population distribution*. A key feature of such applications is that the observed data, $y_{ij}$, with student index $i$ within group indexed by $j$, can be used to estimate aspects of the population distribution of the $theta_j$'s even though the values of $\theta_j$ are not themselves observed. In contrast, hierarchical models can have enough parameters to fit the model well, while using a population distribution to structure some dependence into the parameters, thereby avoiding problems of overfitting.
-I simultaneously investigate the treatment in six different schools. The analysis is restricted to wave 1 (pre treatment) and wave 2 (post treatment). The regression equation is:
-The hierarchical structure in my model looks as follows:
+The goal of my estimation is to identify the causal effect of the treatment on the well-being of the participating students. But the development of the satisfaction measures could have altered due to other variables, besides the introduction of the music project. Therefor, I make use of the Difference-in-Difference (DD) method and compare the treatment group to the control group. This helps removing the confounding effect after the intervention period and arrive at the real causal impact.
+The underlying common trend assumption implies that both groups follow the same trend in the pre-treatment and the treatment group would have the same trend as the control group in the the-post intervention period in the absence of the treatment. Then the difference in the change of life satisfaction is the actual treatment effect.
+
+This way, the problem of significant pre-treatment differences is avoided because DD-regressions allow for systematic differences due to group-specific time-invariant characteristics.
 The model I am using to fit the data includes varying intercepts on the school level and on the student level and varying slopes for each school. This assumes that schools have similar features but it also recognizes that unmeasured aspects on the students or schools can lead to variation in treatment effects. It allows for differences in how individuals or groups respond to the same circumstance. The specific regression equation is:
 \begin{align}\label{eq:ml_DDmodel}
 y_{ijt} = \beta_0 + \beta_{1j[i]} T_i + \sum\limits_{l=2}^5\delta_{lj[i]} (T_{i} \cdot 1[l=t]) + \sum\limits_{l=2}^5\lambda_l\cdot 1[l=t] + \mu_{j[i]} + \alpha_{i} + \epsilon_{ijt},
@@ -345,7 +344,7 @@ The assumption of a normally distributed effects is hard to justify, considering
 
 ## Model validation
 \label{sec:validation}
-After fitting the model in the previous section, I will now check its fit to data. A basic approach to asses the models adequacy is what is described as "phenomenological Bayesian monitoring" in @Rubin1981 (394) also: Gelman Bayesian Data Analsis ch. 5.5. The method is as follows. The posterior distribution, the distribution of the model parameters conditional on the observed data, can be used to generate a posterior predictive distribution. The implied predictions come from sampling from the posterior distribution to simulate predictions.  The idea behind this approach is then to compare the posterior predictive distribution to a) the actual data and b) scientific judgment about plausible values of such data. If the model fits well, there should not be any systematic differences between what the model predicts to what the real data show and they will not contradict with plausible values but will be typical of them. Recalling Chapter&nbsp;\@ref(ch:identification), the posterior predictive distribution is
+After fitting the model in the previous section, I will now check its fit to data.A basic approach to asses the models adequacy is what is described as "phenomenological Bayesian monitoring" in @Rubin1981 (394) also: Gelman Bayesian Data Analsis ch. 5.5. The method is as follows. The posterior distribution, the distribution of the model parameters conditional on the observed data, can be used to generate a posterior predictive distribution. The implied predictions come from sampling from the posterior distribution to simulate predictions.  The idea behind this approach is then to compare the posterior predictive distribution to a) the actual data and b) scientific judgment about plausible values of such data. If the model fits well, there should not be any systematic differences between what the model predicts to what the real data show and they will not contradict with plausible values but will be typical of them. Recalling Chapter&nbsp;\@ref(ch:identification), the posterior predictive distribution is
 $$p(\tilde{y}|y) =\int p(\tilde{y}|\theta)p(\theta|y)d\theta,$$
 where $y$ is the current data, $\tilde y$ is to be predicted, and $\theta$ are the model parameters.
 I chose a graphical representation of the PPCs. Instead of calculating posterior probability, simulated data are plotted, to be visually compared to observed data. 
@@ -365,33 +364,29 @@ knitr::include_graphics("../figures/post_skew_class.png")
 knitr::include_graphics("../figures/post_skew_school.png")
 ```
 
-\clearpage
 # Results
 \label{ch:results}
-A good way to work with a resulting posterior distribution is to sample parameters values drawn from it as I already did for the posterior predictive checks. These samples can then be used to produce intervals and point estimates.
-Below in Figure&nbsp;\@ref(fig:m1-coef), all of the parameter estimates from the MCMC draws are shown. It plots the 50% posterior intervals for the parameters where the thick lines, the thinner outer lines represent the 90% intervals. In this chapter I will focus on the causal effect of the intervention on the students' life satisfaction. I will also bring in the results for the three observed areas of satisfaction. The general life satisfaction will be discussed in more detail than the satisfaction areas because this is where my main interest lies.
+In this chapter I will focus on the causal effect of the intervention on the students' life satisfaction. I will also bring in the results for the three observed areas of satisfaction. The general life satisfaction will be discussed in more detail than the satisfaction areas because this is where my main interest lies.
+
+As for the model checking, good way for summarizing and interpreting the posterior distribution is to sample parameter values drawn from it. These samples can then be used to produce intervals and point estimates. The resulting samples will have the same proportions as the exact posterior density. Therefore the individual values of the parameters will appear in the samples in proportion to the posterior plausibility of each value. elreath p 52
+
+Figure&nbsp;\@ref(fig:m1-coef) summarizes point estimates for the median of the posterior distribution. When analyzing this figure, it is important to keep in mind that any point estimate in Bayesian analysis discards information. A Bayesian parameter consists of an entire posterior distribution and not just a single value. Besides the estimates, the figure includes specified intervals. Different names exist for the interval of posterior probability but I will refer to elreath 54, who prefers to call them compatibility intervals. These intervals indicate the range of parameter values compatible with the model and data.
+The compatibility intervals in Figure&nbso;\@ref(fig:m1-coef) state that out of 4000 values that are drawn from the posterior distribution, 90%(50%) lie within the boundaries of the thick(thin) lines. In other words, posterior intervals report two parameter values that contain between them a specified amount of posterior probability, a probability mass. elreath 54
 ```{r m1-coef, echo=FALSE, fig.cap="Parameter estimates", out.width = "80%", fig.align='center'}
 knitr::include_graphics("../figures/m1_coef.png")
 ```
 
 ## Life satisfaction
 \label{sec:life-satisfaction}
-
-### Average school
-Plotting the population-averaged predicted life satisfaction throughout time for the treatment and the control group respectively gives the following picture:
+I will now come to the identification of the treatment effects. To give a general picture of how life satisfaction changed in the treatment and control group respectively, I averaged the predicted life satisfaction for each wave over all schools (\@ref(fig:lsat-pred)).
 ```{r lsat-pred, echo=FALSE, fig.cap="Predicted life satisfaction for average school", out.width = "80%", fig.align='center'}
 knitr::include_graphics("../figures/lsat_pred.png")
 ```
-Overall, students from the treatment group do not show any large changes in their satisfaction level. After the first period, they become even slightly less satisfied and remain on the same level until the end of the project. The control group shows a different dynamic. Their satisfaction level drops by around 0.75 points on the satisfaction scale after wave 1. It then goes up to the initial level to drop again in period 4. From period 4 to period 5, life satisfaction jumps back and even exceeds the level of period 1. Evaluating the average treatment effects in Figure&nbsp;\@ref(fig:lsat-teff) in that light, it indicates that the treatment effect does not come from the treatment but from the varying differences in the level of life satisfaction between the treatment and the control group. In other words, the differences between the control group and the treatment group are resulting from the the control group being quite volatile in their life satisfaction while the treatment group is rather consistent and generally on a lower level. The supposedly positive treatment effect that Figure&nbsp;\@(fig:lsat-teff) indicates in waves 2 and 4 simply appear because the difference between the treatment group and the control group are shrinking, compared to the previous period. Not because the treatment class is actually becoming happier.
-```{r sat-teff, echo=FALSE, fig.cap="Treatment effects by area of satisfaction for average school",  fig.show = "hold", out.width = "50%", fig.align = "default"}
+Overall, students from the treatment group (blue line) have a lower life satisfaction than the ones from the control group and do not show any large changes in their satisfaction level. After the first period, they become even slightly less satisfied and remain on the same level until the end of the project. The control group shows a different dynamic. Their satisfaction level drops by around 0.25 points on the satisfaction scale after wave 1, almost parallel to the treatment group. But the both groups then depart from each other as the control group goes up to the initial level in wave 3 to drop again in period 4. From period 4 to period 5, life satisfaction jumps back and even exceeds the level of period 1. Evaluating the average treatment effects in Figure&nbsp;\@ref(fig:lsat-teff), the differences between the control and the treatment group, indicate that the treatment effect appear not due to changes in the LS of the treated but are due to varying LS among the untreated. In other words, the differences between the control group and the treatment group are resulting from the the control group being quite volatile in their life satisfaction while the treatment group is rather consistent and generally on a lower level. The supposedly positive treatment effect that Figure&nbsp;\@(fig:lsat-teff) indicates in waves 2 and 4 simply appear because the difference between the treatment group and the control group are shrinking, compared to the previous period. Not because the treatment class is actually becoming happier. With all of the 80% uncertainty intervals crossing the zero-line, treatment effects are rather weak.
+```{r lsat-teff, echo=FALSE, fig.cap="Predicted life satisfaction for average school", out.width = "80%", fig.align='center'}
 knitr::include_graphics("../figures/lsat_teff.png")
-knitr::include_graphics("../figures/sat_friends_teff.png")
-knitr::include_graphics("../figures/sat_class_teff.png")
-knitr::include_graphics("../figures/sat_school_teff.png")
 ```
-
-### Across schools
-The pattern from Figure&nbsp;\@ref(fig:lsat-teff) also appears in Figure&nbsp;\@ref(fig:lsat-teff-across-schools): There is a tendency of the treatment effects alternating from positive to negative from one wave to another. The magnitude of the effects however is extremely small and the 90% credibility intervals always cross the zero line. Wave 5 shows a diffuse situation where school five seems to be completely off. The problem of school five being not very trustworthy was already mentioned when the descriptive statistics were introduced in Section&nbsp;\@ref(sec:variables).
+To reflect the heterogeneity across schools, Figure&nbsp;\@ref(fig:lsat-pred-across-schools) represents the school-specific predicted life satisfaction. The corrseponding treatment effects are shown in Figure&nbsp;\@ref(fig:lsat-teff-across-schools). The pattern from Figure&nbsp;\@ref(fig:lsat-teff) also appears in Figure&nbsp;\@ref(fig:lsat-teff-across-schools): There is a tendency of the treatment effects alternating from positive to negative from one wave to another. The magnitude of the effects however is extremely small and the 80% certainty intervals always cross the zero line. Wave 5 shows a diffuse situation where school five seems to be completely off. The effect appears because from wave 4 to wave 5, the control group in school 5 becomes more satisfied while at the same time, the average life satisfaction in the treatment class suddenly drops even though it showd a constant level in the previous periods. The problem of school five being not very trustworthy was already mentioned when the descriptive statistics were introduced in Section&nbsp;\@ref(sec:variables).
 ```{r lsat-pred-across-schools, echo=FALSE, out.width = "80%", fig.cap = "Predicted life satisfaction across schools", fig.subcap="Life satisfaction", fig.align='center'}
 knitr::include_graphics("../figures/lsat_pred_across_schools.png")
 ```
@@ -401,24 +396,34 @@ knitr::include_graphics("../figures/lsat_teff_across_schools.png")
 
 ## Satisfaction with friends
 \label{sec:results-friends}
-The area of satisfaction with friends is the only one, where clearly a negative effect was observed. In both of the groups, the students tend to become less satisfied with their friends. The control group becomes a little more satisfied in wave 2 compared to the previous wave but then drops by the same amount. It then stays on the same level of about 8.75. The treatment group drops consistently, being less satisfied with friends from period to period. The treatment group starts with a mean satisfaction at more than 9, which is the highest values observed in all of the areas, and reaches a level of even less than 8.25 in wave 5. The treatment effects are all below zero including the 90% credibility intervals. Again, it is school 5 where the treatment group shows the most rapid drop in satisfaction with friends from 9 in wave 1 to 7.5 in wave 5. The other schools show also a decrease in their satisfaction levels but school 1 and school 3 show a tendency for increasing satisfaction to the end of the project.
-
+The satisfaction with friends is negatively effected by the treatment. In both of the groups, the students tend to become less satisfied with their friends over the course of the five waves. (Figure&nbsp;\@ref(fig:sat-friends-pred)). The control group becomes a little more satisfied, by around 0.2 points on average, in wave 2 compared to the previous wave but then drops by more than 0.2 points in wave 3. It then stays on the same level of about 8.6. The treatment group drops consistently, being less satisfied with friends from period to period. The treatment group starts with a mean satisfaction at almost 9, which is the highest values observed in all of the areas, and reaches a level of even less than 8.2 in wave 5. The point estimates of the treatment effects are below zero in each school (Figure&nbsp;\@ref(fig:friends), right plot), as well as the 80% uncertainty intervals (Figure&nbsp;\@ref(fig:friends), left plot). Again, it is school 5 where the treatment group shows the most rapid drop in satisfaction with friends from 9 in wave 1 to 7.5 in wave 5. The other schools also also a decrease in their satisfaction levels but school 1 and school 3 show a tendency for increasing satisfaction towards the end of the project (Figure&nbsp;\@ref(fig:sat-friends-pred-across-schools)).
+```{r friends, echo=FALSE, fig.cap="Treatment effects by area of satisfaction for average school",  fig.show = "hold", out.width = "50%", fig.align = "default"}
+knitr::include_graphics("../figures/sat_friends_teff.png")
+knitr::include_graphics("../figures/sat_friends_teff_across_schools.png")
+```
 ## Satisfaction with the class
 \label{sec:results-class}
-Averaging over all schools shows similar developments of the satisfaction with the class in the treatment and the control group. Both of them drop sharply in the first two periods and then remain on a level of around seven with the treatment group generally showing slightly lower satisfaction levels than the control group. Basically, the treatment effects are not significantly different from zero.
-When looking at each school separately, there is no feature worth mentioning with the exception that in school 1 and 2, it is the students in the treatment class that are happier than the one in the control group on average.
+Averaging over all schools shows similar developments of the satisfaction with the class in the treatment and the control group (Figure&nbsp;\@ref(fig:sat-class-pred)). Both of them drop sharply in the first two periods and then remain on a level of around seven with the treatment group generally showing slightly lower satisfaction levels than the control group. The similarity between the groups leads to treatment effects that are close to zero in all of the waves (Figure&nbsp;\@ref(fig:class), left plot).
+When looking at each school separately, it stands out that in school 1 and 2, it is the students in the treatment class that are on average happier than the ones in the control group. The treatment effects across schools are represented in (Figure&nbsp;\@ref(fig:class), right plot). The strikingly positive effects in wave 2 in schools 2 and 3 appear because in both cases the control group becomes more satisfied with friends while the treatment group becomes less satisfied (Figure&nbsp;\@ref(fig:sat-class-pred-across-schools)).
+```{r class, echo=FALSE, fig.cap="Treatment effects by area of satisfaction for average school",  fig.show = "hold", out.width = "50%", fig.align = "default"}
+knitr::include_graphics("../figures/sat_class_teff.png")
+knitr::include_graphics("../figures/sat_class_teff_across_schools.png")
+```
 
 ## Satisfaction with school
 \label{sec:results-school}
-The level of satisfaction with school is quite volatile throughout the time of the project. There is a pattern observable in the control group which shows that students are more satisfied with school at the beginning and at the end of a school year and less satisfied in between. The students in the treatment group generally show a level of satisfaction of more than eight and around 7/7.25 in all the other periods. The drop from wave 1 to wave 2 can be seen in each of the observed schools. But while in the other schools, it goes up again after that initial drop and eventually levels, school 5 is the only school where it continues to drop for the treatment group and goes even down to below 6 which can be categorized as dissatisfied.
+The level of satisfaction with school is quite volatile throughout the time of the project. There is a pattern observable in the control group which shows that students are more satisfied with school at the beginning and at the end of a school year and less satisfied in between, with an overall general trend to be less satisfied. The students in the treatment group generally show a level of satisfaction of more than eight and show values between 7 and 7.25 in all the other periods (Figure&nbsp;\@ref(fig:sat-school-pred)). The drop from wave 1 to wave 2 can be seen in each of the in each of the observed classes. But while in school 5 it continues to drop in the remaining waves with the lowest value in wave 5 being only 6. In all the other schools satisfaction with school goes up after that initial drop and eventually levels between 7 and 8. Figure&nbsp;\@ref(fig:school) shows the treatment effects for the average school satisfaction over the schools (left plot) and across the schools. The effects lie close to zero but have a tendency to be negative.
+```{r school, echo=FALSE, fig.cap="Treatment effects by area of satisfaction for average school",  fig.show = "hold", out.width = "50%", fig.align = "default"}
+knitr::include_graphics("../figures/sat_school_teff.png")
+knitr::include_graphics("../figures/sat_school_teff_across_schools.png")
+```
 
-\clearpage
 # Conclusion
 \label{ch:conclusion}
 ```{r random-pid, echo=FALSE, echo=FALSE, out.width = "80%", fig.align='center', fig.cap="Excerpt from questionnaire"}
 knitr::include_graphics("../figures/random_lsat.png")
 ```
-
+Is the common trend assumption too strong? There are no pre-treatment observations that compare the groups. Can we compare the classes???
 
 <!-- REFERENCES -->
 \clearpage
@@ -441,23 +446,29 @@ knitr::include_graphics("../figures/random_lsat.png")
 
 # (APPENDIX) Appendix {-} 
 
-# Appendix A
-```{r questionnaire, echo=FALSE, echo=FALSE, out.width = "100%", fig.cap="Excerpt from questionnaire"}
-knitr::include_graphics("../figures/Wie zufrieden bist du....pdf")
+```{r questionnaire, echo=FALSE, echo=FALSE, fig.cap="Excerpt from questionnaire", fig.show = "hold", out.width = "80%", fig.align = "center", fig.pos="H"}
+knitr::include_graphics("../figures/questionnaire_satisfaction.png")
 ```
-```{r sat-pred, echo=FALSE, fig.cap="Predicted satisaction by area for average school", fig.show = "hold", out.width = "65%", fig.align = "center", fig.pos="H"}
+```{r sat-friends-pred, echo=FALSE, fig.cap="Predicted satisaction by area for average school", fig.show = "hold", out.width = "80%", fig.align = "center", fig.pos="H"}
 knitr::include_graphics("../figures/sat_friends_pred.png")
+```
+```{r sat-friends-pred-across-schools, echo=FALSE, fig.cap="Predicted satisaction by area for average school", fig.show = "hold", out.width = "80%", fig.align = "center", fig.pos="H"}
+knitr::include_graphics("../figures/sat_friends_pred_across_schools.png")
+```
+```{r sat-class-pred, echo=FALSE, fig.cap="Predicted satisaction by area for average school", fig.show = "hold", out.width = "80%", fig.align = "center", fig.pos="H"}
 knitr::include_graphics("../figures/sat_class_pred.png")
+```
+```{r sat-class-pred-across-schools, echo=FALSE, fig.cap="Predicted satisaction by area for average school", fig.show = "hold", out.width = "80%", fig.align = "center", fig.pos="H"}
+knitr::include_graphics("../figures/sat_class_pred_across_schools.png")
+```
+```{r sat-school-pred, echo=FALSE, fig.cap="Predicted satisaction by area for average school", fig.show = "hold", out.width = "80%", fig.align = "center", fig.pos="H"}
 knitr::include_graphics("../figures/sat_school_pred.png")
 ```
+```{r sat-school-pred-across-schools, echo=FALSE, fig.cap="Predicted satisaction by area for average school", fig.show = "hold", out.width = "80%", fig.align = "center", fig.pos="H"}
+knitr::include_graphics("../figures/sat_school_pred_across_schools.png")
+```
+
 Example of nice appendix in @Hille2014
 
-\clearpage
-# Appendix B
-
-```{r smdtab, echo=FALSE}
-# smdtab <- readRDS("../results/smdtab.Rds")
-# knitr::kable(x = smdtab, booktabs = T, caption = "Standardized mean differences") %>%
-#   kableExtra::kable_styling(full_width = T, latex_options = "HOLD_position")
-```
+# Declaration of authorship
 
