@@ -26,6 +26,9 @@ library(kableExtra)
 library(ggdist)
 library(plm)
 library(broom.mixed)
+library(extrafont)
+theme_set(theme_bw(base_family = "CMU Serif") +
+            theme(text = element_text(size = 16)))
 ```
 
 ```{r}
@@ -77,11 +80,11 @@ compare <- ggplot(all_models, aes(x = school, y = estimate, ymin = conf.low, yma
                   position = position_dodge(width = 1)) +
   coord_flip() +
   scale_colour_manual(values =
-                        c("Complete" = "#b3cde0",
-                          "No" = "#03396c",
+                        c("Complete" = "#99cbff",
+                          "No" = "#004c99",
                           "Partial" = "#9400d3")
                      ) +
-  theme(text = element_text(size=16))
+  labs(colour = "Model", x = "Estimate", y = "School")
 ggsave("../figures/compare_models.png", compare, 
        width = 7, height = 4, units = "in")
 compare

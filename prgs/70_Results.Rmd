@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(comment=NA)
 rm(list=ls())
 ```
+
 ```{r, include=TRUE, message = FALSE}
 library(tidyverse)
 library(brms)
@@ -26,14 +27,16 @@ library(cowplot) # cowplot helps align multiple ggplots in a grid for comparison
 # windowsFonts(CMU = windowsFont("CMU Serif")) # Define CMU font as the computer modern serif font that is used in my latex template
 # theme_set(theme_bw(base_family = "CMU")) # Set the gg-theme to use the latex font
 # Sys.setenv(LANG="en")
-library(extrafont)
 library(patchwork)
-theme_set(theme_bw(base_family = "Times New Roman")) # Set the gg-theme to use the latex font
-if (!require("devtools")) {
-  install.packages("devtools")
-}
-devtools::install_github("stan-dev/bayesplot")
+library(extrafont)
+theme_set(theme_bw(base_family = "CMU Serif") +
+            theme(text = element_text(size = 16)))# Set the gg-theme to use the latex font
+# if (!require("devtools")) {
+#   install.packages("devtools")
+# }
+# devtools::install_github("stan-dev/bayesplot")
 ```
+
 ```{r}
 m1 <- readRDS("../results/m1.rds")
 m2 <- readRDS("../results/sat_friends.rds")
@@ -64,7 +67,11 @@ mcmc_intervals(post[, 2:15],
                point_est = "median")
 mcmc_intervals(post[, 17:22],
                prob = .5,
-               point_est = "median")
+               point_est = "median") +
+  labs(title = "Coefficients lifes satisfaction") +
+  vline_0() +
+  scale_y_discrete(limits = c("sd_school_Intercept", "sd_school_treated1", "sd_school_tXw21", "sd_school_tXw31", "sd_school_tX241", ""),
+                   lables = c("yxc", "yxc", "yxc", "yxc", "yxc", "yxc"))
 
 coef <- mcmc_intervals(post[, 1:22],
                prob = .5,

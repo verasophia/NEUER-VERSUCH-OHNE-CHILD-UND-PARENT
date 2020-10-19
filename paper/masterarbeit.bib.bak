@@ -1486,8 +1486,8 @@ Special Issue: The Arts and Academic Achievement: What the Evidence},
   publisher = {American Psychological Association ({APA})},
 }
 
-@Book{AndrewGelman2013,
-  author    = {Andrew Gelman, Jennifer Hill},
+@Book{Gelman2013,
+  author    = {Andrew Gelman and Jennifer Hill},
   publisher = {Cambridge University Press},
   title     = {Data Analysis Using Regression and Multilevel/Hierarchical Models},
   year      = {2013},
@@ -1667,6 +1667,30 @@ Special Issue: The Arts and Academic Achievement: What the Evidence},
   doi       = {10.1111/j.1468-0297.2004.00235.x},
   groups    = {Method},
   publisher = {Oxford University Press ({OUP})},
+}
+
+@Article{Rubin1981,
+  author    = {Donald B. Rubin},
+  journal   = {Journal of Educational Statistics},
+  title     = {Estimation in Parallel Randomized Experiments},
+  year      = {1981},
+  month     = {dec},
+  number    = {4},
+  pages     = {377--401},
+  volume    = {6},
+  doi       = {10.3102/10769986006004377},
+  groups    = {Method},
+  publisher = {American Educational Research Association ({AERA})},
+}
+
+@Article{Veenhoven1996,
+  author  = {R. Veenhoven},
+  journal = {Social Indicators Research},
+  title   = {Dvelopments in satisfaction research},
+  year    = {1996},
+  number  = {20},
+  volume  = {20},
+  groups  = {SWB children},
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}

@@ -39,7 +39,8 @@ library(grid)
 library(gridExtra)
 # windowsFonts(CMU = windowsFont("CMU Serif")) # Define CMU font as the computer modern serif font that is used in my latex template
 
-theme_set(theme_bw(base_family = "Times New Roman"))
+theme_set(theme_bw(base_family = "CMU Serif") +
+            theme(text = element_text(size = 16)))
 #           text=element_text(size = 20)) # Set the gg-theme to use the latex font
 
 # Sys.setenv(LANG="en") # get better error messages for googling
@@ -83,10 +84,9 @@ saveRDS(sum_satisfaction, file = "../results/sum_satisfaction.RDS")
 
 ```{r}
 lsat_bar <- ggplot(welle1, aes(x=lsat)) +
-  geom_bar((aes(y=(..count..)/sum(..count..))), fill = "#6497b1") +
+  geom_bar((aes(y=(..count..)/sum(..count..))), fill = "#004c99") +
   labs(x="Life satisfaction", y="Density") +
-  scale_x_discrete( limits = seq(0, 10) ) +
-  theme(text = element_text(size=16))
+  scale_x_discrete( limits = seq(0, 10))
 ggsave("../figures/lsat_bar.png", lsat_bar, width = 7, height = 5, units = "in")
 ```
 
@@ -226,18 +226,16 @@ lsat_vs_time_by_school_treated <- ggplot(
   aes(y = lsat, x = welle, group = school)) +
   scale_color_manual(
     values =
-      c("1" = "#d1e1ec",
-        "2" = "#b3cde0",
-        "3" = "#6497b1",
-        "4" = "#005b96",
-        "5" = "#03396c",
-        "6" = "#011f4b")
+      c("1" = "#cce5ff",
+        "2" = "#99cbff",
+        "3" = "#4ca5ff",
+        "4" = "#198bff",
+        "5" = "#0065cc",
+        "6" = "#004c99")
   ) +
   geom_smooth(aes(color=school), method = "lm", se = F, size = .4, linetype = "twodash") +
   geom_smooth(aes(group = 1), method = "lm", se = F, colour = "#9400d3") +
-  theme(text = element_text(size=16)) +
-  labs(x = "Wave", y = "Mean life satisfaction",
-       caption = "Mean life satisfaction by time period in treatment group")
+  labs(colour = "School", x = "Wave", y = "Mean life satisfaction")
 
 ggsave("../figures/lsat_vs_time_by_school_treated.png", lsat_vs_time_by_school_treated, width = 7, height = 5, units = "in")
 ```

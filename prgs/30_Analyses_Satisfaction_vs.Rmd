@@ -35,8 +35,9 @@ library(knitr)
 library(kableExtra)
 library(ggdist)
 library(plm)
-
-theme_set(theme_bw(base_family = "Times New Roman"))
+library(extrafont)
+theme_set(theme_bw(base_family = "CMU Serif") +
+            theme(text = element_text(size = 16)))
 ```
 
 # Data
@@ -78,10 +79,10 @@ left_join(std, schnullifax, by = pid)
 plot(std)
 
 ggplot(data = std, aes(x=sd.sat.pid, y=..density..)) +
-  geom_histogram(bins = 100, fill = "#6497b1")
+  geom_histogram(bins = 100, fill = "#004c99")
   
  prior_predict <- ggplot(all, aes(x=value, y=..density..)) +
-  geom_histogram(bins = 200, fill = "#6497b1")  
+  geom_histogram(bins = 200, fill = "#004c99")  
   
   
 lsat_vs_time_by_school_treated <- ggplot(
@@ -202,13 +203,12 @@ gr_lsat_pred <-  ggplot( pred_df, aes( x = welle, y = Estimate, group = treated)
   geom_pointrange(aes(ymin = Q25, 
                       ymax = Q75, color = treated ),
                   position=position_dodge(width=0.1) ) +
-  ylab("Life satisfaction") +
+  labs(colour = "Treated", y ="Life satisfaction") +
   scale_x_discrete("Wave", limits = seq(1:5) ) +
   theme(legend.position="bottom") +
   scale_color_manual(values = 
-                       c("0" = "#6497b1",
-                         "1" = "#9400d3")) +
-  theme(text = element_text(size = 16))
+                       c("0" = "#99cbff",
+                         "1" = "#004c99"))
 ggsave("../figures/lsat_pred.png", gr_lsat_pred, width = 7, height = 4, units = "in")
 gr_lsat_pred
 ```
@@ -247,11 +247,10 @@ su_teff
 gr_lsat_teff <- ggplot(data = su_teff, 
        aes(x = wave, 
            y = mean)) +
-  geom_pointrange(aes(ymin = Q10, ymax = Q90), colour = "#6497b1") +
+  geom_pointrange(aes(ymin = Q10, ymax = Q90), colour = "#004c99") +
   scale_x_discrete("Wave", limits=c("2", "3", "4", "5")) +
-  geom_hline(yintercept=0, colour = "#6497b1") +
-  ylab("Average treatment effect") +
-  theme(text = element_text(size = 16))
+  geom_hline(yintercept=0) +
+  ylab("Average treatment effect")
 ggsave("../figures/lsat_teff.png", gr_lsat_teff, width = 7, height = 4, units = "in")
 gr_lsat_teff
 ```
@@ -282,17 +281,16 @@ pred_df <- cbind.data.frame( y_pred, x_pred_school )
 gr_lsat_pred_across_schools <- 
   ggplot( pred_df, aes( x = welle, y = Estimate, group = treated) ) + 
   geom_line( aes(color=treated) ) +
-  ylab("Life satisfaction") +
+  labs(colour = "Treated", y = "Life satisfaction") +
   scale_x_discrete("Wave", limits = seq(1:5) ) +
   facet_wrap(vars(school), labeller = labeller(
     school = c("1" = "School: 1", "2" = "School: 2", "3" = "School: 3",
                "4" = "School: 4", "5" = "School: 5", "6" = "School: 6" ))) +
   theme(legend.position="bottom") +
   scale_color_manual(values = 
-                       c("0" = "#6497b1",
-                         "1" = "#9400d3")) +
-  theme(text = element_text(size = 16),
-        axis.text.x = element_text(size = 14),
+                       c("0" = "#99cbff",
+                         "1" = "#004c99")) +
+  theme(axis.text.x = element_text(size = 14),
         axis.text.y = element_text(size = 14)) +
   scale_y_continuous(limits = c(5.5, 8.25), breaks = seq(6, 8.25, by = 1))
 ggsave("../figures/lsat_pred_across_schools.png", gr_lsat_pred_across_schools, 
@@ -358,14 +356,19 @@ Graphical representation of results.
 
 ```{r}
 gr_lsat_teff_across_schools <-
-  ggplot(data = su_teff, aes(x = wave, y = mean, ymin = Q10, ymax = Q90)) +
-  geom_pointrange(aes(color = school, group = school),
+ggplot(data = su_teff, aes(x = wave, y = mean, ymin = Q10, ymax = Q90)) +
+  geom_pointrange(aes(color = as.factor(school), group = school),
                   position=position_dodge(width=0.40)) +
+  scale_colour_manual(values = c("#cce5ff",
+                                 "#99cbff",
+                                 "#4ca5ff",
+                                 "#198bff",
+                                 "#0065cc",
+                                 "#004c99")
+                      ) +
   geom_hline(yintercept=0) + 
   theme(legend.position="bottom") +
-  theme(text = element_text(size = 16),
-        axis.text.x = element_text(size = 16),
-        axis.text.y = element_text(size = 16))
+  labs(colour = "School", x = "Wave", y = "Mean")
 ggsave("../figures/lsat_teff_across_schools.png", gr_lsat_teff_across_schools, 
        width = 7, height = 4, units = "in")
 gr_lsat_teff_across_schools
@@ -403,13 +406,12 @@ gr_sat_friends_pred <-
   geom_pointrange(aes(ymin = Q25, 
                       ymax = Q75, color = treated ),
                   position=position_dodge(width=0.1) ) +
-  ylab("Satisfaction with friends") +
+  labs(colour = "Treated", y = "Satisfaction with friends") +
   scale_x_discrete("Wave", limits = seq(1:5) ) +
   theme(legend.position="bottom") +
   scale_color_manual(values = 
-                       c("0" = "#6497b1",
-                         "1" = "#9400d3")) +
-  theme(text = element_text(size = 16))
+                       c("0" = "#99cbff",
+                         "1" = "#004c99"))
 ggsave("../figures/sat_friends_pred.png", gr_sat_friends_pred, width = 7, height = 4, units = "in")
 gr_sat_friends_pred
 
@@ -430,7 +432,7 @@ teff_quant <- t(apply( X = teff, MARGIN = 2,
 su_teff <- tibble( mean = teff_mean, 
                    Q10 = teff_quant[,1],
                    Q90 = teff_quant[,2], 
-                   wave = seq(2:5) )
+                   wave = seq(1:4) )
 su_teff
 ```
 
@@ -438,11 +440,10 @@ su_teff
 gr_sat_friends_teff <- ggplot(data = su_teff, 
        aes(x = wave, 
            y = mean)) +
-  geom_pointrange(aes(ymin = Q10, ymax = Q90), colour = "#6497b1") +
+  geom_pointrange(aes(ymin = Q10, ymax = Q90), colour = "#004c99") +
   scale_x_discrete("Wave", limits=c("2", "3", "4", "5")) +
-  geom_hline(yintercept=0, colour = "#6497b1") +
-  ylab("Average treatment effect") +
-  theme(text = element_text(size = 16))
+  geom_hline(yintercept=0) +
+  ylab("Average treatment effect")
 ggsave("../figures/sat_friends_teff.png", gr_sat_friends_teff, width = 7, height = 4, units = "in")
 gr_sat_friends_teff
 ```
@@ -458,17 +459,16 @@ pred_df <- cbind.data.frame( y_pred, x_pred_school )
 gr_sat_friends_pred_across_schools <- 
   ggplot( pred_df, aes( x = welle, y = Estimate, group = treated) ) + 
   geom_line( aes(color=treated) ) +
-  ylab("Satisfaction with friends") +
+  labs(colour = "Treated", y = "Satisfaction with friends") +
   scale_x_discrete("Wave", limits = seq(1:5) ) +
   facet_wrap(vars(school), labeller = labeller(
     school = c("1" = "School: 1", "2" = "School: 2", "3" = "School: 3",
                "4" = "School: 4", "5" = "School: 5", "6" = "School: 6" ))) +
   theme(legend.position="bottom") +
   scale_color_manual(values = 
-                       c("0" = "#6497b1",
-                         "1" = "#9400d3")) +
-  theme(text = element_text(size = 16),
-        axis.text.x = element_text(size = 14),
+                       c("0" = "#99cbff",
+                         "1" = "#004c99")) +
+  theme(axis.text.x = element_text(size = 14),
         axis.text.y = element_text(size = 14))
 ggsave("../figures/sat_friends_pred_across_schools.png", gr_sat_friends_pred_across_schools, 
        width = 7, height = 4, units = "in")
@@ -532,15 +532,19 @@ Graphical representation of results.
 
 ```{r}
 gr_sat_friends_teff_across_schools <-
-  ggplot(data = su_teff, aes(x = wave, y = mean)) +
-  geom_pointrange(aes(ymin = Q10, 
-                      ymax = Q90, group = school, color = school),
+ggplot(data = su_teff, aes(x = wave, y = mean, ymin = Q10, ymax = Q90)) +
+  geom_pointrange(aes(color = as.factor(school), group = school),
                   position=position_dodge(width=0.40)) +
+  scale_colour_manual(values = c("#cce5ff",
+                                 "#99cbff",
+                                 "#4ca5ff",
+                                 "#198bff",
+                                 "#0065cc",
+                                 "#004c99")
+                      ) +
   geom_hline(yintercept=0) + 
   theme(legend.position="bottom") +
-  theme(text = element_text(size = 16),
-        axis.text.x = element_text(size = 16),
-        axis.text.y = element_text(size = 16))
+  labs(colour = "School", x = "Wave", y = "Mean")
 ggsave("../figures/sat_friends_teff_across_schools.png", gr_sat_friends_teff_across_schools, 
        width = 7, height = 4, units = "in")
 gr_sat_friends_teff_across_schools
@@ -576,13 +580,12 @@ gr_sat_class_pred <-
   geom_pointrange(aes(ymin = Q25, 
                       ymax = Q75, color = treated ),
                   position=position_dodge(width=0.1) ) +
-  ylab("Satisfaction with class") +
+  labs(colour = "Treated", y = "Satisfaction with class") +
   scale_x_discrete("Wave", limits = seq(1:5) ) +
   theme(legend.position="bottom") +
   scale_color_manual(values = 
-                       c("0" = "#6497b1",
-                         "1" = "#9400d3")) +
-  theme(text = element_text(size = 16))
+                       c("0" = "#99cbff",
+                         "1" = "#004c99"))
 ggsave("../figures/sat_class_pred.png", gr_sat_class_pred, width = 7, height = 4, units = "in")
 gr_sat_class_pred
 ```
@@ -609,11 +612,10 @@ su_teff
 gr_sat_class_teff <- ggplot(data = su_teff, 
        aes(x = wave, 
            y = mean)) +
-  geom_pointrange(aes(ymin = Q10, ymax = Q90), colour = "#6497b1") +
+  geom_pointrange(aes(ymin = Q10, ymax = Q90), colour = "#004c99") +
   scale_x_discrete("Wave", limits=c("2", "3", "4", "5")) +
-  geom_hline(yintercept=0, colour = "#6497b1") +
-  ylab("Average treatment effect") +
-  theme(text = element_text(size = 16))
+  geom_hline(yintercept=0) +
+  ylab("Average treatment effect")
 ggsave("../figures/sat_class_teff.png", gr_sat_class_teff, width = 7, height = 4, units = "in")
 gr_sat_class_teff
 ```
@@ -629,17 +631,16 @@ pred_df <- cbind.data.frame( y_pred, x_pred_school )
 gr_sat_class_pred_across_schools <- 
   ggplot( pred_df, aes( x = welle, y = Estimate, group = treated) ) + 
   geom_line( aes(color=treated) ) +
-  ylab("Satisfaction with class") +
+  labs(colour = "Treated", y = "Satisfaction with class") +
   scale_x_discrete("Wave", limits = seq(1:5) ) +
   facet_wrap(vars(school), labeller = labeller(
     school = c("1" = "School: 1", "2" = "School: 2", "3" = "School: 3",
                "4" = "School: 4", "5" = "School: 5", "6" = "School: 6" ))) +
   theme(legend.position="bottom") +
   scale_color_manual(values = 
-                       c("0" = "#6497b1",
-                         "1" = "#9400d3")) +
-  theme(text = element_text(size = 16),
-        axis.text.x = element_text(size = 14),
+                       c("0" = "#99cbff",
+                         "1" = "#004c99")) +
+  theme(axis.text.x = element_text(size = 14),
         axis.text.y = element_text(size = 14))
 ggsave("../figures/sat_class_pred_across_schools.png", gr_sat_class_pred_across_schools, 
        width = 7, height = 4, units = "in")
@@ -703,14 +704,19 @@ Graphical representation of results.
 
 ```{r}
 gr_sat_class_teff_across_schools <-
-  ggplot(data = su_teff, aes(x = wave, y = mean)) +
-  geom_pointrange(aes(ymin = Q10, 
-                      ymax = Q90, group = school, color = school),
+ggplot(data = su_teff, aes(x = wave, y = mean, ymin = Q10, ymax = Q90)) +
+  geom_pointrange(aes(color = as.factor(school), group = school),
                   position=position_dodge(width=0.40)) +
-  scale_x_discrete("Wave", limits=seq(2:6) )  +
+  scale_colour_manual(values = c("#cce5ff",
+                                 "#99cbff",
+                                 "#4ca5ff",
+                                 "#198bff",
+                                 "#0065cc",
+                                 "#004c99")
+                      ) +
   geom_hline(yintercept=0) + 
   theme(legend.position="bottom") +
-  theme(text = element_text(size = 16))
+  labs(colour = "School", x = "Wave", y = "Mean")
 ggsave("../figures/sat_class_teff_across_schools.png", gr_sat_class_teff_across_schools, 
        width = 7, height = 4, units = "in")
 gr_sat_class_teff_across_schools
@@ -747,13 +753,12 @@ gr_sat_school_pred <-  ggplot( pred_df, aes( x = welle, y = Estimate, group = tr
   geom_pointrange(aes(ymin = Q25, 
                       ymax = Q75, color = treated ),
                   position=position_dodge(width=0.1) ) +
-  ylab("Satisfaction with school") +
+  labs(colour = "Treated", y = "Satisfaction with school") +
   scale_x_discrete("Wave", limits = seq(1:5) ) +
   theme(legend.position="bottom") +
   scale_color_manual(values = 
-                       c("0" = "#6497b1",
-                         "1" = "#9400d3")) +
-  theme(text = element_text(size = 16))
+                       c("0" = "#99cbff",
+                         "1" = "#004c99"))
 ggsave("../figures/sat_school_pred.png", gr_sat_school_pred, width = 7, height = 4, units = "in")
 gr_sat_school_pred
 ```
@@ -780,11 +785,10 @@ su_teff
 gr_sat_school_teff <- ggplot(data = su_teff, 
        aes(x = wave, 
            y = mean)) +
-  geom_pointrange(aes(ymin = Q10, ymax = Q90), colour = "#6497b1") +
+  geom_pointrange(aes(ymin = Q10, ymax = Q90), colour = "#004c99") +
   scale_x_discrete("Wave", limits=c("2", "3", "4", "5")) +
-  geom_hline(yintercept=0, colour = "#6497b1") +
-  ylab("Average treatment effect") +
-  theme(text = element_text(size = 16))
+  geom_hline(yintercept=0) +
+  ylab("Average treatment effect")
 ggsave("../figures/sat_school_teff.png", gr_sat_school_teff, width = 7, height = 4, units = "in")
 gr_sat_school_teff
 ```
@@ -800,17 +804,16 @@ pred_df <- cbind.data.frame( y_pred, x_pred_school )
 gr_sat_school_pred_across_schools <- 
   ggplot( pred_df, aes( x = welle, y = Estimate, group = treated) ) + 
   geom_line( aes(color=treated) ) +
-  ylab("Satisfaction with school") +
+  labs(colour = "Treated", y = "Satisfaction with class") +
   scale_x_discrete("Wave", limits = seq(1:5) ) +
   facet_wrap(vars(school), labeller = labeller(
     school = c("1" = "School: 1", "2" = "School: 2", "3" = "School: 3",
                "4" = "School: 4", "5" = "School: 5", "6" = "School: 6" ))) +
   theme(legend.position="bottom") +
   scale_color_manual(values = 
-                       c("0" = "#6497b1",
-                         "1" = "#9400d3")) +
-  theme(text = element_text(size = 16),
-        axis.text.x = element_text(size = 14),
+                       c("0" = "#99cbff",
+                         "1" = "#004c99")) +
+  theme(axis.text.x = element_text(size = 14),
         axis.text.y = element_text(size = 14))
 ggsave("../figures/sat_school_pred_across_schools.png", gr_sat_school_pred_across_schools, 
        width = 7, height = 4, units = "in")
@@ -874,13 +877,19 @@ Graphical representation of results.
 
 ```{r}
 gr_sat_school_teff_across_schools <-
-  ggplot(data = su_teff, aes(x = wave, y = mean)) +
-  geom_pointrange(aes(ymin = Q10, 
-                      ymax = Q90, group = school, color = school),
+ggplot(data = su_teff, aes(x = wave, y = mean, ymin = Q10, ymax = Q90)) +
+  geom_pointrange(aes(color = as.factor(school), group = school),
                   position=position_dodge(width=0.40)) +
+  scale_colour_manual(values = c("#cce5ff",
+                                 "#99cbff",
+                                 "#4ca5ff",
+                                 "#198bff",
+                                 "#0065cc",
+                                 "#004c99")
+                      ) +
   geom_hline(yintercept=0) + 
   theme(legend.position="bottom") +
-  theme(text = element_text(size = 16))
+  labs(colour = "School", x = "Wave", y = "Mean")
 ggsave("../figures/sat_school_teff_across_schools.png", gr_sat_school_teff_across_schools, 
        width = 7, height = 4, units = "in")
 gr_sat_school_teff_across_schools

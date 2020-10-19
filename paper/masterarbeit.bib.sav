@@ -1486,8 +1486,8 @@ Special Issue: The Arts and Academic Achievement: What the Evidence},
   publisher = {American Psychological Association ({APA})},
 }
 
-@Book{AndrewGelman2013,
-  author    = {Andrew Gelman, Jennifer Hill},
+@Book{Gelman2013,
+  author    = {Andrew Gelman and Jennifer Hill},
   publisher = {Cambridge University Press},
   title     = {Data Analysis Using Regression and Multilevel/Hierarchical Models},
   year      = {2013},
@@ -1500,7 +1500,7 @@ Special Issue: The Arts and Academic Achievement: What the Evidence},
 }
 
 @Book{Mcelreath2020,
-  author    = {Mcelreath, Richard},
+  author    = {McElreath, Richard},
   publisher = {Taylor & Francis Ltd.},
   title     = {Statistical Rethinking},
   year      = {2020},
@@ -1681,6 +1681,16 @@ Special Issue: The Arts and Academic Achievement: What the Evidence},
   doi       = {10.3102/10769986006004377},
   groups    = {Method},
   publisher = {American Educational Research Association ({AERA})},
+}
+
+@Article{Veenhoven1996,
+  author  = {R. Veenhoven},
+  journal = {Social Indicators Research},
+  title   = {Dvelopments in satisfaction research},
+  year    = {1996},
+  number  = {20},
+  volume  = {20},
+  groups  = {SWB children},
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}

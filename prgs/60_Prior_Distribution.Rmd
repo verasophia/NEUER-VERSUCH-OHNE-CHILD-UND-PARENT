@@ -23,9 +23,10 @@ library(cowplot) # cowplot helps align multiple ggplots in a grid for comparison
 # windowsFonts(CMU = windowsFont("CMU Serif")) # Define CMU font as the computer modern serif font that is used in my latex template
 # theme_set(theme_bw(base_family = "CMU")) # Set the gg-theme to use the latex font
 # Sys.setenv(LANG="en")
-library(extrafont)
 library(patchwork)
-theme_set(theme_bw(base_family = "Times New Roman")) # Set the gg-theme to use the latex font
+library(extrafont)
+theme_set(theme_bw(base_family = "CMU Serif") +
+            theme(text = element_text(size = 16)))# Set the gg-theme to use the latex font
 ```
 
 ```{r}
@@ -50,7 +51,7 @@ flat <-
   test %>%
   filter(row == "flat") %>% 
   ggplot(aes(x = lsat, y = value)) +
-  geom_line(color='#6497b1') +
+  geom_line(color='#004c99') +
   scale_x_continuous(breaks = seq(from = -10, to = 10, by = 2)) +
   scale_y_continuous(breaks = NULL, limits = NULL) +
   facet_wrap(~name, scales = "free_y") +
@@ -62,13 +63,13 @@ peaked <-
   test %>%
   filter(row == "peaked") %>% 
   ggplot(aes(x = lsat, y = value)) +
-  geom_line(color='#6497b1') +
+  geom_line(color='#004c99') +
   scale_x_continuous(breaks = seq(from = -10, to = 10, by = 2)) +
   scale_y_continuous(breaks = NULL, limits = NULL) +
   facet_wrap(~name, scales = "free_y") +
   labs(x="", y="") +
   theme(text = element_text(size=14))
-flat_peaked <- flat / peaked + ylab(Density)
+flat_peaked <- flat / peaked
 ggsave("../figures/flat_peaked.png", flat_peaked, width = 6, height = 3, units = "in")
 flat_peaked
 
@@ -76,9 +77,9 @@ p_intercept_sim <-
   tibble(x = seq(from = -10, to = 10, by = 0.1)) %>%
   
   ggplot(aes(x = x, y = dnorm(x, mean = 7, sd = 2))) +
-  geom_line(color='#6497b1') +
+  geom_line(color='#004c99') +
   scale_x_continuous(breaks = seq(from = -10, to = 10, by = 2)) +
-  labs(title = "intercept ~ dnorm(7,2)", x="", y="")
+  labs(title = "Intercept ~ dnorm(7,2)", x="", y="")
 p_intercept_sim
 ```
 ```{r}
@@ -89,7 +90,7 @@ get_prior(lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback
 ```{r}
 p1 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
            sample_prior = "only", data = d,
-           prior = c(prior(normal(7, 2), class = Intercept),
+           prior = c(prior(normal(8, 2), class = Intercept),
                      prior(normal(0, 10), class = b),
                      prior(cauchy(0, 10), class = sd),
                      prior(exponential(0.5), class = sigma)),
@@ -97,7 +98,7 @@ p1 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migbac
 
 p2 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
            sample_prior = "only", data = d,
-           prior = c(prior(normal(7, 2), class = Intercept),
+           prior = c(prior(normal(8, 2), class = Intercept),
                      prior(normal(0, 5), class = b),
                      prior(cauchy(0, 5), class = sd),
                      prior(exponential(0.5), class = sigma)),
@@ -105,7 +106,7 @@ p2 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migbac
 
 p3 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
            sample_prior = "only", data = d,
-           prior = c(prior(normal(7, 2), class = Intercept),
+           prior = c(prior(normal(8, 2), class = Intercept),
                      prior(normal(0, 1), class = b),
                      prior(cauchy(0, 1), class = sd),
                      prior(exponential(0.5), class = sigma)),
@@ -116,34 +117,33 @@ p3 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migbac
 p1_predict <- posterior_epred(object = p1, nsamples = 100)
 p1_long <- gather(data.frame(p1_predict))
 p1_long
-p1_long$prior <- rep("3",145500)
+p1_long$prior <- rep("3",142900)
 ```
 ```{r}
 p2_predict <- posterior_epred(object = p2, nsamples = 100)
 p2_long <- gather(data.frame(p2_predict))
 p2_long
-p2_long$prior <- rep("2",145500)
+p2_long$prior <- rep("2",142900)
 ```
 ```{r}
 p3_predict <- posterior_epred(object = p3, nsamples = 100)
 p3_long <- gather(data.frame(p3_predict))
 p3_long
-p3_long$prior <- rep("1",145500)
+p3_long$prior <- rep("1",142900)
 ```
 
 ```{r}
 all <- bind_rows(p3_long, p2_long, p1_long)
 
 prior_predict <- ggplot(all, aes(x=value, y=..density..)) +
-  geom_histogram(bins = 200, fill = "#6497b1") +
+  geom_histogram(bins = 200, fill = "#004c99", alpha = .8) +
   xlab("Predicted life satisfaction") + 
   ylab("Density") +
   xlim(-30,30) +
   facet_wrap(vars(prior), labeller = labeller(
-  prior = c("1" = "N(0,10)", "2" = "N(0,5)", "3" = "N(0,1)"))) +
+  prior = c("1" = "N(0,1)", "2" = "N(0,5)", "3" = "N(0,10)"))) +
   geom_vline(xintercept = 0, color ="#9400d3") +
-  geom_vline(xintercept = 10, color ="#9400d3")
-  theme(text = element_text(size = 16)) +
+  geom_vline(xintercept = 10, color ="#9400d3") +
   theme(axis.text.y=element_blank())
 ggsave("../figures/prior_predict.png", prior_predict, width = 5, height = 3, units = "in")
 ```
@@ -153,10 +153,10 @@ ggsave("../figures/prior_predict.png", prior_predict, width = 5, height = 3, uni
 p_intercept_sim <-
   tibble(x = seq(from = -10, to = 10, by = 0.1)) %>%
   
-  ggplot(aes(x = x, y = dnorm(x, mean = 7, sd = 2))) +
-  geom_line(color='#6497b1') +
+  ggplot(aes(x = x, y = dnorm(x, mean = 8, sd = 2))) +
+  geom_line(color='#004c99') +
   scale_x_continuous(breaks = seq(from = -10, to = 10, by = 2)) +
-  labs(title = "intercept ~ dnorm(7,2)", x="", y="") +
+  labs(title = "Intercept", x="", y="") +
   theme(text = element_text(size=14))
 p_intercept_sim
 
@@ -164,9 +164,9 @@ p_b_sim <-
   tibble(x = seq(from = -10, to = 10, by = 0.1)) %>%
   
   ggplot(aes(x = x, y = dnorm(x, mean = 0, sd = 1))) +
-  geom_line(color='#6497b1') +
+  geom_line(color='#004c99') +
   scale_x_continuous(breaks = seq(from = -10, to = 10, by = 2)) +
-  labs(title = "b ~ dnorm(0, 1)", x="", y="") +
+  labs(title = "Population level effects", x="", y="") +
   theme(text = element_text(size=14))
 p_b_sim
 
@@ -174,9 +174,9 @@ p_sd_sim <-
   tibble(x = seq(from = -10, to = 10, by = 0.1)) %>%
   
   ggplot(aes(x = x, y = dcauchy(x, location = 0, scale = 1))) +
-  geom_line(color='#6497b1') +
+  geom_line(color='#004c99') +
   scale_x_continuous(breaks = seq(from = -10, to = 10, by = 2)) +
-  labs(title = "sd ~ dcauchy(0, 1)", x="", y="") +
+  labs(title = "Group level effects", x="", y="") +
   theme(text = element_text(size=14))
 p_sd_sim
 
@@ -184,13 +184,13 @@ p_sigma_sim <-
   tibble(x = seq(from = -10, to = 10, by = 0.1)) %>%
   
   ggplot(aes(x = x, y = dexp(x, rate = 0.5))) +
-  geom_line(color='#6497b1') +
+  geom_line(color='#004c99') +
   scale_x_continuous(breaks = seq(from = -10, to = 10, by = 2)) +
-  labs(title = "sigma ~ dexp(0.5)", x="", y="") +
+  labs(title = "Sigma", x="", y="") +
   theme(text = element_text(size=14))
 p_sigma_sim
 
-plot_priors <- grid.arrange(p_intercept_sim, p_b_sim, p_sd_sim, p_sigma_sim, left="Density", bottom="x")
+plot_priors <- grid.arrange(p_intercept_sim, p_b_sim, p_sd_sim, p_sigma_sim)
 ggsave("../figures/plot_priors.png", plot_priors, width = 7, height = 4, units = "in")
 plot_priors
 
