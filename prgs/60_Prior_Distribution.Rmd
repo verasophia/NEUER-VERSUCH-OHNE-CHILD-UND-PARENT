@@ -92,7 +92,7 @@ p1 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migbac
            sample_prior = "only", data = d,
            prior = c(prior(normal(8, 2), class = Intercept),
                      prior(normal(0, 10), class = b),
-                     prior(cauchy(0, 10), class = sd),
+                     prior(cauchy(0, 1), class = sd),
                      prior(exponential(0.5), class = sigma)),
                      file = "../results/prior_p1")
 
@@ -100,7 +100,7 @@ p2 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migbac
            sample_prior = "only", data = d,
            prior = c(prior(normal(8, 2), class = Intercept),
                      prior(normal(0, 5), class = b),
-                     prior(cauchy(0, 5), class = sd),
+                     prior(cauchy(0, 1), class = sd),
                      prior(exponential(0.5), class = sigma)),
            file = "../results/prior_p2")
 
@@ -111,6 +111,13 @@ p3 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migbac
                      prior(cauchy(0, 1), class = sd),
                      prior(exponential(0.5), class = sigma)),
            file = "../results/prior_p3")
+
+p1.1 <- brm( lsat ~ treated + welle  + tXw2 + tXw3 + tXw4 + tXw5 + female + migback + hob.mus.making + (1 + treated + tXw2 + tXw3 + tXw4 + tXw5 | school) + (1 | pid),
+           sample_prior = "only", data = d,
+           prior = c(prior(normal(8, 2), class = Intercept),
+                     prior(normal(0, 1), class = b),
+                     prior(exponential(0.5), class = sigma)),
+           file = "../results/prior_p1.1")
 ```
 
 ```{r}
@@ -118,6 +125,11 @@ p1_predict <- posterior_epred(object = p1, nsamples = 100)
 p1_long <- gather(data.frame(p1_predict))
 p1_long
 p1_long$prior <- rep("3",142900)
+
+p1.1_predict <- posterior_epred(object = p1.1, nsamples = 100)
+p1.1_long <- gather(data.frame(p1.1_predict))
+p1.1_long
+p1.1_long$prior <- rep("3",142900)
 ```
 ```{r}
 p2_predict <- posterior_epred(object = p2, nsamples = 100)
